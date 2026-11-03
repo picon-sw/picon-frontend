@@ -8,7 +8,7 @@
 | develop | 개발 통합 | 직접 push 금지, feat에서 PR로만 병합 |
 | type/이슈번호-내용 | 기능·작업 단위 | develop에서 만들어 작업 후 develop으로 PR |
 - type/이슈번호-내용
-    - type: feat, fix, refactor, docs, style, test, chore
+    - type: feat, fix, refactor, docs, chore
     - 이름 규칙: 영문 소문자와 하이픈, 이슈 번호 포함
         - 예시
             - feat/12-request-create-api
@@ -18,7 +18,7 @@
     - 병합 전 PR 필수
         - 1명 이상의 승인 필요
     - 강제 Push 차단
-        - git push --forse 명령어를 통한 강제 Push를 차단
+        - git push --force 명령어를 통한 강제 Push를 차단
 
 ### 2. Issue 제목, PR 제목, 커밋 메시지 형식
 
