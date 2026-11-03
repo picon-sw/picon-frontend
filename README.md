@@ -170,6 +170,78 @@ export function PhotoCard({ title, onClick }: PhotoCardProps) {
 
 ---
 
+## 📘 처음 쓰는 라이브러리 사용법
+
+> 공식 문서: [React Router](https://reactrouter.com/) · [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
+> 아래 4가지만 알면 대부분의 화면을 만들 수 있어요.
+
+### React Router — 화면 이동
+
+**① 새 화면 추가하기**
+
+```tsx
+// 1. src/pages/LoginPage.tsx 만들기
+export function LoginPage() {
+  return <h1>로그인</h1>;
+}
+
+// 2. src/App.tsx 의 <Routes> 안에 한 줄 추가
+<Route path="/login" element={<LoginPage />} />;
+```
+
+**② 다른 화면으로 이동하기**
+
+```tsx
+import { Link, useNavigate } from 'react-router';
+
+// 눌러서 이동 (링크, 버튼처럼 생긴 메뉴 등) → <a> 대신 <Link>
+<Link to="/login">로그인하러 가기</Link>;
+
+// 코드로 이동 (저장 성공 후 이동 등)
+const navigate = useNavigate();
+navigate('/'); // 홈으로
+navigate(-1); // 뒤로가기
+```
+
+> ⚠️ `<a href="/login">`을 쓰면 페이지 전체가 새로고침돼요. 앱 안에서 이동할 땐 꼭 `<Link>`!
+
+**③ 주소에서 값 꺼내기** (상세 화면 등)
+
+```tsx
+// App.tsx:  <Route path="/photographers/:id" element={<PhotographerDetailPage />} />
+import { useParams } from 'react-router';
+
+export function PhotographerDetailPage() {
+  const { id } = useParams(); // /photographers/3 이면 id === '3' (문자열)
+  return <h1>{id}번 사진가</h1>;
+}
+```
+
+### TanStack Query + axios — 서버에서 데이터 가져오기
+
+**④ 데이터 불러오기**
+
+```tsx
+import { useQuery } from '@tanstack/react-query';
+import { client } from '../api/client';
+
+export function PhotographerListPage() {
+  const { data, isPending, isError } = useQuery({
+    queryKey: ['photographers'], // 이 데이터의 이름표 (캐시 구분용)
+    queryFn: () => client.get('/photographers').then((res) => res.data), // GET /api/photographers
+  });
+
+  if (isPending) return <p>불러오는 중…</p>;
+  if (isError) return <p>불러오지 못했어요</p>;
+  return <p>사진가 {data.length}명</p>;
+}
+```
+
+- 로딩·에러·재시도·캐시를 TanStack Query가 알아서 해줘요. `useEffect` + `useState`로 직접 불러오지 않아요.
+- 저장·수정·삭제(POST, PUT, DELETE)는 `useMutation`을 써요. 처음 쓸 때 팀에 공유해주세요!
+
+---
+
 ## 🔌 서버 · 인프라와 약속한 것
 
 ### API 호출
