@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router';
 import { App } from './App';
 import './index.css';
 
-// 서버 데이터(API 응답) 캐시 관리자 — TanStack Query
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
