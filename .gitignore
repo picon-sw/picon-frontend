@@ -27,4 +27,3 @@ dist-ssr
 # Env (비밀값 커밋 방지)
 .env
 .env.*
-!.env.example
