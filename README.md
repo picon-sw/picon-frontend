@@ -18,7 +18,7 @@
     - 병합 전 PR 필수
         - 1명 이상의 승인 필요
     - 강제 Push 차단
-        - git push —forse 명령어를 통한 강제 Push를 차단
+        - git push --forse 명령어를 통한 강제 Push를 차단
 
 ### 2. Issue 제목, PR 제목, 커밋 메시지 형식
 
