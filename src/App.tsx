@@ -1,12 +1,24 @@
 import { Route, Routes } from 'react-router';
+import { MainLayout } from './components/MainLayout';
+import { ContestPage } from './pages/ContestPage';
+import { ExplorePage } from './pages/ExplorePage';
 import { HomePage } from './pages/HomePage';
+import { MyPage } from './pages/MyPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { RequestPage } from './pages/RequestPage';
 
 // 새 화면은 여기에 Route 추가 (404는 항상 맨 아래)
+// 하단바가 필요한 화면은 MainLayout 안에, 필요 없는 화면은 바깥에 추가
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/explore" element={<ExplorePage />} />
+        <Route path="/requests" element={<RequestPage />} />
+        <Route path="/contests" element={<ContestPage />} />
+        <Route path="/my" element={<MyPage />} />
+      </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

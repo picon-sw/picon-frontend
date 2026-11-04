@@ -1,0 +1,5 @@
+/* 페이지 내용이 하단바(72px)에 가려지지 않도록 아래 여백 확보 */
+.layout {
+  min-height: 100dvh;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
