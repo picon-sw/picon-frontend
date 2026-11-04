@@ -1,0 +1,227 @@
+.page {
+  padding: 21px 16px 21px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #b9b9b9;
+}
+
+/* 배너: 이미지 위에 어두운 오버레이 + 문구 + 버튼 */
+.banner {
+  position: relative;
+  height: 200px;
+  margin-top: 19px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.bannerImage {
+  position: absolute;
+  top: -148.76%;
+  left: -162.22%;
+  width: 296%;
+  max-width: none;
+}
+
+.banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(5, 18, 20, 0.48);
+}
+
+.bannerText {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  right: 20px;
+  z-index: 1;
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.bannerButton {
+  position: absolute;
+  top: 153px;
+  left: 20px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  padding: 0 12px 0 16px;
+  border: 0;
+  border-radius: 17px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d91c2;
+  cursor: pointer;
+}
+
+.sectionTitle {
+  margin: 30px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #8f8f8f;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.tab {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  color: #989898;
+  cursor: pointer;
+}
+
+.tabActive {
+  color: #4b4b4b;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 카드: 위(상태·일정) / 제목 / 날짜 / 구분선 / 작가 정보 */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 189px;
+  padding: 18px;
+  border: 2px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+}
+
+.cardHighlighted {
+  border-color: #b8ddf2;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  padding: 6px 11px;
+  border-radius: 15px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.badge_proposal,
+.badge_completed {
+  background-color: #eaf6fc;
+  color: #70b9df;
+}
+
+.badge_confirmed {
+  background-color: #d9d9d9;
+  color: #6a6a6a;
+}
+
+.scheduleLabel {
+  font-size: 10px;
+  color: #4b4b4b;
+}
+
+.cardTitle {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 10px;
+  color: #4b4b4b;
+}
+
+.divider {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-top: 2px solid #d9d9d9;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: #4b4b4b;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+}
+
+/* 제안한 작가 프로필을 겹쳐서 표시 */
+.avatarStack {
+  display: flex;
+}
+
+.avatarStack > * + * {
+  margin-left: -9px;
+}
+
+.proposalMessage {
+  margin-left: 2px;
+  font-weight: 600;
+}
+
+.photographerInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.photographerName {
+  font-weight: 600;
+}
