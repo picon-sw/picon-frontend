@@ -1,0 +1,214 @@
+.page {
+  padding: 21px 16px 21px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  height: 55px;
+  margin-top: 14px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #ebebeb;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #b9b9b9;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  height: 68px;
+  margin-top: 14px;
+  padding: 7px;
+  border-radius: 15px;
+  background-color: #ebebeb;
+}
+
+.tab {
+  border: 0;
+  border-radius: 15px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8f8f8f;
+  cursor: pointer;
+}
+
+.tabActive {
+  background-color: #fff;
+  color: #363636;
+}
+
+.tagsRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* 접힘: 화면보다 넓으면 가로 스크롤 (왼쪽은 화면 끝까지 스크롤되도록) */
+.tags {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 9px;
+  margin-left: -16px;
+  padding-left: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+/* 펼침: 화살표는 오른쪽 위에 float으로 고정 → 첫 줄만 화살표 자리를 비우고 나머지 줄은 끝까지 채움 */
+.tagsRowExpanded {
+  display: block;
+}
+
+.tagsRowExpanded .tagsToggle {
+  float: right;
+  margin-left: 9px;
+}
+
+.tagsRowExpanded .tags {
+  display: block;
+  margin-left: 0;
+  padding-left: 0;
+  overflow: visible;
+}
+
+.tagsRowExpanded .tag {
+  margin: 0 9px 8px 0;
+  vertical-align: top;
+}
+
+/* 마지막 줄 아래 여백(8px)만큼 그리드 간격을 줄여 접힘 상태와 같은 간격 유지 */
+.tagsRowExpanded + .grid {
+  margin-top: 7px;
+}
+
+.tagsToggle {
+  display: flex;
+  flex-shrink: 0;
+  order: 1; /* 접힘 상태: DOM에선 먼저지만 화면에선 오른쪽 끝 */
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.tagsToggle img {
+  transition: transform 0.2s;
+}
+
+.tagsToggleOpen img {
+  transform: rotate(180deg);
+}
+
+.tags::-webkit-scrollbar {
+  display: none;
+}
+
+.tag {
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 11px;
+  color: #777879;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tagActive {
+  border-color: #b8ddf2;
+  background-color: #b8ddf2;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 15px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  height: 267px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+/* 이미지가 아직 없을 때: 테두리만 있는 빈 칸 */
+.cardEmpty {
+  border: 1px solid #d9d9d9;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 왼쪽 위: 프로필 동그라미 + 작가 이름 */
+.cardHeader {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+}
+
+.cardName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+  color: #fff;
+}
+
+.cardEmpty .cardName {
+  color: #777879;
+}
