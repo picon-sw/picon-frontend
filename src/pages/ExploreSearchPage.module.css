@@ -1,0 +1,218 @@
+.page {
+  padding: 21px 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+  margin-left: 3px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 55px;
+  margin-top: 14px;
+  padding: 0 16px;
+  border-radius: 15px;
+  background-color: #ebebeb;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #363636;
+}
+
+.searchInput::placeholder {
+  color: #b9b9b9;
+}
+
+.searchInput::-webkit-search-cancel-button {
+  display: none;
+}
+
+.filters {
+  display: flex;
+  gap: 9px;
+  margin-top: 16px;
+  padding-left: 3px;
+}
+
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 30px;
+  padding: 0 5px 0 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 11px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.aiButton {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  height: 47px;
+  margin-top: 23px;
+  padding: 0 13px 0 16px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #eaf6fd;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aiLabel {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+  color: #363636;
+}
+
+.section {
+  margin-top: 22px;
+  padding: 18px 9px 0;
+  border-top: 1px solid #d9d9d9;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 22px;
+  color: #000;
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 15px;
+  margin-top: 23px;
+  padding-left: 1px;
+}
+
+.keyword {
+  height: 37px;
+  padding: 0 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 15px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.recentSection {
+  margin-top: 41px;
+  padding: 0 8px 0 9px;
+}
+
+.clearAll {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.recentList {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recentItem {
+  display: flex;
+  align-items: center;
+  height: 32px;
+}
+
+.recentKeyword {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 16px;
+  color: #777879;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* 시계 아이콘: Figma 23px 영역 안에 20.5px 아이콘 */
+.recentKeyword img {
+  margin: 0 1px;
+}
+
+.recentKeyword span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.empty {
+  margin: 23px 0 0;
+  font-size: 15px;
+  color: #b9b9b9;
+}
