@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import chevronDownIcon from '../assets/icons/explore/chevron-down.svg';
 import searchIcon from '../assets/icons/explore/search.svg';
 import styles from './ExplorePage.module.css';
@@ -71,11 +72,10 @@ export function ExplorePage() {
     <main className={styles.page}>
       <h1 className={styles.title}>SEARCH</h1>
 
-      {/* TODO: 검색 화면 이동은 다음 이슈에서 */}
-      <button type="button" className={styles.searchBox}>
+      <Link to="/explore/search" className={styles.searchBox}>
         <img src={searchIcon} alt="" />
         <span>작가, 사진 스타일을 검색해 보세요</span>
-      </button>
+      </Link>
 
       <div className={styles.tabs} role="tablist">
         {TABS.map(({ value, label }) => (
