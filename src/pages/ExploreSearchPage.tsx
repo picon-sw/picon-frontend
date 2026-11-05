@@ -168,12 +168,11 @@ export function ExploreSearchPage() {
         </BottomSheet>
       )}
 
-      {/* TODO: AI 검색 화면 이동은 이후 이슈에서 */}
-      <button type="button" className={styles.aiButton}>
+      <Link to="/explore/ai" className={styles.aiButton}>
         <img src={sparkleIcon} alt="" />
         <span className={styles.aiLabel}>AI로 사진작가 찾기</span>
         <img src={chevronRightIcon} alt="" />
-      </button>
+      </Link>
 
       <section className={styles.section} aria-labelledby="recommended-title">
         <h2 id="recommended-title" className={styles.sectionTitle}>

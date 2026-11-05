@@ -1,0 +1,79 @@
+.page {
+  padding: 21px 16px;
+}
+
+.header {
+  padding: 0 0 25px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+/* AI 조건 요약 박스 */
+.summary {
+  display: flex;
+  gap: 5px;
+  margin-top: 29px;
+  padding: 16px 14px 16px 14px;
+  border-radius: 15px;
+  background-color: #dceffa;
+}
+
+.summaryIcon {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.summaryTitle {
+  margin: 3px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #363636;
+}
+
+.summaryText {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 19px;
+  color: #333;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 8px;
+  border: 1px solid #b8ddf2;
+  border-radius: 9px;
+  background-color: #fff;
+  font-size: 10px;
+  color: #777879;
+}
+
+.resultTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 34px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  color: #000;
+}
+
+.list {
+  margin-top: 10px;
+  padding: 0 5px;
+}
+
+.profileLink {
+  text-decoration: none;
+}
