@@ -233,5 +233,6 @@
   font: inherit;
   font-size: 13px;
   color: #565656;
+  text-decoration: none;
   cursor: pointer;
 }

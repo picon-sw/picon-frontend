@@ -7,6 +7,7 @@ import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
 import { HomePage } from './pages/HomePage';
 import { MyPage } from './pages/MyPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
 import { RequestPage } from './pages/RequestPage';
 
 // 새 화면은 여기에 Route 추가 (404는 항상 맨 아래)
@@ -19,6 +20,10 @@ export function App() {
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/explore/search" element={<ExploreSearchPage />} />
         <Route path="/explore/results" element={<ExploreSearchResultPage />} />
+        <Route
+          path="/explore/photographers/:photographerId"
+          element={<PhotographerProfilePage />}
+        />
         <Route path="/requests" element={<RequestPage />} />
         <Route path="/contests" element={<ContestPage />} />
         <Route path="/my" element={<MyPage />} />

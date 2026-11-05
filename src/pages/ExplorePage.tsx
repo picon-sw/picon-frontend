@@ -8,6 +8,8 @@ type ExploreTab = 'shoot' | 'edit';
 
 interface Photographer {
   id: number;
+  // 작가 프로필 화면(/explore/photographers/:id)의 작가 id
+  photographerId: number;
   name: string;
   // 백엔드에서 받은 이미지 URL. 없으면 빈 칸으로 표시
   imageUrl?: string;
@@ -46,20 +48,20 @@ const TAGS = [
 // TODO: API 연동 시 교체 (임시 데이터)
 const PHOTOGRAPHERS: Record<ExploreTab, Photographer[]> = {
   shoot: [
-    { id: 1, name: '서하 작가' },
-    { id: 2, name: '윤슬 작가' },
-    { id: 3, name: '무드필름' },
-    { id: 4, name: '지훈 작가' },
-    { id: 5, name: '이젤 작가' },
-    { id: 6, name: '아리 작가' },
+    { id: 1, photographerId: 1, name: '서하 작가' },
+    { id: 2, photographerId: 5, name: '윤슬 작가' },
+    { id: 3, photographerId: 3, name: '무드필름' },
+    { id: 4, photographerId: 2, name: '지훈 작가' },
+    { id: 5, photographerId: 6, name: '이젤 작가' },
+    { id: 6, photographerId: 4, name: '아리 작가' },
   ],
   edit: [
-    { id: 7, name: '서하 작가' },
-    { id: 8, name: '윤슬 작가' },
-    { id: 9, name: '무드필름' },
-    { id: 10, name: '지훈 작가' },
-    { id: 11, name: '이젤 작가' },
-    { id: 12, name: '아리 작가' },
+    { id: 7, photographerId: 1, name: '서하 작가' },
+    { id: 8, photographerId: 5, name: '윤슬 작가' },
+    { id: 9, photographerId: 3, name: '무드필름' },
+    { id: 10, photographerId: 2, name: '지훈 작가' },
+    { id: 11, photographerId: 6, name: '이젤 작가' },
+    { id: 12, photographerId: 4, name: '아리 작가' },
   ],
 };
 
@@ -125,15 +127,22 @@ export function ExplorePage() {
       </div>
 
       <ul className={styles.grid}>
-        {PHOTOGRAPHERS[tab].map(({ id, name, imageUrl, profileImageUrl }) => (
+        {PHOTOGRAPHERS[tab].map(({ id, photographerId, name, imageUrl, profileImageUrl }) => (
           <li key={id} className={imageUrl ? styles.card : `${styles.card} ${styles.cardEmpty}`}>
             {imageUrl && <img className={styles.cardImage} src={imageUrl} alt="" />}
             <div className={styles.cardHeader}>
-              {profileImageUrl ? (
-                <img className={styles.avatar} src={profileImageUrl} alt="" />
-              ) : (
-                <span className={`${styles.avatar} ${styles.avatarEmpty}`} />
-              )}
+              {/* 프로필 동그라미를 누르면 작가 프로필로 이동 */}
+              <Link
+                to={`/explore/photographers/${photographerId}`}
+                className={styles.avatarLink}
+                aria-label={`${name} 프로필 보기`}
+              >
+                {profileImageUrl ? (
+                  <img className={styles.avatar} src={profileImageUrl} alt="" />
+                ) : (
+                  <span className={`${styles.avatar} ${styles.avatarEmpty}`} />
+                )}
+              </Link>
               <span className={styles.cardName}>{name}</span>
             </div>
           </li>
