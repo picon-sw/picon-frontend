@@ -1,0 +1,282 @@
+/* 시작 화면: 아래 고정 입력창(약 170px)만큼 여백 */
+.page {
+  padding: 21px 16px 190px;
+}
+
+/* 대화 화면: 아래 고정 버튼(약 103px)만큼 여백 */
+.pageChat {
+  padding-bottom: 130px;
+}
+
+.header {
+  padding: 0 0 25px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.restart {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  color: #777879;
+  cursor: pointer;
+}
+
+/* 시작 화면 */
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 88px;
+  text-align: center;
+}
+
+/* TODO: Figma 큰 AI 아이콘(56×51) 받으면 교체. 지금은 작은 AI 아이콘을 확대해서 사용 */
+.introIcon {
+  width: 56px;
+  height: 51px;
+}
+
+.introTitle {
+  margin: 39px 0 0;
+  font-size: 30px;
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: 42px;
+  color: #363636;
+}
+
+.introText {
+  margin: 39px 0 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: #777879;
+}
+
+.examplesTitle {
+  margin: 134px 0 0;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #777879;
+}
+
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.example {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 55px;
+  padding: 0 16px 0 14px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #ebebeb;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #b9b9b9;
+  text-align: left;
+  cursor: pointer;
+}
+
+.example span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inputBox {
+  position: fixed;
+  right: 0;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  left: 0;
+  z-index: 90;
+  display: flex;
+  gap: 12px;
+  height: 142px;
+  margin: 0 19px 26px 23px;
+  padding: 13px 15px 13px 15px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 0 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 15px;
+  line-height: 20px;
+  color: #333;
+  resize: none;
+}
+
+.input::placeholder {
+  color: #b9b9b9;
+}
+
+.send {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: #70b9df;
+  cursor: pointer;
+}
+
+.send:disabled {
+  background-color: #d9d9d9;
+  cursor: default;
+}
+
+/* 대화 화면 */
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 29px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 자동 스크롤 시 아래 고정 버튼 + 하단바(약 175px)에 가려지지 않게 */
+.chatEnd {
+  scroll-margin-bottom: 190px;
+}
+
+.userMessage {
+  align-self: flex-end;
+  max-width: 80%;
+  padding: 17px 14px;
+  border-radius: 15px;
+  background-color: #dceffa;
+  font-size: 15px;
+  line-height: 20px;
+  color: #333;
+}
+
+.aiMessage {
+  display: flex;
+  gap: 7px;
+}
+
+.aiAvatar {
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.aiBody {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.aiBody p {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 19px;
+  color: #333;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 15px;
+  margin-top: 18px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 37px;
+  padding: 0 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 15px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.option:disabled:not(.optionChosen) {
+  opacity: 0.5;
+}
+
+.optionChosen {
+  border-color: #70b9df;
+  background-color: #eaf6fd;
+  color: #363636;
+}
+
+.ctaBar {
+  position: fixed;
+  right: 0;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  left: 0;
+  z-index: 90;
+  padding: 16px 13px 32px 19px;
+  background-color: #fff;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 55px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.districts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.district {
+  height: 40px;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 13px;
+  color: #777879;
+  cursor: pointer;
+}
