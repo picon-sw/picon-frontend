@@ -238,11 +238,10 @@ export function ExploreSearchResultPage() {
                 </p>
                 <p className={styles.price}>{price.toLocaleString('ko-KR')}원~</p>
 
-                {/* TODO: 작가 프로필 화면 이동은 이후 이슈에서 */}
-                <button type="button" className={styles.profileButton}>
+                <Link to={`/explore/photographers/${id}`} className={styles.profileButton}>
                   프로필 보기
                   <img src={chevronRightSmallIcon} alt="" />
-                </button>
+                </Link>
               </div>
             </li>
           ),
