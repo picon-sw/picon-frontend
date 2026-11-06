@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import chevronRightSmallIcon from '../assets/icons/explore/chevron-right-small.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
+import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
 import styles from './MyPage.module.css';
 
 interface MyProfile {
@@ -72,16 +73,21 @@ export function MyPage() {
 
       <section className={styles.taste} aria-labelledby="taste-title">
         <div className={styles.tasteHeader}>
-          {/* TODO: Figma 아이콘 받아서 제목 앞에 추가 */}
           <h2 id="taste-title" className={styles.tasteTitle}>
-            내 취향 설정
+            <img src={aiSparkleIcon} alt="" />내 취향 설정
           </h2>
           {/* TODO: 취향 수정 화면은 이후 이슈에서 */}
           <button type="button" className={styles.tasteEdit}>
             수정
           </button>
         </div>
-        <p className={styles.interest}>관심 분야 ㅣ {interestField}</p>
+        <p className={styles.interest}>
+          관심 분야
+          <span className={styles.interestDivider} aria-hidden="true">
+            |
+          </span>
+          <strong>{interestField}</strong>
+        </p>
         <ul className={styles.hashtags}>
           {hashtags.map((tag) => (
             <li key={tag} className={styles.hashtag}>
