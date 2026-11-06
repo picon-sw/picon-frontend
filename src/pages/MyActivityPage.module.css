@@ -1,14 +1,16 @@
-/* TODO: 색상·글자 크기는 Figma 원본 확인 후 맞추기 (Figma 사용량 제한으로 구조만 보고 작업) */
 .page {
-  padding: 21px 16px 24px;
+  padding: 0 16px 24px;
 }
 
+/* 상단 앱바(72px): 아래 연한 구분선 */
 .header {
   display: flex;
   align-items: center;
   gap: 16px;
-  height: 36px;
-  padding-left: 3px;
+  height: 72px;
+  margin: 0 -16px;
+  padding: 0 0 0 19px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .back {
@@ -28,12 +30,12 @@
 }
 
 .section {
-  padding: 18px 0;
+  padding: 18px 0 12px;
   border-bottom: 1px solid #d9d9d9;
 }
 
 .section:first-of-type {
-  margin-top: 12px;
+  padding-top: 12px;
 }
 
 .section:last-of-type {
@@ -44,7 +46,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px 0 4px;
+  padding: 0 7px 0 4px;
 }
 
 .sectionTitle {
@@ -52,7 +54,7 @@
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
-  color: #333;
+  color: #000;
 }
 
 .thumbnails,
@@ -75,6 +77,7 @@
 .cards {
   grid-template-columns: repeat(2, 1fr);
   gap: 35px;
+  padding-right: 20px;
 }
 
 .cards .image {
@@ -83,7 +86,7 @@
 
 .image {
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .image img {
@@ -93,25 +96,45 @@
 }
 
 .imageEmpty {
-  background-color: #ebebeb;
+  background-color: #f4f4f4;
 }
 
 .reviewTarget {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   margin: 14px 0 0 4px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 20px;
-  color: #333;
+  color: #000;
+}
+
+/* Figma 별 도형 (회색) */
+.star {
+  width: 15px;
+  height: 15px;
+  background-color: #d9d9d9;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
 }
 
 .reviewContent {
+  min-height: 74px;
   margin: 9px 0 0;
   padding: 14px;
-  border-radius: 10px;
-  background-color: #ebebeb;
+  border-radius: 12px;
+  background-color: #f4f4f4;
   font-size: 12px;
   line-height: 15px;
   color: #565656;

@@ -1,7 +1,6 @@
 import { Link } from 'react-router';
 import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
-import starIcon from '../assets/icons/explore/star.svg';
 import styles from './MyActivityPage.module.css';
 
 interface ImageItem {
@@ -78,7 +77,7 @@ export function MyActivityPage() {
       <section className={styles.section}>
         <SectionHeader title="작성한 리뷰" />
         <p className={styles.reviewTarget}>
-          <img src={starIcon} alt="" />
+          <span className={styles.star} aria-hidden="true" />
           <span aria-label={`평점 ${SAMPLE_REVIEW.rating}`}>{SAMPLE_REVIEW.rating}</span>
           {SAMPLE_REVIEW.photographerName}
         </p>
