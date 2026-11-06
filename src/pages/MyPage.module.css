@@ -1,0 +1,180 @@
+/* TODO: 색상·글자 크기는 Figma 원본 확인 후 맞추기 (Figma 사용량 제한으로 구조만 보고 작업) */
+.page {
+  padding: 21px 16px 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.profile {
+  display: flex;
+  gap: 19px;
+  margin-top: 23px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 93px;
+  height: 93px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  padding-top: 7px;
+}
+
+.nickname {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 29px;
+  color: #333;
+}
+
+.introduction {
+  margin: 9px 0 0;
+  font-size: 12px;
+  line-height: 15px;
+  color: #8f8f8f;
+}
+
+.editProfile {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  line-height: 13px;
+  color: #565656;
+  cursor: pointer;
+}
+
+.taste {
+  margin-top: 11px;
+  padding: 13px 13px 12px;
+  border-radius: 15px;
+  background-color: #eaf6fd;
+}
+
+.tasteHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tasteTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 22px;
+  color: #333;
+}
+
+.tasteEdit {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  line-height: 15px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.interest {
+  margin: 9px 0 0 3px;
+  font-size: 12px;
+  line-height: 15px;
+  color: #565656;
+}
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hashtag {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 15px;
+  background-color: #fff;
+  font-size: 11px;
+  color: #565656;
+}
+
+/* 내 의뢰 · 작성한 리뷰 · 찜한 전문가 3칸, 칸 사이 세로선 */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  height: 68px;
+  margin: 18px 0 0;
+  border-radius: 15px;
+  background-color: #ebebeb;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin: 7px 0;
+}
+
+.stat + .stat {
+  border-left: 1px solid #d9d9d9;
+}
+
+.statCount {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+  color: #333;
+}
+
+.statLabel {
+  font-size: 11px;
+  line-height: 13px;
+  color: #777879;
+}
+
+.menu {
+  margin-top: 22px;
+  border-top: 1px solid #d9d9d9;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 12px 0 27px;
+  border-bottom: 1px solid #d9d9d9;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+}
