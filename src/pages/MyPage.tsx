@@ -1,6 +1,9 @@
 import { Link } from 'react-router';
 import chevronRightSmallIcon from '../assets/icons/explore/chevron-right-small.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
+import handIcon from '../assets/icons/my/hand.svg';
+import settingIcon from '../assets/icons/my/setting.svg';
+import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
 import styles from './MyPage.module.css';
 
 interface MyProfile {
@@ -27,8 +30,8 @@ const SAMPLE_PROFILE: MyProfile = {
 };
 
 const MENU_ITEMS = [
-  { to: '/my/activity', label: '나의 활동' },
-  { to: '/my/settings', label: '설정 및 지원' },
+  { to: '/my/activity', label: '나의 활동', icon: handIcon },
+  { to: '/my/settings', label: '설정 및 지원', icon: settingIcon },
 ];
 
 export function MyPage() {
@@ -72,16 +75,21 @@ export function MyPage() {
 
       <section className={styles.taste} aria-labelledby="taste-title">
         <div className={styles.tasteHeader}>
-          {/* TODO: Figma 아이콘 받아서 제목 앞에 추가 */}
           <h2 id="taste-title" className={styles.tasteTitle}>
-            내 취향 설정
+            <img src={aiSparkleIcon} alt="" />내 취향 설정
           </h2>
           {/* TODO: 취향 수정 화면은 이후 이슈에서 */}
           <button type="button" className={styles.tasteEdit}>
             수정
           </button>
         </div>
-        <p className={styles.interest}>관심 분야 ㅣ {interestField}</p>
+        <p className={styles.interest}>
+          관심 분야
+          <span className={styles.interestDivider} aria-hidden="true">
+            |
+          </span>
+          <strong>{interestField}</strong>
+        </p>
         <ul className={styles.hashtags}>
           {hashtags.map((tag) => (
             <li key={tag} className={styles.hashtag}>
@@ -101,10 +109,14 @@ export function MyPage() {
       </dl>
 
       <nav className={styles.menu} aria-label="마이페이지 메뉴">
-        {MENU_ITEMS.map(({ to, label }) => (
+        {MENU_ITEMS.map(({ to, label, icon }) => (
           <Link key={to} to={to} className={styles.menuItem}>
-            {/* TODO: Figma 아이콘 받아서 메뉴 이름 앞에 추가 */}
-            <span>{label}</span>
+            <span className={styles.menuLabel}>
+              <span className={styles.menuIcon}>
+                <img src={icon} alt="" />
+              </span>
+              {label}
+            </span>
             <img src={chevronRightIcon} alt="" />
           </Link>
         ))}
