@@ -7,7 +7,9 @@ import { ExplorePage } from './pages/ExplorePage';
 import { ExploreSearchPage } from './pages/ExploreSearchPage';
 import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
 import { HomePage } from './pages/HomePage';
+import { MyActivityPage } from './pages/MyActivityPage';
 import { MyPage } from './pages/MyPage';
+import { MySettingsPage } from './pages/MySettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
 import { RequestPage } from './pages/RequestPage';
@@ -31,6 +33,8 @@ export function App() {
         <Route path="/requests" element={<RequestPage />} />
         <Route path="/contests" element={<ContestPage />} />
         <Route path="/my" element={<MyPage />} />
+        <Route path="/my/activity" element={<MyActivityPage />} />
+        <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
