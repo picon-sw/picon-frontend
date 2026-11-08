@@ -143,6 +143,14 @@
   line-height: 1.45;
 }
 
+/* 선택한 값이 길면 말줄임 */
+.pickText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .placeholder {
   font-weight: 400;
   color: #8f8f8f;

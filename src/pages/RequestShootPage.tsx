@@ -4,9 +4,11 @@ import backIcon from '../assets/icons/request/arrow-left.svg';
 import calendarIcon from '../assets/icons/request/calendar-box.svg';
 import mapIcon from '../assets/icons/request/map.svg';
 import { AiFillBar } from '../components/AiFillBar';
+import { DatePickerSheet } from '../components/DatePickerSheet';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
 import { useAiFill } from '../hooks/useAiFill';
 import { useMoodPhotos } from '../hooks/useMoodPhotos';
+import { addDays, addMonths, formatMonthDay, startOfToday, toDateKey } from '../utils/date';
 import styles from './RequestShootPage.module.css';
 
 const SHOOT_TYPES = ['졸업', '커플', '우정', '여행', '프로필', '기타'] as const;
@@ -19,6 +21,9 @@ const MIN_PEOPLE = 1;
 const MAX_PEOPLE = 20;
 const ETC_MAX_LENGTH = 20;
 const NOTE_MAX_LENGTH = 500;
+// 희망 날짜: 오늘 + 3일 ~ 오늘 + 1개월
+const DATE_MIN_DAYS = 3;
+const DATE_MAX_MONTHS = 1;
 
 interface ChipGroupProps<T extends string> {
   label: string;
@@ -55,9 +60,11 @@ export function RequestShootPage() {
   const location = useLocation();
   const [shootType, setShootType] = useState<ShootType | null>(null);
   const [etcText, setEtcText] = useState('');
-  // TODO: 희망 날짜 · 촬영 지역 바텀시트(#28, #29)에서 값 채우기
-  const [date] = useState<string | null>(null);
+  // 희망 날짜는 'YYYY-MM-DD'
+  const [date, setDate] = useState<string | null>(null);
+  // TODO: 촬영 지역 바텀시트(#29)에서 값 채우기
   const [place] = useState<string | null>(null);
+  const [openSheet, setOpenSheet] = useState<'date' | null>(null);
   const [people, setPeople] = useState(1);
   const [budget, setBudget] = useState<Budget | null>(null);
   const [note, setNote] = useState('');
@@ -129,12 +136,18 @@ export function RequestShootPage() {
 
           <section className={styles.card} aria-label="촬영 일정">
             <div className={styles.schedule}>
-              {/* TODO: 희망 날짜 바텀시트 열기 (#28) */}
-              <button type="button" className={styles.pick}>
+              <button
+                type="button"
+                className={styles.pick}
+                aria-haspopup="dialog"
+                onClick={() => setOpenSheet('date')}
+              >
                 <span className={styles.pickLabel}>희망 날짜</span>
                 <span className={styles.pickValue}>
-                  <span className={date ? undefined : styles.placeholder}>
-                    {date ?? '선택해 주세요'}
+                  <span
+                    className={date ? styles.pickText : `${styles.pickText} ${styles.placeholder}`}
+                  >
+                    {date ? formatMonthDay(date) : '선택해 주세요'}
                   </span>
                   <span className={styles.pickIcon}>
                     <img src={calendarIcon} alt="" />
@@ -210,6 +223,21 @@ export function RequestShootPage() {
           </section>
         </div>
       </div>
+
+      {openSheet === 'date' && (
+        <DatePickerSheet
+          title="희망 날짜"
+          value={date}
+          minDate={toDateKey(addDays(startOfToday(), DATE_MIN_DAYS))}
+          maxDate={toDateKey(addMonths(startOfToday(), DATE_MAX_MONTHS))}
+          guide="3일 후부터 한 달 안의 날짜를 고를 수 있어요"
+          onSelect={(next) => {
+            setDate(next);
+            setOpenSheet(null);
+          }}
+          onClose={() => setOpenSheet(null)}
+        />
+      )}
 
       {toast && (
         <p className={styles.toast} role="status">
