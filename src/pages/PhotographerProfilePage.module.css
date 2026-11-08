@@ -331,42 +331,29 @@
   color: #333;
 }
 
-/* 하단바(72px) 바로 위에 고정되는 채팅하기 · 바로 의뢰하기 */
+/* 하단바(72px) 바로 위에 고정되는 바로 의뢰하기 */
 .actions {
   position: fixed;
   right: 0;
   bottom: calc(72px + env(safe-area-inset-bottom));
   left: 0;
   z-index: 90;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 17px;
-  padding: 22px 16px 24px 23px;
+  padding: 22px 16px 24px;
   border-top: 2px solid #d9d9d9;
   background-color: #fff;
 }
 
-.chatButton,
 .requestButton {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   height: 55px;
+  border: 0;
   border-radius: 15px;
   font: inherit;
   font-size: 16px;
   cursor: pointer;
-}
-
-.chatButton {
-  gap: 7px;
-  border: 1px solid #70b9df;
-  background-color: #fff;
-  color: #70b9df;
-}
-
-.requestButton {
-  border: 0;
   background-color: #70b9df;
   color: #fff;
 }
