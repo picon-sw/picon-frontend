@@ -155,6 +155,10 @@
   color: #4b4b4b;
 }
 
+.scheduleLabelUrgent {
+  font-weight: 700;
+}
+
 .cardTitle {
   margin: 0;
   overflow: hidden;
