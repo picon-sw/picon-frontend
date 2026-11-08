@@ -3,9 +3,11 @@ import { useLocation, useNavigate } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import calendarIcon from '../assets/icons/request/calendar-box.svg';
 import mapIcon from '../assets/icons/request/map.svg';
+import { formatLocation, type ShootLocation } from '../api/places';
 import { AiFillBar } from '../components/AiFillBar';
 import { DatePickerSheet } from '../components/DatePickerSheet';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
+import { RegionPickerSheet } from '../components/RegionPickerSheet';
 import { useAiFill } from '../hooks/useAiFill';
 import { useMoodPhotos } from '../hooks/useMoodPhotos';
 import { addDays, addMonths, formatMonthDay, startOfToday, toDateKey } from '../utils/date';
@@ -57,14 +59,13 @@ function ChipGroup<T extends string>({ label, options, value, onChange }: ChipGr
 
 export function RequestShootPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const routerLocation = useLocation();
   const [shootType, setShootType] = useState<ShootType | null>(null);
   const [etcText, setEtcText] = useState('');
   // 희망 날짜는 'YYYY-MM-DD'
   const [date, setDate] = useState<string | null>(null);
-  // TODO: 촬영 지역 바텀시트(#29)에서 값 채우기
-  const [place] = useState<string | null>(null);
-  const [openSheet, setOpenSheet] = useState<'date' | null>(null);
+  const [location, setLocation] = useState<ShootLocation | null>(null);
+  const [openSheet, setOpenSheet] = useState<'date' | 'location' | null>(null);
   const [people, setPeople] = useState(1);
   const [budget, setBudget] = useState<Budget | null>(null);
   const [note, setNote] = useState('');
@@ -93,12 +94,12 @@ export function RequestShootPage() {
 
   // 주소로 바로 들어온 경우(이전 화면 없음)는 의뢰 메인으로
   const goBack = () => {
-    if (location.key === 'default') navigate('/requests');
+    if (routerLocation.key === 'default') navigate('/requests');
     else navigate(-1);
   };
 
   const shootTypeDone = shootType !== null && (shootType !== '기타' || etcText.trim() !== '');
-  const canSubmit = shootTypeDone && date !== null && place !== null && budget !== null;
+  const canSubmit = shootTypeDone && date !== null && location !== null && budget !== null;
 
   return (
     <main className={styles.page}>
@@ -154,12 +155,20 @@ export function RequestShootPage() {
                   </span>
                 </span>
               </button>
-              {/* TODO: 촬영 지역 바텀시트 열기 (#29) */}
-              <button type="button" className={styles.pick}>
+              <button
+                type="button"
+                className={styles.pick}
+                aria-haspopup="dialog"
+                onClick={() => setOpenSheet('location')}
+              >
                 <span className={styles.pickLabel}>촬영 지역</span>
                 <span className={styles.pickValue}>
-                  <span className={place ? undefined : styles.placeholder}>
-                    {place ?? '선택해 주세요'}
+                  <span
+                    className={
+                      location ? styles.pickText : `${styles.pickText} ${styles.placeholder}`
+                    }
+                  >
+                    {location ? formatLocation(location) : '선택해 주세요'}
                   </span>
                   <span className={styles.pickIcon}>
                     <img src={mapIcon} alt="" />
@@ -233,6 +242,17 @@ export function RequestShootPage() {
           guide="3일 후부터 한 달 안의 날짜를 고를 수 있어요"
           onSelect={(next) => {
             setDate(next);
+            setOpenSheet(null);
+          }}
+          onClose={() => setOpenSheet(null)}
+        />
+      )}
+
+      {openSheet === 'location' && (
+        <RegionPickerSheet
+          value={location}
+          onSelect={(next) => {
+            setLocation(next);
             setOpenSheet(null);
           }}
           onClose={() => setOpenSheet(null)}
