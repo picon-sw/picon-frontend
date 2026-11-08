@@ -12,6 +12,7 @@ import { MyPage } from './pages/MyPage';
 import { MySettingsPage } from './pages/MySettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
+import { RequestDonePage } from './pages/RequestDonePage';
 import { RequestPage } from './pages/RequestPage';
 import { RequestTypePage } from './pages/RequestTypePage';
 
@@ -38,6 +39,7 @@ export function App() {
         <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
       <Route path="/requests/new" element={<RequestTypePage />} />
+      <Route path="/requests/done" element={<RequestDonePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
