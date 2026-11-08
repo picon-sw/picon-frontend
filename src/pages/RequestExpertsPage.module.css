@@ -1,0 +1,318 @@
+/* 아래쪽 고정 버튼 영역(88px)만큼 여백 */
+.page {
+  min-height: 100dvh;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  background-color: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  padding: 24px 20px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #000;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 14px;
+}
+
+.summary,
+.guide {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary {
+  gap: 2px;
+}
+
+.summaryTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 21px;
+  color: #000;
+}
+
+.summaryDetail {
+  margin: 0;
+  font-size: 12px;
+  line-height: 17px;
+  color: #000;
+}
+
+.guide {
+  gap: 4px;
+}
+
+.guideTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 26px;
+}
+
+.guideTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.count {
+  padding: 5px 10px;
+  border-radius: 100px;
+  background-color: #eaf6fc;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  color: #000;
+}
+
+.guideText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: #000;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 카드 어디를 눌러도 선택 토글 */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid #ebebeb;
+  border-radius: 16px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.cardSelected {
+  border-color: #b8ddf2;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #000;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.profileLink {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  color: #8f8f8f;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.select {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 100px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.selectOn {
+  border-color: #b8ddf2;
+  background-color: #b8ddf2;
+}
+
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolioItem {
+  aspect-ratio: 101 / 76;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.portfolioItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageEmpty {
+  background-color: #f5f5f5;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 0;
+  font-size: 13px;
+  color: #8f8f8f;
+}
+
+.empty p {
+  margin: 0;
+}
+
+.editButton {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #70b9df;
+  border-radius: 100px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.typeGuide {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #eaf6fc;
+  font-size: 11px;
+  line-height: 16px;
+  color: #000;
+}
+
+.typeGuide p {
+  margin: 0;
+}
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 110;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
+}
+
+.bottomBar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid #ebebeb;
+  background-color: #fff;
+}
+
+.sendButton {
+  flex: 1;
+  height: 48px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.sendButton:disabled {
+  background-color: #d9d9d9;
+  color: #8f8f8f;
+  cursor: default;
+}

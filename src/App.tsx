@@ -12,6 +12,7 @@ import { MyPage } from './pages/MyPage';
 import { MySettingsPage } from './pages/MySettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
+import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestPage } from './pages/RequestPage';
 
 // 새 화면은 여기에 Route 추가 (404는 항상 맨 아래)
@@ -36,6 +37,7 @@ export function App() {
         <Route path="/my/activity" element={<MyActivityPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
+      <Route path="/requests/new/experts" element={<RequestExpertsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
