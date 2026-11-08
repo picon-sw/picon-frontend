@@ -22,8 +22,10 @@ interface MyRequest {
   date: string;
   place: string;
   people: number;
-  // 카드 오른쪽 위 안내 (제안 마감 D-2, 촬영 D-21, 촬영일 11월 3일 등)
+  // 카드 오른쪽 위 안내 (2일 안에 선택해 주세요, 촬영 D-21, 촬영일 11월 3일 등)
   scheduleLabel: string;
+  // 제안 선택 마감이 하루 이하로 남았을 때 굵게 표시
+  scheduleUrgent?: boolean;
   // 제안 도착: 제안한 작가들 / 그 외: 담당 작가 1명
   photographers: Photographer[];
   message: string;
@@ -34,6 +36,15 @@ const STATUS_LABEL: Record<RequestStatus, string> = {
   confirmed: '예약확정',
   completed: '완료',
 };
+
+// 제안 선택 마감까지 남은 일수 → 안내 문구 (하루 이하면 '오늘 안에' + 굵게)
+function getProposalDeadline(daysLeft: number) {
+  const urgent = daysLeft <= 1;
+  return {
+    scheduleLabel: urgent ? '오늘 안에 선택해 주세요' : `${daysLeft}일 안에 선택해 주세요`,
+    scheduleUrgent: urgent,
+  };
+}
 
 const TABS: { value: RequestTab; label: string }[] = [
   { value: 'ongoing', label: '진행 중' },
@@ -50,7 +61,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
       date: '10월 20일',
       place: '서울숲',
       people: 3,
-      scheduleLabel: '제안 마감 D-2',
+      ...getProposalDeadline(2),
       photographers: [
         { id: 1, name: '서하 작가' },
         { id: 2, name: '윤슬 작가' },
@@ -136,7 +147,17 @@ interface RequestCardProps {
 }
 
 function RequestCard({ request, highlighted }: RequestCardProps) {
-  const { status, title, date, place, people, scheduleLabel, photographers, message } = request;
+  const {
+    status,
+    title,
+    date,
+    place,
+    people,
+    scheduleLabel,
+    scheduleUrgent,
+    photographers,
+    message,
+  } = request;
   const isCompleted = status === 'completed';
 
   return (
@@ -145,7 +166,15 @@ function RequestCard({ request, highlighted }: RequestCardProps) {
         <span className={`${styles.badge} ${styles[`badge_${status}`]}`}>
           {STATUS_LABEL[status]}
         </span>
-        <span className={styles.scheduleLabel}>{scheduleLabel}</span>
+        <span
+          className={
+            scheduleUrgent
+              ? `${styles.scheduleLabel} ${styles.scheduleLabelUrgent}`
+              : styles.scheduleLabel
+          }
+        >
+          {scheduleLabel}
+        </span>
       </div>
 
       <p className={styles.cardTitle}>{title}</p>
