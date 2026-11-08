@@ -13,6 +13,7 @@ import { MySettingsPage } from './pages/MySettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
 import { RequestDonePage } from './pages/RequestDonePage';
+import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestPage } from './pages/RequestPage';
 import { RequestTypePage } from './pages/RequestTypePage';
@@ -41,6 +42,7 @@ export function App() {
       </Route>
       <Route path="/requests/new" element={<RequestTypePage />} />
       <Route path="/requests/new/experts" element={<RequestExpertsPage />} />
+      <Route path="/requests/new/experts/:expertId" element={<RequestExpertProfilePage />} />
       <Route path="/requests/done" element={<RequestDonePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
