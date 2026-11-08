@@ -52,6 +52,13 @@ export function RequestTypePage() {
     else navigate(-1);
   };
 
+  // 촬영만 · 촬영 + 편집은 촬영 요청서, 편집만은 편집 요청서
+  // TODO: 촬영 + 편집 요청서 구성이 정해지면 작업 유형을 state로 넘기기
+  const goNext = () => {
+    if (selectedType === null) return;
+    navigate(selectedType === 'edit' ? '/requests/new/edit' : '/requests/new/shoot');
+  };
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -98,8 +105,12 @@ export function RequestTypePage() {
       </section>
 
       <div className={styles.bottomBar}>
-        {/* TODO: 촬영·편집 요청서 화면 이동은 Routing 이슈에서 */}
-        <button type="button" className={styles.nextButton} disabled={selectedType === null}>
+        <button
+          type="button"
+          className={styles.nextButton}
+          disabled={selectedType === null}
+          onClick={goNext}
+        >
           다음
         </button>
       </div>

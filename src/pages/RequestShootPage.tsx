@@ -4,6 +4,7 @@ import backIcon from '../assets/icons/request/arrow-left.svg';
 import calendarIcon from '../assets/icons/request/calendar-box.svg';
 import mapIcon from '../assets/icons/request/map.svg';
 import { formatLocation, type ShootLocation } from '../api/places';
+import type { RequestExpertsState } from '../api/requests';
 import { AiFillBar } from '../components/AiFillBar';
 import { DatePickerSheet } from '../components/DatePickerSheet';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
@@ -100,6 +101,19 @@ export function RequestShootPage() {
 
   const shootTypeDone = shootType !== null && (shootType !== '기타' || etcText.trim() !== '');
   const canSubmit = shootTypeDone && date !== null && location !== null && budget !== null;
+
+  // TODO: API 나오면 여기서 요청서를 저장하고 받은 requestId도 state에 담기
+  const goToExperts = () => {
+    if (!canSubmit || shootType === null || date === null || location === null) return;
+    const typeLabel = shootType === '기타' ? etcText.trim() : shootType;
+    const state: RequestExpertsState = {
+      summary: {
+        title: `${location.place ?? location.sigungu} ${typeLabel} 스냅`,
+        detail: `${formatMonthDay(date)} · ${formatLocation(location)} · 촬영 인원 ${people}명`,
+      },
+    };
+    navigate('/requests/new/experts', { state });
+  };
 
   return (
     <main className={styles.page}>
@@ -272,8 +286,12 @@ export function RequestShootPage() {
           </div>
         )}
         <div className={styles.bottomBar}>
-          {/* TODO: 전문가 선택 화면 이동은 Routing 항목에서 */}
-          <button type="button" className={styles.nextButton} disabled={!canSubmit}>
+          <button
+            type="button"
+            className={styles.nextButton}
+            disabled={!canSubmit}
+            onClick={goToExperts}
+          >
             작가 고르러 가기
           </button>
         </div>
