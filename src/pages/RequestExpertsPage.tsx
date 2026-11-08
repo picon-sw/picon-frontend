@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import checkIcon from '../assets/icons/request/check.svg';
+import {
+  readExpertsState,
+  sendRequest,
+  type RequestDoneState,
+  type RequestExpertsState,
+  type RequestSummary,
+} from '../api/requests';
 import styles from './RequestExpertsPage.module.css';
 
 const MAX_SELECTION = 5;
@@ -18,16 +25,10 @@ interface Expert {
   portfolio: { id: number; imageUrl?: string }[];
 }
 
-interface RequestSummary {
-  title: string;
-  // 촬영: 날짜 · 장소 · 인원 / 편집: 보정 항목 · 장수
-  detail: string;
-}
-
 const SAMPLE_PORTFOLIO = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
-// TODO: 요청서 화면에서 넘겨받은 정보로 교체 (임시 데이터)
-const REQUEST_SUMMARY: RequestSummary = {
+// 주소로 바로 들어와서 요청서 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
+const SAMPLE_SUMMARY: RequestSummary = {
   title: '서울숲 우정 스냅',
   detail: '10월 20일 · 서울숲 · 촬영 인원 3명',
 };
@@ -46,9 +47,10 @@ interface ExpertCardProps {
   expert: Expert;
   selected: boolean;
   onToggle: () => void;
+  onOpenProfile: () => void;
 }
 
-function ExpertCard({ expert, selected, onToggle }: ExpertCardProps) {
+function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardProps) {
   const { name, rating, reviewCount, minPrice, profileImageUrl, portfolio } = expert;
 
   return (
@@ -69,11 +71,13 @@ function ExpertCard({ expert, selected, onToggle }: ExpertCardProps) {
             <span>
               ★ {rating.toFixed(1)} ({reviewCount}) · {minPrice.toLocaleString('ko-KR')}원~
             </span>
-            {/* TODO: 작가 프로필 화면 이동은 Routing 항목에서 */}
             <button
               type="button"
               className={styles.profileLink}
-              onClick={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                onOpenProfile();
+              }}
             >
               프로필 보기
             </button>
@@ -114,7 +118,10 @@ function ExpertCard({ expert, selected, onToggle }: ExpertCardProps) {
 export function RequestExpertsPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const pageState = readExpertsState(location.state);
+  const summary = pageState?.summary ?? SAMPLE_SUMMARY;
+  const [selectedIds, setSelectedIds] = useState<number[]>(pageState?.selectedIds ?? []);
+  const [sending, setSending] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   // 토스트는 2초 뒤 사라짐
@@ -142,6 +149,32 @@ export function RequestExpertsPage() {
     setSelectedIds([...selectedIds, id]);
   };
 
+  // 프로필을 보고 뒤로 돌아와도 고른 전문가가 남도록 지금 화면 state에 저장해 두고 이동
+  const openProfile = (id: number) => {
+    const state: RequestExpertsState = { summary, selectedIds };
+    navigate(location.pathname, { replace: true, state });
+    navigate(`/requests/new/experts/${id}`);
+  };
+
+  // 뒤로 가기로 전문가 선택 화면에 다시 들어오지 않도록 replace 이동
+  const send = async () => {
+    if (selectedIds.length === 0 || sending) return;
+    setSending(true);
+    try {
+      await sendRequest(selectedIds);
+      const state: RequestDoneState = {
+        summary,
+        experts: EXPERTS.filter(({ id }) => selectedIds.includes(id)).map(
+          ({ id, name, profileImageUrl }) => ({ id, name, profileImageUrl }),
+        ),
+      };
+      navigate('/requests/done', { replace: true, state });
+    } catch {
+      setToast('요청을 보내지 못했어요');
+      setSending(false);
+    }
+  };
+
   const selectedCount = selectedIds.length;
 
   return (
@@ -155,8 +188,8 @@ export function RequestExpertsPage() {
 
       <div className={styles.content}>
         <section className={styles.summary}>
-          <p className={styles.summaryTitle}>{REQUEST_SUMMARY.title}</p>
-          <p className={styles.summaryDetail}>{REQUEST_SUMMARY.detail}</p>
+          <p className={styles.summaryTitle}>{summary.title}</p>
+          <p className={styles.summaryDetail}>{summary.detail}</p>
         </section>
 
         <section className={styles.guide}>
@@ -179,6 +212,7 @@ export function RequestExpertsPage() {
                 expert={expert}
                 selected={selectedIds.includes(expert.id)}
                 onToggle={() => toggleExpert(expert.id)}
+                onOpenProfile={() => openProfile(expert.id)}
               />
             ))}
           </ul>
@@ -207,8 +241,12 @@ export function RequestExpertsPage() {
       )}
 
       <div className={styles.bottomBar}>
-        {/* TODO: 요청서 발송 후 요청 완료 화면 이동은 Routing 항목에서 */}
-        <button type="button" className={styles.sendButton} disabled={selectedCount === 0}>
+        <button
+          type="button"
+          className={styles.sendButton}
+          disabled={selectedCount === 0 || sending}
+          onClick={send}
+        >
           선택한 {selectedCount}명에게 요청 보내기
         </button>
       </div>

@@ -1,25 +1,12 @@
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { readDoneState, type RequestDoneState } from '../api/requests';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import styles from './RequestDonePage.module.css';
 
-interface SelectedExpert {
-  id: number;
-  name: string;
-  // 백엔드에서 받은 이미지 URL. 없으면 빈 동그라미로 표시
-  profileImageUrl?: string;
-}
-
-interface SentRequest {
-  title: string;
-  // 촬영: 날짜 · 장소 · 인원 / 편집: 보정 항목 · 장수
-  summary: string;
-  experts: SelectedExpert[];
-}
-
-// TODO: 전문가 선택 화면에서 보낸 요청서 정보로 교체 (임시 데이터)
-const SENT_REQUEST: SentRequest = {
-  title: '서울숲 우정 스냅',
-  summary: '10월 20일 · 서울숲 · 3명',
+// 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
+// 전문가 사진(profileImageUrl)이 없으면 빈 동그라미로 표시
+const SAMPLE_DONE: RequestDoneState = {
+  summary: { title: '서울숲 우정 스냅', detail: '10월 20일 · 서울숲 · 3명' },
   experts: [
     { id: 1, name: '김하늘' },
     { id: 2, name: '윤슬' },
@@ -29,7 +16,8 @@ const SENT_REQUEST: SentRequest = {
 
 export function RequestDonePage() {
   const navigate = useNavigate();
-  const { title, summary, experts } = SENT_REQUEST;
+  const location = useLocation();
+  const { summary, experts } = readDoneState(location.state) ?? SAMPLE_DONE;
 
   // 뒤로가기로 요청서·완료 화면에 다시 들어오지 않도록 replace 이동
   // 의뢰 메인은 '진행 중' 탭이 기본 선택
@@ -73,8 +61,8 @@ export function RequestDonePage() {
 
       <article className={styles.card}>
         <span className={styles.badge}>제안 대기</span>
-        <p className={styles.cardTitle}>{title}</p>
-        <p className={styles.cardSummary}>{summary}</p>
+        <p className={styles.cardTitle}>{summary.title}</p>
+        <p className={styles.cardSummary}>{summary.detail}</p>
       </article>
 
       <div className={styles.bottomBar}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import type { RequestExpertsState } from '../api/requests';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import { AiFillBar } from '../components/AiFillBar';
 import { EditPhotoPicker } from '../components/EditPhotoPicker';
@@ -89,6 +90,20 @@ export function RequestEditPage() {
 
   // 보정할 사진이 1장 이상이고, 모두 업로드가 끝나야 다음으로
   const canSubmit = editPhotos.length > 0 && editPhotos.every(({ status }) => status === 'done');
+
+  // TODO: API 나오면 여기서 요청서(업로드한 파일 key 포함)를 저장하고 받은 requestId도 state에 담기
+  const goToExperts = () => {
+    if (!canSubmit) return;
+    // 보정 항목은 누른 순서가 아니라 화면에 보이는 순서로
+    const itemText = ITEMS.filter((item) => items.includes(item)).join(', ');
+    const detail = [itemText || null, strength, `${editPhotos.length}장`]
+      .filter((part): part is string => part !== null)
+      .join(' · ');
+    const state: RequestExpertsState = {
+      summary: { title: `사진 보정 ${editPhotos.length}장`, detail },
+    };
+    navigate('/requests/new/experts', { state });
+  };
 
   return (
     <main className={shootStyles.page}>
@@ -186,8 +201,12 @@ export function RequestEditPage() {
           </div>
         )}
         <div className={shootStyles.bottomBar}>
-          {/* TODO: 전문가 선택 화면 이동은 Routing 항목에서 */}
-          <button type="button" className={shootStyles.nextButton} disabled={!canSubmit}>
+          <button
+            type="button"
+            className={shootStyles.nextButton}
+            disabled={!canSubmit}
+            onClick={goToExperts}
+          >
             작가 고르러 가기
           </button>
         </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import calendarIcon from '../assets/icons/request/calendar.svg';
 import bannerImage from '../assets/images/request/banner.png';
 import styles from './RequestPage.module.css';
@@ -209,6 +210,7 @@ function RequestCard({ request, highlighted }: RequestCardProps) {
 }
 
 export function RequestPage() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState<RequestTab>('ongoing');
 
   return (
@@ -222,8 +224,11 @@ export function RequestPage() {
           나만의 순간,
           <br />꼭 맞는 작가에게 맡겨 보세요
         </p>
-        {/* TODO: 요청서 작성 화면 이동은 다음 이슈에서 */}
-        <button type="button" className={styles.bannerButton}>
+        <button
+          type="button"
+          className={styles.bannerButton}
+          onClick={() => navigate('/requests/new')}
+        >
           의뢰 시작하기 <span aria-hidden="true">›</span>
         </button>
       </section>
