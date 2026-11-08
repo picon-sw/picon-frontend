@@ -16,6 +16,7 @@ import { RequestDonePage } from './pages/RequestDonePage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestPage } from './pages/RequestPage';
+import { RequestShootPage } from './pages/RequestShootPage';
 import { RequestTypePage } from './pages/RequestTypePage';
 
 // 새 화면은 여기에 Route 추가 (404는 항상 맨 아래)
@@ -41,6 +42,7 @@ export function App() {
         <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
       <Route path="/requests/new" element={<RequestTypePage />} />
+      <Route path="/requests/new/shoot" element={<RequestShootPage />} />
       <Route path="/requests/new/experts" element={<RequestExpertsPage />} />
       <Route path="/requests/new/experts/:expertId" element={<RequestExpertProfilePage />} />
       <Route path="/requests/done" element={<RequestDonePage />} />

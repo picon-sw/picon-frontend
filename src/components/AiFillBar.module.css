@@ -1,0 +1,57 @@
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid #70b9df;
+  border-radius: 15px;
+  background-color: #eaf6fc;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.message {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #000;
+}
+
+.fillButton {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.fillButton:disabled {
+  background-color: #d9d9d9;
+  color: #8f8f8f;
+  cursor: default;
+}
