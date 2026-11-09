@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/explore/back.svg';
 import starIcon from '../assets/icons/explore/star.svg';
 import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
-import chatIcon from '../assets/icons/profile/chat.svg';
 import heartIcon from '../assets/icons/profile/heart.svg';
 import starFilledIcon from '../assets/icons/profile/star-filled.svg';
 import starLargeIcon from '../assets/icons/profile/star-large.svg';
@@ -355,12 +354,8 @@ export function PhotographerProfilePage() {
       )}
 
       {/* 하단바 바로 위에 고정 */}
-      {/* TODO: 채팅 · 의뢰 화면 이동은 이후 이슈에서 */}
+      {/* TODO: 의뢰 화면 이동은 이후 이슈에서 */}
       <div className={styles.actions}>
-        <button type="button" className={styles.chatButton}>
-          <img src={chatIcon} alt="" />
-          채팅하기
-        </button>
         <button type="button" className={styles.requestButton}>
           바로 의뢰하기
         </button>

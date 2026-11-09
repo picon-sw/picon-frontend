@@ -16,7 +16,9 @@ interface AiSearchResult {
   name: string;
   rating: number;
   reviewCount: number;
-  specialty: string;
+  // 분야(촬영/편집)와 전문 분야 — 작가 프로필과 같은 형식으로 표시
+  field: string;
+  specialties: string[];
   region: string;
   price: number;
   // 백엔드에서 받은 이미지 URL. 없으면 빈 칸으로 표시
@@ -30,7 +32,8 @@ const RESULTS: AiSearchResult[] = [
     name: '서하 작가',
     rating: 4.9,
     reviewCount: 182,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 마포구',
     price: 80000,
   },
@@ -39,7 +42,8 @@ const RESULTS: AiSearchResult[] = [
     name: '무드필름',
     rating: 4.7,
     reviewCount: 96,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 성동구',
     price: 90000,
   },
@@ -48,7 +52,8 @@ const RESULTS: AiSearchResult[] = [
     name: '지훈 작가',
     rating: 4.8,
     reviewCount: 30,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 서초구',
     price: 70000,
   },
@@ -57,7 +62,8 @@ const RESULTS: AiSearchResult[] = [
     name: '아리 작가',
     rating: 4.5,
     reviewCount: 12,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 강남구',
     price: 50000,
   },
@@ -100,42 +106,46 @@ export function ExploreAiSearchResultPage() {
       </h2>
 
       <ul className={`${resultStyles.list} ${styles.list}`}>
-        {RESULTS.map(({ id, name, rating, reviewCount, specialty, region, price, imageUrl }) => (
-          <li key={id} className={resultStyles.card}>
-            {imageUrl ? (
-              <img className={resultStyles.image} src={imageUrl} alt="" />
-            ) : (
-              <span className={`${resultStyles.image} ${resultStyles.imageEmpty}`} />
-            )}
+        {RESULTS.map(
+          ({ id, name, rating, reviewCount, field, specialties, region, price, imageUrl }) => (
+            <li key={id} className={resultStyles.card}>
+              {imageUrl ? (
+                <img className={resultStyles.image} src={imageUrl} alt="" />
+              ) : (
+                <span className={`${resultStyles.image} ${resultStyles.imageEmpty}`} />
+              )}
 
-            <div className={resultStyles.info}>
-              <div className={resultStyles.nameRow}>
-                <span className={resultStyles.name}>{name}</span>
-                <span className={resultStyles.rating}>
-                  <img src={starIcon} alt="" />
-                  <span aria-label={`평점 ${rating}`}>{rating.toFixed(1)}</span>
-                  <span className={resultStyles.reviewCount} aria-label={`리뷰 ${reviewCount}개`}>
-                    ({reviewCount})
+              <div className={resultStyles.info}>
+                <div className={resultStyles.nameRow}>
+                  <span className={resultStyles.name}>{name}</span>
+                  <span className={resultStyles.rating}>
+                    <img src={starIcon} alt="" />
+                    <span aria-label={`평점 ${rating}`}>{rating.toFixed(1)}</span>
+                    <span className={resultStyles.reviewCount} aria-label={`리뷰 ${reviewCount}개`}>
+                      ({reviewCount})
+                    </span>
                   </span>
-                </span>
-              </div>
-              <p className={resultStyles.specialty}>{specialty}</p>
-              <p className={resultStyles.region}>
-                <img src={locationIcon} alt="" />
-                {region}
-              </p>
-              <p className={resultStyles.price}>{price.toLocaleString('ko-KR')}원~</p>
+                </div>
+                <p className={resultStyles.specialty}>
+                  {field} · {specialties.join(' / ')}
+                </p>
+                <p className={resultStyles.region}>
+                  <img src={locationIcon} alt="" />
+                  {region}
+                </p>
+                <p className={resultStyles.price}>{price.toLocaleString('ko-KR')}원~</p>
 
-              <Link
-                to={`/explore/photographers/${id}`}
-                className={`${resultStyles.profileButton} ${styles.profileLink}`}
-              >
-                프로필 보기
-                <img src={chevronRightSmallIcon} alt="" />
-              </Link>
-            </div>
-          </li>
-        ))}
+                <Link
+                  to={`/explore/photographers/${id}`}
+                  className={`${resultStyles.profileButton} ${styles.profileLink}`}
+                >
+                  프로필 보기
+                  <img src={chevronRightSmallIcon} alt="" />
+                </Link>
+              </div>
+            </li>
+          ),
+        )}
       </ul>
     </main>
   );

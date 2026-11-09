@@ -23,7 +23,9 @@ interface SearchResult {
   name: string;
   rating: number;
   reviewCount: number;
-  specialty: string;
+  // 분야(촬영/편집)와 전문 분야 — 작가 프로필과 같은 형식으로 표시
+  field: string;
+  specialties: string[];
   region: string;
   price: number;
   // 백엔드에서 받은 이미지 URL. 없으면 빈 칸으로 표시
@@ -45,7 +47,8 @@ const RESULTS: SearchResult[] = [
     name: '서하 작가',
     rating: 4.9,
     reviewCount: 182,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 마포구',
     price: 80000,
   },
@@ -54,7 +57,8 @@ const RESULTS: SearchResult[] = [
     name: '지훈 작가',
     rating: 4.8,
     reviewCount: 30,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 서초구',
     price: 70000,
   },
@@ -63,7 +67,8 @@ const RESULTS: SearchResult[] = [
     name: '무드필름',
     rating: 4.7,
     reviewCount: 96,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 성동구',
     price: 90000,
   },
@@ -72,7 +77,8 @@ const RESULTS: SearchResult[] = [
     name: '아리 작가',
     rating: 4.5,
     reviewCount: 12,
-    specialty: '졸업사진 촬영',
+    field: '촬영',
+    specialties: ['졸업사진', '프로필사진'],
     region: '서울 강남구',
     price: 50000,
   },
@@ -212,7 +218,7 @@ export function ExploreSearchResultPage() {
 
       <ul className={styles.list}>
         {sortedResults.map(
-          ({ id, name, rating, reviewCount, specialty, region, price, imageUrl }) => (
+          ({ id, name, rating, reviewCount, field, specialties, region, price, imageUrl }) => (
             <li key={id} className={styles.card}>
               {imageUrl ? (
                 <img className={styles.image} src={imageUrl} alt="" />
@@ -231,7 +237,9 @@ export function ExploreSearchResultPage() {
                     </span>
                   </span>
                 </div>
-                <p className={styles.specialty}>{specialty}</p>
+                <p className={styles.specialty}>
+                  {field} · {specialties.join(' / ')}
+                </p>
                 <p className={styles.region}>
                   <img src={locationIcon} alt="" />
                   {region}
