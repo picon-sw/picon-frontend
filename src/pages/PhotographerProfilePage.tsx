@@ -16,7 +16,8 @@ type ReviewSort = 'latest' | 'ratingHigh' | 'ratingLow';
 
 interface Review {
   id: number;
-  author: string;
+  // 리뷰 작성자 닉네임 (아이디는 노출하지 않음)
+  nickname: string;
   rating: number;
   // YYYY.MM.DD
   date: string;
@@ -52,7 +53,7 @@ const REVIEW_SORT_OPTIONS: { value: ReviewSort; label: string }[] = [
 const SAMPLE_REVIEWS: Review[] = [
   {
     id: 1,
-    author: 'daeun****',
+    nickname: '봄날',
     rating: 5,
     date: '2027.02.25',
     service: '졸업사진 촬영',
@@ -61,7 +62,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: 2,
-    author: 'kde****',
+    nickname: '하루',
     rating: 4,
     date: '2026.11.07',
     service: '프로필사진 촬영',
@@ -70,7 +71,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: 3,
-    author: 'pci**',
+    nickname: '모카',
     rating: 5,
     date: '2026.10.30',
     service: '졸업사진 촬영',
@@ -335,12 +336,12 @@ export function PhotographerProfilePage() {
           </div>
 
           <ul className={styles.reviewList}>
-            {sortedReviews.map(({ id, author, rating: reviewRating, date, service, content }) => (
+            {sortedReviews.map(({ id, nickname, rating: reviewRating, date, service, content }) => (
               <li key={id} className={styles.review}>
                 <img className={styles.reviewUser} src={userIcon} alt="" />
                 <div className={styles.reviewBody}>
                   <div className={styles.reviewTop}>
-                    <span className={styles.reviewAuthor}>{author}</span>
+                    <span className={styles.reviewNickname}>{nickname}</span>
                     <time className={styles.reviewDate}>{date}</time>
                   </div>
                   <Stars rating={reviewRating} />
