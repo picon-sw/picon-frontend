@@ -1,0 +1,473 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 402px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: #fff;
+  color: #111;
+  box-sizing: border-box;
+}
+
+/* 로그인 화면 */
+
+.loginPhoto {
+  position: relative;
+  height: 68dvh;
+  min-height: 440px;
+  max-height: 700px;
+  overflow: hidden;
+  border-radius: 0 0 35px 35px;
+  background: #b6c8d1;
+}
+
+.loginBackground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.loginPhoto::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.12), transparent 35%, rgba(0, 0, 0, 0.45));
+}
+
+.loginLogo {
+  position: absolute;
+  z-index: 1;
+  top: 22px;
+  left: 16px;
+  color: white;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.loginLogo span {
+  color: #b8ddf2;
+}
+
+.loginText {
+  position: absolute;
+  z-index: 1;
+  right: 16px;
+  bottom: 30px;
+  left: 16px;
+  color: white;
+}
+
+.loginText p {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.loginText h1 {
+  margin: 0 0 14px;
+  font-size: 29px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+.loginBottom {
+  padding: 26px 36px;
+  text-align: center;
+}
+
+.kakaoButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: 14px;
+  background: #fee500;
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kakaoButton img {
+  width: 22px;
+  height: 22px;
+}
+
+.loginBottom p {
+  margin-top: 18px;
+  color: #aaa;
+  font-size: 10px;
+}
+
+/* 온보딩 상단 */
+
+.stepHeader {
+  padding: 24px 24px 0;
+}
+
+.stepTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  color: #999;
+  font-size: 15px;
+}
+
+.backButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #999;
+  font-size: 38px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.progress {
+  width: 100%;
+  height: 5px;
+  background: #f1f1f1;
+}
+
+.progress div {
+  height: 100%;
+  background: #70b9df;
+  transition: width 0.2s;
+}
+
+/* 공통 내용 */
+
+.stepContent {
+  flex: 1;
+  padding: 22px 24px 35px;
+}
+
+.stepLabel {
+  margin: 0 0 18px;
+  color: #70b9df;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.title {
+  margin: 0;
+  color: #000;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -1px;
+}
+
+.description {
+  margin: 18px 0 32px;
+  color: #b6b6b6;
+  font-size: 14px;
+  line-height: 1.55;
+  font-weight: 500;
+}
+
+/* 1단계 - 도움 선택 */
+
+.helpList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.helpCard {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 95px;
+  gap: 16px;
+  padding: 15px 16px;
+  border: 2px solid #e7e7e7;
+  border-radius: 16px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.helpCardActive {
+  border-color: #70b9df;
+  background: #eaf6fc;
+}
+
+.helpIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #f0f0f0;
+}
+
+.helpCardActive .helpIcon {
+  background: white;
+}
+
+.helpIcon img {
+  width: 31px;
+  height: 31px;
+}
+
+.helpText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.helpText strong {
+  font-size: 16px;
+}
+
+.helpText span {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #e6e6e6;
+  border-radius: 50%;
+}
+
+.checked {
+  border-color: #70b9df;
+  background: #70b9df;
+  color: white;
+  font-size: 17px;
+}
+
+/* 2단계 - 사진 스타일 선택 */
+
+.styleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 18px;
+}
+
+.styleCard {
+  position: relative;
+  height: 112px;
+  overflow: hidden;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  background: #e3e9ed;
+  cursor: pointer;
+}
+
+.styleCardActive {
+  border-color: #70b9df;
+}
+
+.styleName {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  color: #555;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.styleCheck {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #70b9df;
+  color: white;
+}
+
+/* 3단계 - 프로필 사진 */
+
+.profilePhotoArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin: 25px 0 30px;
+}
+
+.profilePhotoWrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.profilePhoto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  overflow: hidden;
+  border: 4px solid #e8e8e8;
+  border-radius: 50%;
+  background: #dff1fb;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* 기본 사람 아이콘 크기 축소 */
+
+.profileHuman {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+/* 등록한 프로필 사진 */
+
+.uploadedPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 프로필 오른쪽 아래 카메라 아이콘 */
+
+.profileCamera {
+  position: absolute;
+  right: -2px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 4px solid white;
+  border-radius: 50%;
+  background: #70b9df;
+  cursor: pointer;
+}
+
+.profileCamera img {
+  width: 19px;
+  height: 19px;
+  filter: brightness(0) invert(1);
+}
+
+.photoButton {
+  padding: 10px 22px;
+  border: 2px solid #e8e8e8;
+  border-radius: 25px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 3단계 - 프로필 정보 입력 */
+
+.profileForm {
+  padding: 0 16px;
+  border: 2px solid #e8e8e8;
+  border-radius: 20px;
+}
+
+.formRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 70px;
+  border-bottom: 1px solid #ddd;
+}
+
+.formRow:last-child {
+  border-bottom: 0;
+}
+
+.formRow > span {
+  flex: 0 0 92px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.formRow input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.formRow p {
+  color: #777;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.genderOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.genderButton {
+  padding: 6px 9px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  color: #777;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.genderActive {
+  border-color: #b8ddf2;
+  background: #b8ddf2;
+  color: #333;
+}
+
+.error {
+  color: #d44;
+  font-size: 12px;
+}
+
+/* 하단 다음 버튼 */
+
+.footer {
+  padding: 16px 24px 24px;
+}
+
+.nextButton {
+  width: 100%;
+  height: 58px;
+  border: 0;
+  border-radius: 16px;
+  background: #b8ddf2;
+  color: #111;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nextButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

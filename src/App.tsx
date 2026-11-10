@@ -7,6 +7,7 @@ import { ExplorePage } from './pages/ExplorePage';
 import { ExploreSearchPage } from './pages/ExploreSearchPage';
 import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
 import { HomePage } from './pages/HomePage';
+import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
 import { MyPage } from './pages/MyPage';
 import { MySettingsPage } from './pages/MySettingsPage';
@@ -42,6 +43,7 @@ export function App() {
         <Route path="/my/activity" element={<MyActivityPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
+      <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/requests/new" element={<RequestTypePage />} />
       <Route path="/requests/new/shoot" element={<RequestShootPage />} />
       <Route path="/requests/new/edit" element={<RequestEditPage />} />
