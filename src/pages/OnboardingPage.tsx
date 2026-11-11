@@ -1,5 +1,5 @@
 import { useRef, useState, type ChangeEvent } from 'react';
-import { useNavigate } from 'react-router';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import styles from './OnboardingPage.module.css';
 
 import loginBg from '../assets/icons/onboarding/login_bg.svg';
@@ -12,12 +12,18 @@ import humanIcon from '../assets/icons/onboarding/human.svg';
 
 const photoStyles = ['인물', '풍경', '필름', '자연광', '컨셉', '웨딩', '졸업', '기타'];
 
+// URL 단계 순서: /onboarding/help → /onboarding/style → /onboarding/profile
+const steps = ['help', 'style', 'profile'];
+
 export function OnboardingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { step: stepName } = useParams();
   const photoInput = useRef<HTMLInputElement>(null);
 
-  const [started, setStarted] = useState(false);
-  const [step, setStep] = useState(1);
+  // 로그인 화면은 0, 단계는 1~3, 없는 단계는 -1
+  const step = stepName === undefined ? 0 : steps.indexOf(stepName) + 1 || -1;
+
   const [help, setHelp] = useState<string[]>([]);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [nickname, setNickname] = useState('');
@@ -43,10 +49,11 @@ export function OnboardingPage() {
   }
 
   function goBack() {
-    if (step === 1) {
-      setStarted(false);
+    // 주소로 바로 들어온 경우엔 돌아갈 기록이 없으니 이전 단계로 이동
+    if (location.key === 'default') {
+      navigate(step === 1 ? '/onboarding' : `/onboarding/${steps[step - 2]}`);
     } else {
-      setStep(step - 1);
+      navigate(-1);
     }
   }
 
@@ -67,12 +74,12 @@ export function OnboardingPage() {
 
   function nextStep() {
     if (step < 3) {
-      setStep(step + 1);
+      navigate(`/onboarding/${steps[step]}`);
       return;
     }
 
     // TODO: 백엔드 API 연결 후 온보딩 정보 저장
-    navigate('/');
+    navigate('/', { replace: true });
   }
 
   const phoneValid = phone.trim() === '' || /^01[016789]-?\d{3,4}-?\d{4}$/.test(phone);
@@ -84,7 +91,17 @@ export function OnboardingPage() {
         ? selectedStyles.length > 0
         : nickname.trim().length > 0 && phoneValid;
 
-  if (!started) {
+  // 없는 단계 주소는 로그인 화면으로
+  if (step === -1) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  // 새로고침 등으로 앞 단계 선택값이 없으면 첫 단계부터 다시
+  if ((step >= 2 && help.length === 0) || (step === 3 && selectedStyles.length === 0)) {
+    return <Navigate to="/onboarding/help" replace />;
+  }
+
+  if (step === 0) {
     return (
       <main className={styles.page}>
         <div className={styles.loginPhoto}>
@@ -106,7 +123,12 @@ export function OnboardingPage() {
         </div>
 
         <div className={styles.loginBottom}>
-          <button type="button" className={styles.kakaoButton} onClick={() => setStarted(true)}>
+          <button
+            type="button"
+            className={styles.kakaoButton}
+            onClick={() => navigate('/onboarding/help')}
+          >
+            {/* TODO: 카카오 로그인 연결 */}
             <img src={kakaoIcon} alt="" />
             카카오로 시작하기
           </button>
