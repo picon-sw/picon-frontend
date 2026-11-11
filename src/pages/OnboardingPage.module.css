@@ -284,6 +284,23 @@
   font-weight: 700;
 }
 
+/* 스타일 사진: 카드를 꽉 채우고 살짝 어둡게 → 위에 흰 글씨
+   세로 사진은 얼굴이 위쪽에 있는 경우가 많아 위쪽(30%) 기준으로 자름 */
+.stylePhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: brightness(0.75);
+}
+
+.stylePhoto + .styleName {
+  color: #fff;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
+}
+
 .styleCheck {
   position: absolute;
   top: 9px;

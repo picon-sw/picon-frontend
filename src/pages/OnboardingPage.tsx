@@ -1,5 +1,6 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
+import { DEMO_ONBOARDING_STYLE_IMAGES } from '../constants/demoImages';
 import styles from './OnboardingPage.module.css';
 
 import loginBg from '../assets/icons/onboarding/login_bg.svg';
@@ -239,6 +240,14 @@ export function OnboardingPage() {
                     className={`${styles.styleCard} ${active ? styles.styleCardActive : ''}`}
                     onClick={() => toggleItem(item, selectedStyles, setSelectedStyles)}
                   >
+                    {/* TODO: 시연용 사진 (API 연동 또는 실제 스타일 이미지 정해지면 교체) */}
+                    {DEMO_ONBOARDING_STYLE_IMAGES[item] && (
+                      <img
+                        className={styles.stylePhoto}
+                        src={DEMO_ONBOARDING_STYLE_IMAGES[item]}
+                        alt=""
+                      />
+                    )}
                     <span className={styles.styleName}>{item}</span>
 
                     {active && <span className={styles.styleCheck}>✓</span>}
