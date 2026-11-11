@@ -8,6 +8,7 @@ import starFilledIcon from '../assets/icons/profile/star-filled.svg';
 import starLargeIcon from '../assets/icons/profile/star-large.svg';
 import userIcon from '../assets/icons/profile/user.svg';
 import { SortDropdown } from '../components/SortDropdown';
+import { DEMO_PORTFOLIO_IMAGES, DEMO_PROFILE_IMAGES } from '../constants/demoImages';
 import styles from './PhotographerProfilePage.module.css';
 
 type ProfileTab = 'portfolio' | 'review';
@@ -79,7 +80,11 @@ const SAMPLE_REVIEWS: Review[] = [
   },
 ];
 
-const SAMPLE_PORTFOLIO = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+// TODO: 시연용 사진 (API 연동 시 imageUrl 삭제)
+const SAMPLE_PORTFOLIO = DEMO_PORTFOLIO_IMAGES.map((imageUrl, index) => ({
+  id: index + 1,
+  imageUrl,
+}));
 
 const SAMPLE_INTRODUCTION =
   '자연스러운 표정과 분위기를 담는 사진작가입니다.\n소중한 순간을 편안하게 기록해 드려요.';
@@ -151,6 +156,8 @@ const PHOTOGRAPHERS: PhotographerProfile[] = [
   aiReviewSummary: SAMPLE_AI_SUMMARY,
   portfolio: SAMPLE_PORTFOLIO,
   reviews: SAMPLE_REVIEWS,
+  // TODO: 시연용 사진 (API 연동 시 삭제)
+  profileImageUrl: DEMO_PROFILE_IMAGES[base.id],
 }));
 
 interface StarsProps {

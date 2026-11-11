@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import calendarIcon from '../assets/icons/request/calendar.svg';
-import bannerImage from '../assets/images/request/banner.png';
+import { DEMO_REQUEST_BANNER_IMAGE, demoProfileImage } from '../constants/demoImages';
 import styles from './RequestPage.module.css';
 
 type RequestTab = 'ongoing' | 'completed';
@@ -130,6 +130,22 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
   ],
 };
 
+// TODO: 시연용 사진 연결 (API 연동 시 삭제하고 REQUESTS 그대로 사용)
+const REQUESTS_WITH_DEMO_IMAGES: Record<RequestTab, MyRequest[]> = {
+  ongoing: REQUESTS.ongoing.map(withDemoImages),
+  completed: REQUESTS.completed.map(withDemoImages),
+};
+
+function withDemoImages(request: MyRequest): MyRequest {
+  return {
+    ...request,
+    photographers: request.photographers.map((photographer) => ({
+      ...photographer,
+      profileImageUrl: demoProfileImage(photographer.name),
+    })),
+  };
+}
+
 interface AvatarProps {
   imageUrl?: string;
 }
@@ -219,7 +235,8 @@ export function RequestPage() {
       <p className={styles.subtitle}>내게 맞는 방식으로 전문가를 만나보세요.</p>
 
       <section className={styles.banner}>
-        <img className={styles.bannerImage} src={bannerImage} alt="" />
+        {/* TODO: 시연용 사진 (실제 배너 이미지 정해지면 교체) */}
+        <img className={styles.bannerImage} src={DEMO_REQUEST_BANNER_IMAGE} alt="" />
         <p className={styles.bannerText}>
           나만의 순간,
           <br />꼭 맞는 작가에게 맡겨 보세요
@@ -245,13 +262,13 @@ export function RequestPage() {
             className={tab === value ? `${styles.tab} ${styles.tabActive}` : styles.tab}
             onClick={() => setTab(value)}
           >
-            {label} {REQUESTS[value].length}
+            {label} {REQUESTS_WITH_DEMO_IMAGES[value].length}
           </button>
         ))}
       </div>
 
       <ul className={styles.list}>
-        {REQUESTS[tab].map((request, index) => (
+        {REQUESTS_WITH_DEMO_IMAGES[tab].map((request, index) => (
           <RequestCard
             key={request.id}
             request={request}

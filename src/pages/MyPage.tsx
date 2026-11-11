@@ -4,6 +4,7 @@ import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import handIcon from '../assets/icons/my/hand.svg';
 import settingIcon from '../assets/icons/my/setting.svg';
 import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
+import { DEMO_MY_PROFILE_IMAGE } from '../constants/demoImages';
 import styles from './MyPage.module.css';
 
 interface MyProfile {
@@ -22,6 +23,8 @@ interface MyProfile {
 const SAMPLE_PROFILE: MyProfile = {
   nickname: '치로',
   introduction: '일상 속 작은 순간들을 기록하고 싶어요.',
+  // TODO: 시연용 사진 (API 연동 시 삭제)
+  profileImageUrl: DEMO_MY_PROFILE_IMAGE,
   interestField: '촬영',
   hashtags: ['자연광', '인물', '풍경', '필름'],
   requestCount: 6,

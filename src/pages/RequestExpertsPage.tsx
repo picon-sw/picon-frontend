@@ -9,6 +9,7 @@ import {
   type RequestExpertsState,
   type RequestSummary,
 } from '../api/requests';
+import { DEMO_REQUEST_PORTFOLIO_IMAGES, demoProfileImage } from '../constants/demoImages';
 import styles from './RequestExpertsPage.module.css';
 
 const MAX_SELECTION = 5;
@@ -25,7 +26,11 @@ interface Expert {
   portfolio: { id: number; imageUrl?: string }[];
 }
 
-const SAMPLE_PORTFOLIO = [{ id: 1 }, { id: 2 }, { id: 3 }];
+// TODO: 시연용 사진 (API 연동 시 imageUrl 삭제)
+const SAMPLE_PORTFOLIO = DEMO_REQUEST_PORTFOLIO_IMAGES.map((imageUrl, index) => ({
+  id: index + 1,
+  imageUrl,
+}));
 
 // 주소로 바로 들어와서 요청서 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 const SAMPLE_SUMMARY: RequestSummary = {
@@ -41,7 +46,12 @@ const EXPERTS: Expert[] = [
   { id: 4, name: '서하 작가', rating: 4.7, reviewCount: 18, minPrice: 70000 },
   { id: 5, name: '무드필름', rating: 4.8, reviewCount: 56, minPrice: 95000 },
   { id: 6, name: '이젤 작가', rating: 4.6, reviewCount: 12, minPrice: 60000 },
-].map((expert) => ({ ...expert, portfolio: SAMPLE_PORTFOLIO }));
+].map((expert) => ({
+  ...expert,
+  portfolio: SAMPLE_PORTFOLIO,
+  // TODO: 시연용 사진 (API 연동 시 삭제)
+  profileImageUrl: demoProfileImage(expert.name),
+}));
 
 interface ExpertCardProps {
   expert: Expert;

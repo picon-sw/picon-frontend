@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
+import { DEMO_REQUEST_PROFILE_PORTFOLIO_IMAGES, demoProfileImage } from '../constants/demoImages';
 import styles from './RequestExpertProfilePage.module.css';
 
 interface ExpertProfile {
@@ -19,7 +20,11 @@ interface ExpertProfile {
   portfolio: { id: number; imageUrl?: string }[];
 }
 
-const SAMPLE_PORTFOLIO = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+// TODO: 시연용 사진 (API 연동 시 imageUrl 삭제)
+const SAMPLE_PORTFOLIO = DEMO_REQUEST_PROFILE_PORTFOLIO_IMAGES.map((imageUrl, index) => ({
+  id: index + 1,
+  imageUrl,
+}));
 
 // TODO: API 연동 시 교체 (임시 데이터 — 전문가 선택 화면의 작가 id와 맞춤)
 const EXPERTS: ExpertProfile[] = [
@@ -95,7 +100,12 @@ const EXPERTS: ExpertProfile[] = [
     priceSummary: '10장 기준 60,000원 · 추가 비용 없음',
     priceDetail: '원본·보정 1회 포함',
   },
-].map((expert) => ({ ...expert, portfolio: SAMPLE_PORTFOLIO }));
+].map((expert) => ({
+  ...expert,
+  portfolio: SAMPLE_PORTFOLIO,
+  // TODO: 시연용 사진 (API 연동 시 삭제)
+  profileImageUrl: demoProfileImage(expert.name),
+}));
 
 export function RequestExpertProfilePage() {
   const { expertId } = useParams();

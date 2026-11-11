@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 import { readDoneState, type RequestDoneState } from '../api/requests';
 import backIcon from '../assets/icons/request/arrow-left.svg';
+import { demoProfileImage } from '../constants/demoImages';
 import styles from './RequestDonePage.module.css';
 
 // 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
@@ -11,7 +12,9 @@ const SAMPLE_DONE: RequestDoneState = {
     { id: 1, name: '김하늘' },
     { id: 2, name: '윤슬' },
     { id: 3, name: '민서' },
-  ],
+  ]
+    // TODO: 시연용 사진 연결 (API 연동 시 .map 삭제)
+    .map((expert) => ({ ...expert, profileImageUrl: demoProfileImage(expert.name) })),
 };
 
 export function RequestDonePage() {

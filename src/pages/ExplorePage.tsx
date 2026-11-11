@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import chevronDownIcon from '../assets/icons/explore/chevron-down.svg';
 import searchIcon from '../assets/icons/explore/search.svg';
+import { DEMO_EXPLORE_CARD_IMAGES, DEMO_PROFILE_IMAGES } from '../constants/demoImages';
 import styles from './ExplorePage.module.css';
 
 type ExploreTab = 'shoot' | 'edit';
@@ -45,6 +46,16 @@ const TAGS = [
   '보정',
 ];
 
+// TODO: 시연용 사진 연결 (API 연동 시 이 함수와 .map(withDemoProfile) 삭제)
+// 카드 대표 사진은 작가마다 정해져 있어서 촬영·편집 탭에서 같은 작가는 같은 사진
+function withDemoProfile(photographer: Photographer): Photographer {
+  return {
+    ...photographer,
+    imageUrl: DEMO_EXPLORE_CARD_IMAGES[photographer.photographerId],
+    profileImageUrl: DEMO_PROFILE_IMAGES[photographer.photographerId],
+  };
+}
+
 // TODO: API 연동 시 교체 (임시 데이터)
 const PHOTOGRAPHERS: Record<ExploreTab, Photographer[]> = {
   shoot: [
@@ -54,7 +65,7 @@ const PHOTOGRAPHERS: Record<ExploreTab, Photographer[]> = {
     { id: 4, photographerId: 2, name: '지훈 작가' },
     { id: 5, photographerId: 6, name: '이젤 작가' },
     { id: 6, photographerId: 4, name: '아리 작가' },
-  ],
+  ].map(withDemoProfile),
   edit: [
     { id: 7, photographerId: 1, name: '서하 작가' },
     { id: 8, photographerId: 5, name: '윤슬 작가' },
@@ -62,7 +73,7 @@ const PHOTOGRAPHERS: Record<ExploreTab, Photographer[]> = {
     { id: 10, photographerId: 2, name: '지훈 작가' },
     { id: 11, photographerId: 6, name: '이젤 작가' },
     { id: 12, photographerId: 4, name: '아리 작가' },
-  ],
+  ].map(withDemoProfile),
 };
 
 export function ExplorePage() {

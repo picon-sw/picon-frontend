@@ -53,6 +53,7 @@
 }
 
 .heroImage {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
@@ -64,7 +65,25 @@
   background: #d8e5eb;
 }
 
+/* 배너 사진: 칸을 꽉 채우고, 흰 글씨가 잘 보이도록 위에 어두운 막 */
+.heroPhoto,
+.heroDim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heroPhoto {
+  object-fit: cover;
+}
+
+.heroDim {
+  background: linear-gradient(90deg, rgb(0 0 0 / 45%), rgb(0 0 0 / 10%));
+}
+
 .heroContent {
+  position: relative;
   width: 100%;
 }
 
@@ -160,8 +179,18 @@
 }
 
 .contestImage {
+  position: relative;
   flex: 0 0 50%;
   background: #d8e5eb;
+}
+
+/* 카드 높이에 맞춰 사진을 꽉 채움 (넘치는 부분은 잘림) */
+.contestImage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .contestContent {
@@ -290,8 +319,15 @@
   width: 100%;
   aspect-ratio: 4 / 5;
   margin-bottom: 10px;
+  overflow: hidden;
   border-radius: 15px;
   background: #d8e5eb;
+}
+
+.photographerImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .photographerCard strong {

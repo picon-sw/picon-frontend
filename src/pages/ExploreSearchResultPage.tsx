@@ -15,6 +15,7 @@ import {
 } from '../constants/exploreFilters';
 import { useRecentKeywords } from '../hooks/useRecentKeywords';
 // 상단(뒤로가기·제목·검색창)은 일반검색 화면과 같은 스타일 사용
+import { DEMO_PROFILE_IMAGES } from '../constants/demoImages';
 import searchStyles from './ExploreSearchPage.module.css';
 import styles from './ExploreSearchResultPage.module.css';
 
@@ -82,7 +83,8 @@ const RESULTS: SearchResult[] = [
     region: '서울 강남구',
     price: 50000,
   },
-];
+  // TODO: 시연용 사진 연결 (API 연동 시 .map 삭제)
+].map((result) => ({ ...result, imageUrl: DEMO_PROFILE_IMAGES[result.id] }));
 
 export function ExploreSearchResultPage() {
   const navigate = useNavigate();
