@@ -9,47 +9,11 @@
   color: #000;
 }
 
-.sectionTitle {
-  margin: 20px 0 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.chip {
-  padding: 7px 12px;
-  border: 1px solid #ebebeb;
-  border-radius: 100px;
-  background-color: #fff;
-  font: inherit;
-  font-size: 12px;
-  line-height: normal;
-  color: #000;
-  cursor: pointer;
-}
-
-.chipSelected {
-  border-color: #b8ddf2;
-  background-color: #b8ddf2;
-  font-weight: 600;
-}
-
 .options {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 12px;
-}
-
-/* 시/도 아래 추천 장소는 제목 바로 아래 */
-.sectionTitle + .options {
-  margin-top: 0;
 }
 
 .option {
@@ -74,22 +38,6 @@
 .optionName {
   font-size: 13px;
   font-weight: 600;
-}
-
-.optionAddress {
-  font-size: 11px;
-  color: #8f8f8f;
-}
-
-.customInput {
-  width: 100%;
-  padding: 10px;
-  border: 0;
-  border-radius: 10px;
-  background-color: #f5f5f5;
-  font: inherit;
-  font-size: 12px;
-  color: #000;
 }
 
 .status {
