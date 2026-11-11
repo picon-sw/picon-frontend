@@ -108,7 +108,7 @@ export function RequestShootPage() {
     const typeLabel = shootType === '기타' ? etcText.trim() : shootType;
     const state: RequestExpertsState = {
       summary: {
-        title: `${location.place ?? location.sigungu} ${typeLabel} 스냅`,
+        title: `${location.dong} ${typeLabel} 스냅`,
         detail: `${formatMonthDay(date)} · ${formatLocation(location)} · 촬영 인원 ${people}명`,
       },
     };
