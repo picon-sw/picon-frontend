@@ -44,6 +44,7 @@ export function App() {
         <Route path="/my/settings" element={<MySettingsPage />} />
       </Route>
       <Route path="/onboarding" element={<OnboardingPage />} />
+      <Route path="/onboarding/:step" element={<OnboardingPage />} />
       <Route path="/requests/new" element={<RequestTypePage />} />
       <Route path="/requests/new/shoot" element={<RequestShootPage />} />
       <Route path="/requests/new/edit" element={<RequestEditPage />} />
