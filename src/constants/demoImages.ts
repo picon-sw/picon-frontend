@@ -7,6 +7,12 @@ import home3 from '../assets/images/demo/home-3.jpg';
 import home4 from '../assets/images/demo/home-4.jpg';
 import home5 from '../assets/images/demo/home-5.jpg';
 import mypage from '../assets/images/demo/mypage.jpg';
+import onboarding1 from '../assets/images/demo/on-1.jpg';
+import onboarding2 from '../assets/images/demo/on-2.jpg';
+// 인물 카드용: home-2 원본을 가로로 긴 카드 비율에 맞춰 얼굴 중심으로 다시 자른 사진
+import onboarding3 from '../assets/images/demo/on-3.jpg';
+// 기타 카드용: search-4 원본을 카드 비율에 맞춰 사람이 가운데 오게 다시 자른 사진
+import onboarding4 from '../assets/images/demo/on-4.jpg';
 import request from '../assets/images/demo/request.jpg';
 import search1 from '../assets/images/demo/search-1.jpg';
 import search2 from '../assets/images/demo/search-2.jpg';
@@ -101,6 +107,18 @@ export const DEMO_REQUEST_PROFILE_PORTFOLIO_IMAGES = [
   search2,
   home1,
 ];
+
+// 온보딩 사진 스타일 카드: 스타일 이름 → 어울리는 사진
+export const DEMO_ONBOARDING_STYLE_IMAGES: Record<string, string> = {
+  인물: onboarding3,
+  풍경: home4,
+  필름: onboarding1,
+  자연광: home3,
+  컨셉: onboarding2,
+  웨딩: search6,
+  졸업: portfolio2,
+  기타: onboarding4,
+};
 
 // 나의 활동 썸네일
 export const DEMO_MY_ACTIVITY_IMAGES = {
