@@ -6,6 +6,7 @@ import starIcon from '../assets/icons/explore/star.svg';
 import aiIcon from '../assets/icons/profile/ai-sparkle.svg';
 import { conditionChips, conditionSentence, readConditionParams } from '../utils/aiSearchMock';
 // 상단은 일반검색, 작가 카드는 일반검색 결과 화면과 같은 스타일 사용
+import { DEMO_PROFILE_IMAGES } from '../constants/demoImages';
 import searchStyles from './ExploreSearchPage.module.css';
 import resultStyles from './ExploreSearchResultPage.module.css';
 import styles from './ExploreAiSearchResultPage.module.css';
@@ -67,7 +68,8 @@ const RESULTS: AiSearchResult[] = [
     region: '서울 강남구',
     price: 50000,
   },
-];
+  // TODO: 시연용 사진 연결 (API 연동 시 .map 삭제)
+].map((result) => ({ ...result, imageUrl: DEMO_PROFILE_IMAGES[result.id] }));
 
 export function ExploreAiSearchResultPage() {
   const [searchParams] = useSearchParams();

@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
+import { DEMO_MY_ACTIVITY_IMAGES } from '../constants/demoImages';
 import styles from './MyActivityPage.module.css';
 
 interface ImageItem {
@@ -16,16 +17,21 @@ interface MyReview {
   content: string;
 }
 
+// TODO: 시연용 사진 (API 연동 시 toImageItems와 DEMO_MY_ACTIVITY_IMAGES 삭제)
+function toImageItems(imageUrls: string[]): ImageItem[] {
+  return imageUrls.map((imageUrl, index) => ({ id: index + 1, imageUrl }));
+}
+
 // TODO: API 연동 시 교체 (임시 데이터)
-const SAMPLE_REQUESTS: ImageItem[] = [{ id: 1 }, { id: 2 }, { id: 3 }];
+const SAMPLE_REQUESTS: ImageItem[] = toImageItems(DEMO_MY_ACTIVITY_IMAGES.requests);
 const SAMPLE_REVIEW: MyReview = {
   id: 1,
   photographerName: '서하 작가',
   rating: 4.5,
   content: '포즈를 친절하게 알려주셔서 편하게 촬영했어요. 사진도 자연스럽게 나와서 만족해요!',
 };
-const SAMPLE_LIKED: ImageItem[] = [{ id: 1 }, { id: 2 }, { id: 3 }];
-const SAMPLE_VOTES: ImageItem[] = [{ id: 1 }, { id: 2 }];
+const SAMPLE_LIKED: ImageItem[] = toImageItems(DEMO_MY_ACTIVITY_IMAGES.liked);
+const SAMPLE_VOTES: ImageItem[] = toImageItems(DEMO_MY_ACTIVITY_IMAGES.votes);
 
 interface SectionHeaderProps {
   title: string;

@@ -1,40 +1,63 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import starsIcon from '../assets/icons/home/stars.svg';
+import {
+  DEMO_CONTEST_IMAGE,
+  DEMO_HOME_BANNER_IMAGES,
+  DEMO_HOME_PHOTOGRAPHER_IMAGES,
+} from '../constants/demoImages';
 import styles from './HomePage.module.css';
 
 // TODO: API 연동 시 실제 데이터로 교체
-const banners = [
+// imageUrl이 없으면 기본 배경색으로 표시
+const banners: { label: string; title: string; link: string; imageUrl?: string }[] = [
   {
     label: 'NEW PHOTOGRAPHER',
     title: '새로운 시선으로 담아낼\n당신만의 특별한 순간',
     link: '/explore',
+    // TODO: 시연용 사진 (API 연동 시 삭제)
+    imageUrl: DEMO_HOME_BANNER_IMAGES.newPhotographer,
   },
   {
     label: 'CONTEST WINNER',
     title: '수상으로 증명된 감각,\n당신의 순간을 작품으로',
     link: '/explore',
+    // TODO: 시연용 사진 (API 연동 시 삭제)
+    imageUrl: DEMO_HOME_BANNER_IMAGES.contestWinner,
   },
 ];
 
-const photographers = [
+// imageUrl이 없으면 기본 배경색으로 표시
+const photographers: {
+  id: number;
+  name: string;
+  category: string;
+  rating: string;
+  imageUrl?: string;
+}[] = [
   {
     id: 1,
     name: '서하 작가',
     category: '인물 · 필름',
     rating: '4.7',
+    // TODO: 시연용 사진 (API 연동 시 삭제)
+    imageUrl: DEMO_HOME_PHOTOGRAPHER_IMAGES.seoha,
   },
   {
     id: 2,
     name: '윤슬 작가',
     category: '자연광 · 필름',
     rating: '4.6',
+    // TODO: 시연용 사진 (API 연동 시 삭제)
+    imageUrl: DEMO_HOME_PHOTOGRAPHER_IMAGES.yunseul,
   },
   {
     id: 3,
     name: '무드 필름',
     category: '풍경 · 필름',
     rating: '4.3',
+    // TODO: 시연용 사진 (API 연동 시 삭제)
+    imageUrl: DEMO_HOME_PHOTOGRAPHER_IMAGES.moodFilm,
   },
 ];
 
@@ -72,6 +95,12 @@ export function HomePage() {
 
       <section className={styles.hero} aria-label="추천 작가 배너">
         <div className={styles.heroImage}>
+          {banner.imageUrl && (
+            <>
+              <img className={styles.heroPhoto} src={banner.imageUrl} alt="" />
+              <span className={styles.heroDim} aria-hidden="true" />
+            </>
+          )}
           <div className={styles.heroContent}>
             <span className={styles.heroLabel}>{banner.label}</span>
 
@@ -104,7 +133,10 @@ export function HomePage() {
         <h2 className={styles.sectionTitle}>이달의 콘테스트</h2>
 
         <div className={styles.contestCard}>
-          <div className={styles.contestImage} />
+          <div className={styles.contestImage}>
+            {/* TODO: 시연용 사진 (API 연동 시 콘테스트 대표 이미지 URL로 교체) */}
+            <img src={DEMO_CONTEST_IMAGE} alt="" />
+          </div>
 
           <div className={styles.contestContent}>
             <span className={styles.dday}>투표 D-8</span>
@@ -164,7 +196,9 @@ export function HomePage() {
               to={`/explore/photographers/${photographer.id}`}
               className={styles.photographerCard}
             >
-              <div className={styles.photographerImage} />
+              <div className={styles.photographerImage}>
+                {photographer.imageUrl && <img src={photographer.imageUrl} alt="" />}
+              </div>
 
               <strong>{photographer.name}</strong>
 
