@@ -35,7 +35,7 @@ const SAMPLE_PORTFOLIO = DEMO_REQUEST_PORTFOLIO_IMAGES.map((imageUrl, index) => 
 // 주소로 바로 들어와서 요청서 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 const SAMPLE_SUMMARY: RequestSummary = {
   title: '서울숲 우정 스냅',
-  detail: '10월 20일 · 서울숲 · 촬영 인원 3명',
+  detail: '10월 20일 (화) · 서울숲 · 촬영 인원 3명',
 };
 
 // TODO: API 연동 시 교체 (임시 데이터 — 서버가 연관성 높은 순으로 내려준 목록을 그대로 표시)
