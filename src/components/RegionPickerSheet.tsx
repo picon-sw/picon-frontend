@@ -108,7 +108,13 @@ export function RegionPickerSheet({ value, onSelect, onClose }: RegionPickerShee
       );
     }
     if (regionsQuery.data.length === 0) {
-      return <p className={styles.status}>검색 결과가 없어요. 다른 지역 이름으로 찾아 주세요</p>;
+      return (
+        <p className={styles.status}>
+          검색 결과가 없어요.
+          <br />
+          시·군·구 이름으로 검색해 주세요 (예: 성동, 마포)
+        </p>
+      );
     }
     return (
       <>
