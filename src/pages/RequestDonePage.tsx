@@ -7,7 +7,7 @@ import styles from './RequestDonePage.module.css';
 // 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 // 전문가 사진(profileImageUrl)이 없으면 빈 동그라미로 표시
 const SAMPLE_DONE: RequestDoneState = {
-  summary: { title: '서울숲 우정 스냅', detail: '10월 20일 · 서울숲 · 3명' },
+  summary: { title: '서울숲 우정 스냅', detail: '10월 20일 (화) · 서울숲 · 3명' },
   experts: [
     { id: 1, name: '김하늘' },
     { id: 2, name: '윤슬' },
