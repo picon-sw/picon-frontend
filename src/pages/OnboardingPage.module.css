@@ -11,7 +11,6 @@
 }
 
 /* 로그인 화면 */
-
 .loginPhoto {
   position: relative;
   height: 68dvh;
@@ -21,21 +20,18 @@
   border-radius: 0 0 35px 35px;
   background: #b6c8d1;
 }
-
 .loginBackground {
   position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .loginPhoto::after {
   position: absolute;
   inset: 0;
   content: '';
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.12), transparent 35%, rgba(0, 0, 0, 0.45));
 }
-
 .loginLogo {
   position: absolute;
   z-index: 1;
@@ -45,11 +41,9 @@
   font-size: 30px;
   font-weight: 800;
 }
-
 .loginLogo span {
   color: #b8ddf2;
 }
-
 .loginText {
   position: absolute;
   z-index: 1;
@@ -58,25 +52,21 @@
   left: 16px;
   color: white;
 }
-
 .loginText p {
   margin: 0 0 8px;
   font-size: 12px;
   font-weight: 600;
 }
-
 .loginText h1 {
   margin: 0 0 14px;
   font-size: 29px;
   line-height: 1.35;
   font-weight: 800;
 }
-
 .loginBottom {
   padding: 26px 36px;
   text-align: center;
 }
-
 .kakaoButton {
   display: flex;
   align-items: center;
@@ -92,12 +82,10 @@
   font-weight: 700;
   cursor: pointer;
 }
-
 .kakaoButton img {
   width: 22px;
   height: 22px;
 }
-
 .loginBottom p {
   margin-top: 18px;
   color: #aaa;
@@ -105,11 +93,9 @@
 }
 
 /* 온보딩 상단 */
-
 .stepHeader {
   padding: 24px 24px 0;
 }
-
 .stepTop {
   display: flex;
   align-items: center;
@@ -118,7 +104,6 @@
   color: #999;
   font-size: 15px;
 }
-
 .backButton {
   padding: 0;
   border: 0;
@@ -128,13 +113,11 @@
   line-height: 1;
   cursor: pointer;
 }
-
 .progress {
   width: 100%;
   height: 5px;
   background: #f1f1f1;
 }
-
 .progress div {
   height: 100%;
   background: #70b9df;
@@ -142,19 +125,16 @@
 }
 
 /* 공통 내용 */
-
 .stepContent {
   flex: 1;
   padding: 22px 24px 35px;
 }
-
 .stepLabel {
   margin: 0 0 18px;
   color: #70b9df;
   font-size: 14px;
   font-weight: 700;
 }
-
 .title {
   margin: 0;
   color: #000;
@@ -163,7 +143,6 @@
   line-height: 1.35;
   letter-spacing: -1px;
 }
-
 .description {
   margin: 18px 0 32px;
   color: #b6b6b6;
@@ -173,13 +152,11 @@
 }
 
 /* 1단계 - 도움 선택 */
-
 .helpList {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-
 .helpCard {
   display: flex;
   align-items: center;
@@ -193,12 +170,10 @@
   text-align: left;
   cursor: pointer;
 }
-
 .helpCardActive {
   border-color: #70b9df;
   background: #eaf6fc;
 }
-
 .helpIcon {
   display: flex;
   align-items: center;
@@ -209,32 +184,26 @@
   border-radius: 16px;
   background: #f0f0f0;
 }
-
 .helpCardActive .helpIcon {
   background: white;
 }
-
 .helpIcon img {
   width: 31px;
   height: 31px;
 }
-
 .helpText {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 9px;
 }
-
 .helpText strong {
   font-size: 16px;
 }
-
 .helpText span {
   color: #aaa;
   font-size: 12px;
 }
-
 .check {
   display: flex;
   align-items: center;
@@ -245,7 +214,6 @@
   border: 2px solid #e6e6e6;
   border-radius: 50%;
 }
-
 .checked {
   border-color: #70b9df;
   background: #70b9df;
@@ -254,13 +222,11 @@
 }
 
 /* 2단계 - 사진 스타일 선택 */
-
 .styleGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px 18px;
 }
-
 .styleCard {
   position: relative;
   height: 112px;
@@ -270,11 +236,9 @@
   background: #e3e9ed;
   cursor: pointer;
 }
-
 .styleCardActive {
   border-color: #70b9df;
 }
-
 .styleName {
   position: absolute;
   bottom: 12px;
@@ -283,9 +247,7 @@
   font-size: 14px;
   font-weight: 700;
 }
-
-/* 스타일 사진: 카드를 꽉 채우고 살짝 어둡게 → 위에 흰 글씨
-   세로 사진은 얼굴이 위쪽에 있는 경우가 많아 위쪽(30%) 기준으로 자름 */
+/* 스타일 사진: 카드 채우고 살짝 어둡게 */
 .stylePhoto {
   position: absolute;
   inset: 0;
@@ -295,12 +257,10 @@
   object-position: center 30%;
   filter: brightness(0.75);
 }
-
 .stylePhoto + .styleName {
   color: #fff;
   text-shadow: 0 1px 4px rgb(0 0 0 / 50%);
 }
-
 .styleCheck {
   position: absolute;
   top: 9px;
@@ -316,7 +276,6 @@
 }
 
 /* 3단계 - 프로필 사진 */
-
 .profilePhotoArea {
   display: flex;
   flex-direction: column;
@@ -324,13 +283,11 @@
   gap: 18px;
   margin: 25px 0 30px;
 }
-
 .profilePhotoWrap {
   position: relative;
   width: 120px;
   height: 120px;
 }
-
 .profilePhoto {
   display: flex;
   align-items: center;
@@ -345,25 +302,16 @@
   box-sizing: border-box;
   cursor: pointer;
 }
-
-/* 기본 사람 아이콘 크기 축소 */
-
 .profileHuman {
   width: 48px;
   height: 48px;
   object-fit: contain;
 }
-
-/* 등록한 프로필 사진 */
-
 .uploadedPhoto {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-/* 프로필 오른쪽 아래 카메라 아이콘 */
-
 .profileCamera {
   position: absolute;
   right: -2px;
@@ -379,13 +327,11 @@
   background: #70b9df;
   cursor: pointer;
 }
-
 .profileCamera img {
   width: 19px;
   height: 19px;
   filter: brightness(0) invert(1);
 }
-
 .photoButton {
   padding: 10px 22px;
   border: 2px solid #e8e8e8;
@@ -397,13 +343,11 @@
 }
 
 /* 3단계 - 프로필 정보 입력 */
-
 .profileForm {
   padding: 0 16px;
   border: 2px solid #e8e8e8;
   border-radius: 20px;
 }
-
 .formRow {
   display: flex;
   align-items: center;
@@ -411,17 +355,14 @@
   min-height: 70px;
   border-bottom: 1px solid #ddd;
 }
-
 .formRow:last-child {
   border-bottom: 0;
 }
-
 .formRow > span {
   flex: 0 0 92px;
   font-size: 13px;
   font-weight: 700;
 }
-
 .formRow input {
   width: 100%;
   min-width: 0;
@@ -432,19 +373,16 @@
   font-family: inherit;
   font-size: 13px;
 }
-
 .formRow p {
   color: #777;
   font-size: 13px;
   line-height: 1.5;
 }
-
 .genderOptions {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
 }
-
 .genderButton {
   padding: 6px 9px;
   border: 1px solid #ddd;
@@ -454,24 +392,20 @@
   font-size: 11px;
   cursor: pointer;
 }
-
 .genderActive {
   border-color: #b8ddf2;
   background: #b8ddf2;
   color: #333;
 }
-
 .error {
   color: #d44;
   font-size: 12px;
 }
 
 /* 하단 다음 버튼 */
-
 .footer {
   padding: 16px 24px 24px;
 }
-
 .nextButton {
   width: 100%;
   height: 58px;
@@ -483,8 +417,158 @@
   font-weight: 600;
   cursor: pointer;
 }
-
 .nextButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* 추가: 약관 동의 화면 */
+.termsHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 12px 24px;
+}
+.termsHeaderTitle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: 700;
+}
+.termsContent {
+  flex: 1;
+  padding: 24px 24px 32px;
+}
+.termsAllRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 16px;
+  border: 2px solid #70b9df;
+  border-radius: 16px;
+  background: #eaf6fc;
+  cursor: pointer;
+}
+.termsAllRow span {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.termsAllRow strong {
+  font-size: 16px;
+}
+.termsAllRow small {
+  color: #777;
+  font-size: 12px;
+}
+.termsCheckbox {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  margin: 0;
+  accent-color: #70b9df;
+  cursor: pointer;
+}
+.termsDivider {
+  height: 1px;
+  margin: 22px 0 10px;
+  background: #ededed;
+}
+.termsList {
+  display: flex;
+  flex-direction: column;
+}
+.termsItem {
+  padding: 14px 0;
+}
+.termsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.termsLabel {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.required {
+  color: #70b9df;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.optional {
+  color: #999;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.termsDetailButton {
+  flex-shrink: 0;
+  padding: 5px 3px;
+  border: 0;
+  background: transparent;
+  color: #888;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.termsDetail {
+  margin: 12px 0 0 29px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f6f7f8;
+  color: #666;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.termsNotice {
+  margin-top: 18px;
+  color: #999;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* 약관 전문: 보기 버튼으로 펼치는 상세 내용 */
+.termsDocument {
+  color: #4d5660;
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.termsDocument h2 {
+  margin: 18px 0 6px;
+  color: #202b34;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.termsDocument h2:first-of-type {
+  margin-top: 12px;
+}
+.termsDocument p {
+  margin: 7px 0;
+}
+.termsDocument ul {
+  margin: 6px 0 10px;
+  padding-left: 19px;
+}
+.termsDocument li {
+  margin: 3px 0;
+}
+.termsDocument strong {
+  color: #263745;
+  font-weight: 700;
+}
+.termsDraftNotice {
+  padding: 10px 11px;
+  border-left: 3px solid #70b9df;
+  border-radius: 4px;
+  background: #eaf6fc;
+  color: #3b596b;
 }
