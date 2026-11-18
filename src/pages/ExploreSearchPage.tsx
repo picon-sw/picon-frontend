@@ -2,11 +2,9 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import backIcon from '../assets/icons/explore/back.svg';
 import chevronDownIcon from '../assets/icons/explore/chevron-down.svg';
-import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import clockIcon from '../assets/icons/explore/clock.svg';
 import closeIcon from '../assets/icons/explore/close.svg';
 import searchIcon from '../assets/icons/explore/search.svg';
-import sparkleIcon from '../assets/icons/explore/sparkle.svg';
 import { BottomSheet } from '../components/BottomSheet';
 import {
   EXPLORE_FILTERS,
@@ -167,12 +165,6 @@ export function ExploreSearchPage() {
           )}
         </BottomSheet>
       )}
-
-      <Link to="/explore/ai" className={styles.aiButton}>
-        <img src={sparkleIcon} alt="" />
-        <span className={styles.aiLabel}>AI로 사진작가 찾기</span>
-        <img src={chevronRightIcon} alt="" />
-      </Link>
 
       <section className={styles.section} aria-labelledby="recommended-title">
         <h2 id="recommended-title" className={styles.sectionTitle}>
