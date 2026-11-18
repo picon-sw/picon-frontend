@@ -129,11 +129,14 @@
   cursor: pointer;
 }
 
+/* 시트 아래 여백(BottomSheet .sheet padding-bottom)까지 덮어서 스크롤된 목록이 버튼 아래로 비치지 않게 함 */
 .footer {
   position: sticky;
-  bottom: 0;
+  bottom: calc(-24px - env(safe-area-inset-bottom));
   margin-top: 20px;
+  margin-bottom: calc(-24px - env(safe-area-inset-bottom));
   padding-top: 12px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
   background-color: #fff;
 }
 
