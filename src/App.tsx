@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router';
 import { MainLayout } from './components/MainLayout';
 import { ContestPage } from './pages/ContestPage';
-import { ExploreAiSearchPage } from './pages/ExploreAiSearchPage';
-import { ExploreAiSearchResultPage } from './pages/ExploreAiSearchResultPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { ExploreSearchPage } from './pages/ExploreSearchPage';
 import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
@@ -29,8 +27,6 @@ export function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/explore" element={<ExplorePage />} />
-        <Route path="/explore/ai" element={<ExploreAiSearchPage />} />
-        <Route path="/explore/ai/results" element={<ExploreAiSearchResultPage />} />
         <Route path="/explore/search" element={<ExploreSearchPage />} />
         <Route path="/explore/results" element={<ExploreSearchResultPage />} />
         <Route
