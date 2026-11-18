@@ -16,13 +16,11 @@ interface Photographer {
   profileImageUrl?: string;
 }
 
-interface MyRequest {
+interface BaseRequest {
   id: number;
   status: RequestStatus;
   title: string;
   date: string;
-  place: string;
-  people: number;
   // 카드 오른쪽 위 안내 (2일 안에 선택해 주세요, 촬영 D-21, 촬영일 11월 3일 등)
   scheduleLabel: string;
   // 제안 선택 마감이 하루 이하로 남았을 때 굵게 표시
@@ -31,6 +29,10 @@ interface MyRequest {
   photographers: Photographer[];
   message: string;
 }
+
+// 촬영 의뢰는 날짜·장소·인원, 사진 편집 의뢰는 장소·인원이 없으니 날짜만 표시
+type MyRequest = BaseRequest &
+  ({ kind: 'shoot'; place: string; people: number } | { kind: 'edit' });
 
 const STATUS_LABEL: Record<RequestStatus, string> = {
   proposal: '제안 도착',
@@ -57,11 +59,10 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
   ongoing: [
     {
       id: 1,
+      kind: 'edit',
       status: 'proposal',
-      title: '서울숲 우정 스냅사진 보정',
+      title: '사진 편집 - 2장',
       date: '10월 20일 (화)',
-      place: '서울숲',
-      people: 3,
       ...getProposalDeadline(2),
       photographers: [
         { id: 1, name: '서하 작가' },
@@ -72,6 +73,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
     },
     {
       id: 2,
+      kind: 'shoot',
       status: 'confirmed',
       title: '제주 여행 커플 스냅',
       date: '11월 3일 (화)',
@@ -83,6 +85,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
     },
     {
       id: 3,
+      kind: 'shoot',
       status: 'confirmed',
       title: '성수 프로필 촬영',
       date: '11월 10일 (화)',
@@ -94,6 +97,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
     },
     {
       id: 4,
+      kind: 'shoot',
       status: 'confirmed',
       title: '돌잔치 가족 스냅',
       date: '11월 17일 (화)',
@@ -107,6 +111,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
   completed: [
     {
       id: 5,
+      kind: 'shoot',
       status: 'completed',
       title: '제주 여행 커플 스냅',
       date: '11월 3일 (화)',
@@ -118,6 +123,7 @@ const REQUESTS: Record<RequestTab, MyRequest[]> = {
     },
     {
       id: 6,
+      kind: 'shoot',
       status: 'completed',
       title: '한강 우정 스냅',
       date: '10월 12일 (월)',
@@ -163,18 +169,14 @@ interface RequestCardProps {
   highlighted: boolean;
 }
 
+function formatMeta(request: MyRequest) {
+  return request.kind === 'shoot'
+    ? `${request.date} · ${request.place} · ${request.people}명`
+    : request.date;
+}
+
 function RequestCard({ request, highlighted }: RequestCardProps) {
-  const {
-    status,
-    title,
-    date,
-    place,
-    people,
-    scheduleLabel,
-    scheduleUrgent,
-    photographers,
-    message,
-  } = request;
+  const { status, title, scheduleLabel, scheduleUrgent, photographers, message } = request;
   const isCompleted = status === 'completed';
 
   return (
@@ -198,7 +200,7 @@ function RequestCard({ request, highlighted }: RequestCardProps) {
 
       <p className={styles.cardMeta}>
         {!isCompleted && <img src={calendarIcon} alt="" />}
-        {date} · {place} · {people}명
+        {formatMeta(request)}
       </p>
 
       <hr className={styles.divider} />
