@@ -9,6 +9,8 @@ import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
 import { MyPage } from './pages/MyPage';
 import { MySettingsPage } from './pages/MySettingsPage';
+import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
+import { MyTermsPage } from './pages/MyTermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
 import { RequestDonePage } from './pages/RequestDonePage';
@@ -38,6 +40,8 @@ export function App() {
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/activity" element={<MyActivityPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
+        <Route path="/my/settings/terms" element={<MyTermsPage />} />
+        <Route path="/my/settings/terms/:termsId" element={<MyTermsDetailPage />} />
       </Route>
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/onboarding/:step" element={<OnboardingPage />} />

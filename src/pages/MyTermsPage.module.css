@@ -1,0 +1,148 @@
+/* 약관 목록 · 상세 공통. 설정 및 지원 화면과 같은 헤더 · 여백 · 구분선 */
+.page {
+  padding: 0 12px 32px 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+  margin-left: -1px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+/* 목록 */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 63px;
+  padding: 0 21px 0 5px;
+  border-bottom: 1px solid #d9d9d9;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+}
+
+.itemTitle,
+.documentTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 필수 · 선택 표시 */
+.badgeRequired,
+.badgeOptional {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.badgeRequired {
+  background-color: #e1f1f9;
+  color: #70b9df;
+}
+
+.badgeOptional {
+  background-color: #ebebeb;
+  color: #8f8f8f;
+}
+
+/* 상세 */
+.document {
+  padding: 4px 9px 0 5px;
+}
+
+.documentTitle {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #000;
+}
+
+.notice {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #f4f4f4;
+  font-size: 12px;
+  line-height: 18px;
+  color: #777879;
+}
+
+.section {
+  margin-top: 24px;
+}
+
+.sectionHeading {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #333;
+}
+
+.paragraph {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 21px;
+  color: #555;
+  word-break: keep-all;
+}
+
+.label {
+  color: #333;
+}
+
+.bulletList {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 21px;
+  color: #555;
+  word-break: keep-all;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 120px 16px;
+  color: #777879;
+}
+
+.notFound a {
+  font-weight: 700;
+  color: #70b9df;
+  text-decoration: none;
+}
