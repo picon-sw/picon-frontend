@@ -3,7 +3,13 @@ import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import styles from './MySettingsPage.module.css';
 
-const SETTING_ITEMS = ['알림 설정', '공지사항', '고객센터', '약관 및 정책'];
+// to가 없는 메뉴는 아직 화면이 없어 버튼만 표시
+const SETTING_ITEMS: { label: string; to?: string }[] = [
+  { label: '알림 설정', to: '/my/settings/notifications' },
+  { label: '공지사항' },
+  { label: '고객센터' },
+  { label: '약관 및 정책' },
+];
 
 export function MySettingsPage() {
   return (
@@ -15,14 +21,21 @@ export function MySettingsPage() {
         <h1 className={styles.title}>설정 및 지원</h1>
       </header>
 
-      {/* TODO: 각 메뉴의 상세 화면은 이후 이슈에서 */}
+      {/* TODO: 공지사항 · 고객센터 · 약관 및 정책 화면은 이후 이슈에서 */}
       <ul className={styles.list}>
-        {SETTING_ITEMS.map((label) => (
+        {SETTING_ITEMS.map(({ label, to }) => (
           <li key={label}>
-            <button type="button" className={styles.item}>
-              <span>{label}</span>
-              <img src={chevronRightIcon} alt="" />
-            </button>
+            {to ? (
+              <Link to={to} className={styles.item}>
+                <span>{label}</span>
+                <img src={chevronRightIcon} alt="" />
+              </Link>
+            ) : (
+              <button type="button" className={styles.item}>
+                <span>{label}</span>
+                <img src={chevronRightIcon} alt="" />
+              </button>
+            )}
           </li>
         ))}
       </ul>

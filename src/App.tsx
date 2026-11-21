@@ -7,6 +7,7 @@ import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
 import { HomePage } from './pages/HomePage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
+import { MyNotificationSettingsPage } from './pages/MyNotificationSettingsPage';
 import { MyPage } from './pages/MyPage';
 import { MySettingsPage } from './pages/MySettingsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -38,6 +39,7 @@ export function App() {
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/activity" element={<MyActivityPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
+        <Route path="/my/settings/notifications" element={<MyNotificationSettingsPage />} />
       </Route>
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/onboarding/:step" element={<OnboardingPage />} />
