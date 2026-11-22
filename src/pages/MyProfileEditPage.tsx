@@ -3,19 +3,11 @@ import { Link, useNavigate } from 'react-router';
 import backIcon from '../assets/icons/explore/back.svg';
 import cameraIcon from '../assets/icons/onboarding/camera.svg';
 import humanIcon from '../assets/icons/onboarding/human.svg';
-import { DEMO_MY_PROFILE_IMAGE } from '../constants/demoImages';
+import { type Gender, type MyProfileInfo, useMyProfile } from '../hooks/useMyProfile';
 import styles from './MyProfileEditPage.module.css';
 
-type Gender = '여성' | '남성' | '선택 안함';
-
-interface ProfileForm {
-  nickname: string;
-  introduction: string;
-  // YYYY-MM-DD (input type="date" 값)
-  birthDate: string;
-  gender: Gender | '';
-  phone: string;
-}
+// 입력 칸 값 (사진은 따로 관리)
+type ProfileForm = Omit<MyProfileInfo, 'profileImageUrl'>;
 
 const GENDERS: Gender[] = ['여성', '남성', '선택 안함'];
 const NICKNAME_MAX = 10;
@@ -23,17 +15,6 @@ const INTRODUCTION_MAX = 40;
 
 // 온보딩과 같은 전화번호 형식 (비워 두는 것도 허용)
 const PHONE_PATTERN = /^01[016789]-?\d{3,4}-?\d{4}$/;
-
-// TODO: API 연동 시 서버에서 내 프로필을 받아와 교체 (마이페이지 임시 데이터와 같은 값)
-const SAMPLE_FORM: ProfileForm = {
-  nickname: '치로',
-  introduction: '일상 속 작은 순간들을 기록하고 싶어요.',
-  birthDate: '2003-07-28',
-  gender: '여성',
-  phone: '010-1234-5678',
-};
-// TODO: 시연용 사진 (API 연동 시 서버의 프로필 사진으로 교체)
-const SAMPLE_PHOTO_URL = DEMO_MY_PROFILE_IMAGE;
 
 // 오늘 이후 날짜는 생년월일로 고를 수 없게 (기기 시간대 기준 오늘)
 function todayString() {
@@ -46,15 +27,22 @@ function todayString() {
 export function MyProfileEditPage() {
   const navigate = useNavigate();
   const photoInput = useRef<HTMLInputElement>(null);
-  const [form, setForm] = useState(SAMPLE_FORM);
+  // 지금 저장된 프로필을 처음 값으로 → 저장하면 마이페이지에도 반영
+  const { profile, saveProfile } = useMyProfile();
+  const { profileImageUrl: savedPhotoUrl, ...savedForm } = profile;
+  const [form, setForm] = useState<ProfileForm>(savedForm);
   // 새로 고른 사진 파일과 미리 보기 주소
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  // 저장한 미리 보기 주소는 마이페이지에서 계속 쓰므로 정리하지 않음
+  const savedPreview = useRef<string | null>(null);
 
-  // 미리 보기 주소는 사진을 바꾸거나 화면을 나갈 때 정리
+  // 미리 보기 주소는 사진을 바꾸거나 저장하지 않고 화면을 나갈 때 정리
   useEffect(() => {
     return () => {
-      if (photoPreview) URL.revokeObjectURL(photoPreview);
+      if (photoPreview && photoPreview !== savedPreview.current) {
+        URL.revokeObjectURL(photoPreview);
+      }
     };
   }, [photoPreview]);
 
@@ -75,7 +63,7 @@ export function MyProfileEditPage() {
   const phoneValid = form.phone.trim() === '' || PHONE_PATTERN.test(form.phone.trim());
   const changed =
     photoFile !== null ||
-    (Object.keys(form) as (keyof ProfileForm)[]).some((key) => form[key] !== SAMPLE_FORM[key]);
+    (Object.keys(form) as (keyof ProfileForm)[]).some((key) => form[key] !== savedForm[key]);
   const canSave = nicknameValid && phoneValid && changed;
 
   const save = () => {
@@ -83,10 +71,18 @@ export function MyProfileEditPage() {
     // TODO: API 연동 시
     //   1) 사진을 바꿨으면 uploadPhoto(src/api/uploads.ts)로 Pre-signed URL 업로드 → 파일 key 받기
     //   2) client로 프로필 수정 요청 (닉네임 · 소개 · 생년월일 · 성별 · 전화번호 · 사진 key)
+    savedPreview.current = photoPreview;
+    saveProfile({
+      ...form,
+      nickname: form.nickname.trim(),
+      introduction: form.introduction.trim(),
+      phone: form.phone.trim(),
+      profileImageUrl: photoPreview ?? savedPhotoUrl,
+    });
     navigate('/my');
   };
 
-  const photoUrl = photoPreview ?? SAMPLE_PHOTO_URL;
+  const photoUrl = photoPreview ?? savedPhotoUrl;
 
   return (
     <main className={styles.page}>

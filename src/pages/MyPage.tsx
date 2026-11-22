@@ -4,14 +4,11 @@ import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import handIcon from '../assets/icons/my/hand.svg';
 import settingIcon from '../assets/icons/my/setting.svg';
 import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
-import { DEMO_MY_PROFILE_IMAGE } from '../constants/demoImages';
+import { useMyProfile } from '../hooks/useMyProfile';
 import styles from './MyPage.module.css';
 
+// 닉네임 · 소개 · 사진은 useMyProfile(프로필 수정 화면과 공유)
 interface MyProfile {
-  nickname: string;
-  introduction: string;
-  // 백엔드에서 받은 이미지 URL. 없으면 빈 칸으로 표시
-  profileImageUrl?: string;
   interestField: string;
   hashtags: string[];
   requestCount: number;
@@ -21,10 +18,6 @@ interface MyProfile {
 
 // TODO: API 연동 시 교체 (임시 데이터 — Figma 예시)
 const SAMPLE_PROFILE: MyProfile = {
-  nickname: '치로',
-  introduction: '일상 속 작은 순간들을 기록하고 싶어요.',
-  // TODO: 시연용 사진 (API 연동 시 삭제)
-  profileImageUrl: DEMO_MY_PROFILE_IMAGE,
   interestField: '촬영',
   hashtags: ['자연광', '인물', '풍경', '필름'],
   requestCount: 6,
@@ -38,16 +31,11 @@ const MENU_ITEMS = [
 ];
 
 export function MyPage() {
+  const { interestField, hashtags, requestCount, reviewCount, likedCount } = SAMPLE_PROFILE;
+  // 프로필 수정 화면에서 저장한 값
   const {
-    nickname,
-    introduction,
-    profileImageUrl,
-    interestField,
-    hashtags,
-    requestCount,
-    reviewCount,
-    likedCount,
-  } = SAMPLE_PROFILE;
+    profile: { nickname, introduction, profileImageUrl },
+  } = useMyProfile();
 
   const stats = [
     { label: '내 의뢰', count: requestCount },
