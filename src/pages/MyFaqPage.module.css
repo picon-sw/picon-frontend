@@ -1,0 +1,96 @@
+/* 헤더 · 줄 구분선은 설정 및 지원 화면과 같게 */
+.page {
+  padding: 0 20px 32px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+  margin-left: -1px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.faqList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faq {
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  padding: 0 6px 0 3px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: #000;
+  cursor: pointer;
+  list-style: none;
+}
+
+/* 브라우저 기본 ▶ 표시 숨김 */
+.question::-webkit-details-marker {
+  display: none;
+}
+
+.q {
+  margin-right: 6px;
+  color: #70b9df;
+}
+
+.arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.faq[open] .arrow {
+  transform: rotate(180deg);
+}
+
+.answer {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #f4f4f4;
+  font-size: 13px;
+  line-height: 20px;
+  color: #555;
+  word-break: keep-all;
+}
+
+.more {
+  margin: 24px 0 0;
+  font-size: 12px;
+  color: #8f8f8f;
+  text-align: center;
+}
+
+.moreLink {
+  font-weight: 700;
+  color: #70b9df;
+  text-decoration: none;
+}
