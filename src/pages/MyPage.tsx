@@ -68,11 +68,10 @@ export function MyPage() {
         <div className={styles.info}>
           <p className={styles.nickname}>{nickname}</p>
           <p className={styles.introduction}>{introduction}</p>
-          {/* TODO: 프로필 수정 화면은 이후 이슈에서 */}
-          <button type="button" className={styles.editProfile}>
+          <Link to="/my/profile/edit" className={styles.editProfile}>
             프로필 정보 수정
             <img src={chevronRightSmallIcon} alt="" />
-          </button>
+          </Link>
         </div>
       </section>
 

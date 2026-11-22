@@ -9,6 +9,7 @@ import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
 import { MyNotificationSettingsPage } from './pages/MyNotificationSettingsPage';
 import { MyPage } from './pages/MyPage';
+import { MyProfileEditPage } from './pages/MyProfileEditPage';
 import { MySettingsPage } from './pages/MySettingsPage';
 import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
 import { MyTermsPage } from './pages/MyTermsPage';
@@ -40,6 +41,7 @@ export function App() {
         <Route path="/contests" element={<ContestPage />} />
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/activity" element={<MyActivityPage />} />
+        <Route path="/my/profile/edit" element={<MyProfileEditPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
         <Route path="/my/settings/notifications" element={<MyNotificationSettingsPage />} />
         <Route path="/my/settings/terms" element={<MyTermsPage />} />
