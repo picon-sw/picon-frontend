@@ -1,0 +1,207 @@
+/* 헤더는 마이페이지 하위 화면(설정 및 지원 등)과 같게,
+   사진 · 입력 칸은 온보딩 프로필 입력 화면과 같은 모양 */
+.page {
+  padding: 0 20px 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+  margin-left: -1px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+/* 프로필 사진 */
+.photoArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 24px;
+}
+
+.photoWrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+}
+
+.photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 110px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 34px;
+  background-color: #e1f1f9;
+  cursor: pointer;
+}
+
+.photoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+/* 오른쪽 아래 카메라 표시 */
+.camera {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background-color: #70b9df;
+  pointer-events: none;
+}
+
+.camera img {
+  width: 17px;
+  height: 17px;
+  filter: brightness(0) invert(1);
+}
+
+.photoButton {
+  padding: 8px 18px;
+  border: 1px solid #d9d9d9;
+  border-radius: 20px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+}
+
+/* 입력 칸 */
+.form {
+  padding: 0 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 15px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rowLabel {
+  flex: 0 0 76px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.required {
+  margin-left: 2px;
+  color: #70b9df;
+}
+
+.row input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: #333;
+}
+
+.row input::placeholder {
+  color: #b9b9b9;
+}
+
+.genderOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.genderButton {
+  padding: 6px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 20px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 11px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.genderActive {
+  border-color: #70b9df;
+  background-color: #e1f1f9;
+  color: #333;
+  font-weight: 700;
+}
+
+.messages {
+  min-height: 20px;
+  margin-top: 8px;
+}
+
+.error {
+  margin: 0 0 0 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #d44;
+}
+
+.saveButton {
+  width: 100%;
+  height: 55px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  background-color: #d9d9d9;
+  cursor: default;
+}
