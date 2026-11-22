@@ -1,0 +1,140 @@
+/* 설정 및 지원 화면과 같은 헤더 · 여백 · 구분선 */
+.page {
+  padding: 0 12px 24px 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+  margin-left: -1px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+/* 전체 알림: 하늘색 카드로 강조 */
+.allRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 63px;
+  margin-right: 9px;
+  padding: 0 16px 0 18px;
+  border-radius: 15px;
+  background-color: #e1f1f9;
+}
+
+.allLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.sectionTitle {
+  margin: 28px 0 0 5px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8f8f8f;
+}
+
+.list {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 70px;
+  padding: 12px 21px 12px 5px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rowLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.rowDescription {
+  font-size: 12px;
+  line-height: 15px;
+  color: #8f8f8f;
+}
+
+/* 전체 알림이 꺼졌거나 혜택 알림이 꺼져 선택할 수 없는 줄 */
+.rowDisabled .rowLabel,
+.rowDisabled .rowDescription {
+  color: #c4c4c4;
+}
+
+.notice {
+  margin: 12px 21px 0 5px;
+  font-size: 11px;
+  line-height: 15px;
+  color: #b9b9b9;
+}
+
+/* 스위치: 켜짐 파랑(#70b9df), 꺼짐 회색 */
+.toggle {
+  position: relative;
+  flex-shrink: 0;
+  width: 46px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background-color: #d9d9d9;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toggleOn {
+  background-color: #70b9df;
+}
+
+.toggle:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+  transition: transform 0.2s;
+}
+
+.toggleOn .toggleThumb {
+  transform: translateX(20px);
+}
