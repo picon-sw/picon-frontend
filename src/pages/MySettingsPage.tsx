@@ -8,7 +8,7 @@ const SETTING_ITEMS: { label: string; to?: string }[] = [
   { label: '알림 설정', to: '/my/settings/notifications' },
   { label: '공지사항' },
   { label: '고객센터' },
-  { label: '약관 및 정책' },
+  { label: '약관 및 정책', to: '/my/settings/terms' },
 ];
 
 export function MySettingsPage() {
@@ -21,7 +21,7 @@ export function MySettingsPage() {
         <h1 className={styles.title}>설정 및 지원</h1>
       </header>
 
-      {/* TODO: 공지사항 · 고객센터 · 약관 및 정책 화면은 이후 이슈에서 */}
+      {/* TODO: 공지사항 · 고객센터 화면은 이후 이슈에서 */}
       <ul className={styles.list}>
         {SETTING_ITEMS.map(({ label, to }) => (
           <li key={label}>
