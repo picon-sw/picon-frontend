@@ -5,7 +5,7 @@ import styles from './MySettingsPage.module.css';
 
 // to가 없는 메뉴는 아직 화면이 없어 버튼만 표시
 const SETTING_ITEMS: { label: string; to?: string }[] = [
-  { label: '알림 설정' },
+  { label: '알림 설정', to: '/my/settings/notifications' },
   { label: '공지사항' },
   { label: '고객센터' },
   { label: '약관 및 정책', to: '/my/settings/terms' },
