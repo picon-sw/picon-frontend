@@ -1,0 +1,153 @@
+/* 헤더는 마이페이지 하위 화면과 같게, 태그는 마이페이지 취향 카드 해시태그와 같은 모양 */
+.page {
+  padding: 0 20px 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+  margin-left: -1px;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 36px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 36px;
+  color: #b9b9b9;
+}
+
+.description {
+  margin: 0 0 0 3px;
+  font-size: 12px;
+  line-height: 15px;
+  color: #8f8f8f;
+}
+
+.sectionTitle {
+  margin: 26px 0 0 3px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* 관심 분야: 탐색 촬영/편집 탭과 같은 회색 바 + 흰 선택 칸 */
+.fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+  padding: 6px;
+  border-radius: 15px;
+  background-color: #ebebeb;
+}
+
+.field {
+  height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #8f8f8f;
+  cursor: pointer;
+}
+
+.fieldActive {
+  background-color: #fff;
+  color: #363636;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+}
+
+.tagsHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.count {
+  margin-right: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #70b9df;
+}
+
+.hint {
+  margin: 6px 0 0 3px;
+  font-size: 11px;
+  color: #b9b9b9;
+}
+
+.group {
+  margin-top: 18px;
+}
+
+.groupTitle {
+  margin: 0 0 0 3px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #777879;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 12px;
+  color: #777879;
+  cursor: pointer;
+}
+
+.tagActive {
+  border-color: #70b9df;
+  background-color: #e1f1f9;
+  font-weight: 700;
+  color: #333;
+}
+
+.tag:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.saveButton {
+  width: 100%;
+  height: 55px;
+  margin-top: 32px;
+  border: 0;
+  border-radius: 15px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  background-color: #d9d9d9;
+  cursor: default;
+}

@@ -11,6 +11,7 @@ import { MyNotificationSettingsPage } from './pages/MyNotificationSettingsPage';
 import { MyPage } from './pages/MyPage';
 import { MyProfileEditPage } from './pages/MyProfileEditPage';
 import { MySettingsPage } from './pages/MySettingsPage';
+import { MyTasteEditPage } from './pages/MyTasteEditPage';
 import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
 import { MyTermsPage } from './pages/MyTermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -42,6 +43,7 @@ export function App() {
         <Route path="/my" element={<MyPage />} />
         <Route path="/my/activity" element={<MyActivityPage />} />
         <Route path="/my/profile/edit" element={<MyProfileEditPage />} />
+        <Route path="/my/taste/edit" element={<MyTasteEditPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
         <Route path="/my/settings/notifications" element={<MyNotificationSettingsPage />} />
         <Route path="/my/settings/terms" element={<MyTermsPage />} />

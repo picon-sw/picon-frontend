@@ -5,21 +5,19 @@ import handIcon from '../assets/icons/my/hand.svg';
 import settingIcon from '../assets/icons/my/setting.svg';
 import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
 import { useMyProfile } from '../hooks/useMyProfile';
+import { useMyTaste } from '../hooks/useMyTaste';
 import styles from './MyPage.module.css';
 
-// 닉네임 · 소개 · 사진은 useMyProfile(프로필 수정 화면과 공유)
-interface MyProfile {
-  interestField: string;
-  hashtags: string[];
+// 닉네임 · 소개 · 사진은 useMyProfile(프로필 수정 화면과 공유),
+// 관심 분야 · 태그는 useMyTaste(내 취향 설정 수정 화면과 공유)
+interface MyActivityCounts {
   requestCount: number;
   reviewCount: number;
   likedCount: number;
 }
 
 // TODO: API 연동 시 교체 (임시 데이터 — Figma 예시)
-const SAMPLE_PROFILE: MyProfile = {
-  interestField: '촬영',
-  hashtags: ['자연광', '인물', '풍경', '필름'],
+const SAMPLE_COUNTS: MyActivityCounts = {
   requestCount: 6,
   reviewCount: 4,
   likedCount: 13,
@@ -31,11 +29,15 @@ const MENU_ITEMS = [
 ];
 
 export function MyPage() {
-  const { interestField, hashtags, requestCount, reviewCount, likedCount } = SAMPLE_PROFILE;
+  const { requestCount, reviewCount, likedCount } = SAMPLE_COUNTS;
   // 프로필 수정 화면에서 저장한 값
   const {
     profile: { nickname, introduction, profileImageUrl },
   } = useMyProfile();
+  // 내 취향 설정 수정 화면에서 저장한 값
+  const {
+    taste: { field: interestField, tags: hashtags },
+  } = useMyTaste();
 
   const stats = [
     { label: '내 의뢰', count: requestCount },
@@ -68,10 +70,9 @@ export function MyPage() {
           <h2 id="taste-title" className={styles.tasteTitle}>
             <img src={aiSparkleIcon} alt="" />내 취향 설정
           </h2>
-          {/* TODO: 취향 수정 화면은 이후 이슈에서 */}
-          <button type="button" className={styles.tasteEdit}>
+          <Link to="/my/taste/edit" className={styles.tasteEdit}>
             수정
-          </button>
+          </Link>
         </div>
         <p className={styles.interest}>
           관심 분야
