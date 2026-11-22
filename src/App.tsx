@@ -7,10 +7,14 @@ import { ExploreSearchResultPage } from './pages/ExploreSearchResultPage';
 import { HomePage } from './pages/HomePage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
+import { MyFaqPage } from './pages/MyFaqPage';
+import { MyNoticeDetailPage } from './pages/MyNoticeDetailPage';
+import { MyNoticesPage } from './pages/MyNoticesPage';
 import { MyNotificationSettingsPage } from './pages/MyNotificationSettingsPage';
 import { MyPage } from './pages/MyPage';
 import { MyProfileEditPage } from './pages/MyProfileEditPage';
 import { MySettingsPage } from './pages/MySettingsPage';
+import { MySupportPage } from './pages/MySupportPage';
 import { MyTasteEditPage } from './pages/MyTasteEditPage';
 import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
 import { MyTermsPage } from './pages/MyTermsPage';
@@ -46,6 +50,10 @@ export function App() {
         <Route path="/my/taste/edit" element={<MyTasteEditPage />} />
         <Route path="/my/settings" element={<MySettingsPage />} />
         <Route path="/my/settings/notifications" element={<MyNotificationSettingsPage />} />
+        <Route path="/my/settings/notices" element={<MyNoticesPage />} />
+        <Route path="/my/settings/notices/:noticeId" element={<MyNoticeDetailPage />} />
+        <Route path="/my/settings/faq" element={<MyFaqPage />} />
+        <Route path="/my/settings/support" element={<MySupportPage />} />
         <Route path="/my/settings/terms" element={<MyTermsPage />} />
         <Route path="/my/settings/terms/:termsId" element={<MyTermsDetailPage />} />
       </Route>
