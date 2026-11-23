@@ -1,6 +1,5 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
-import { DEMO_ONBOARDING_STYLE_IMAGES } from '../constants/demoImages';
 import styles from './OnboardingPage.module.css';
 
 import loginBg from '../assets/icons/onboarding/login_bg.svg';
@@ -10,8 +9,25 @@ import cameraActiveIcon from '../assets/icons/onboarding/camera.active.svg';
 import editIcon from '../assets/icons/onboarding/edit.svg';
 import editActiveIcon from '../assets/icons/onboarding/edit.active.svg';
 import humanIcon from '../assets/icons/onboarding/human.svg';
+import brightPhoto from '../assets/icons/onboarding/01_bright.jpg';
+import naturalPhoto from '../assets/icons/onboarding/02_natural.jpg';
+import calmPhoto from '../assets/icons/onboarding/03_calm.jpg';
+import sophisticatedPhoto from '../assets/icons/onboarding/04_sophisticated.jpg';
+import dreamyPhoto from '../assets/icons/onboarding/05_dreamy.jpg';
+import uniquePhoto from '../assets/icons/onboarding/06_unique.jpg';
+import dramaticPhoto from '../assets/icons/onboarding/07_dramatic.jpg';
 
-const photoStyles = ['인물', '풍경', '필름', '자연광', '컨셉', '웨딩', '졸업', '기타'];
+const photoStyles = ['밝음', '자연스러움', '차분함', '세련됨', '몽환적', '개성적', '극적 표현'];
+
+const photoStyleImages: Record<string, string> = {
+  밝음: brightPhoto,
+  자연스러움: naturalPhoto,
+  차분함: calmPhoto,
+  세련됨: sophisticatedPhoto,
+  몽환적: dreamyPhoto,
+  개성적: uniquePhoto,
+  '극적 표현': dramaticPhoto,
+};
 
 // 약관: /onboarding/terms → 기존 3단계: help → style → profile
 const steps = ['help', 'style', 'profile'];
@@ -523,14 +539,7 @@ export function OnboardingPage() {
                     className={`${styles.styleCard} ${active ? styles.styleCardActive : ''}`}
                     onClick={() => toggleItem(item, selectedStyles, setSelectedStyles)}
                   >
-                    {/* TODO: 시연용 사진 (API 연동 또는 실제 스타일 이미지 정해지면 교체) */}
-                    {DEMO_ONBOARDING_STYLE_IMAGES[item] && (
-                      <img
-                        className={styles.stylePhoto}
-                        src={DEMO_ONBOARDING_STYLE_IMAGES[item]}
-                        alt=""
-                      />
-                    )}
+                    <img className={styles.stylePhoto} src={photoStyleImages[item]} alt="" />
                     <span className={styles.styleName}>{item}</span>
 
                     {active && <span className={styles.styleCheck}>✓</span>}
