@@ -1,5 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
+import { startKakaoLogin } from '../api/auth';
+import { setOnboarded } from '../api/authStore';
 import { DEMO_ONBOARDING_STYLE_IMAGES } from '../constants/demoImages';
 import styles from './OnboardingPage.module.css';
 
@@ -104,7 +106,8 @@ export function OnboardingPage() {
       return;
     }
 
-    // TODO: 백엔드 API 연결 후 온보딩 정보 저장
+    // TODO: 온보딩 저장 API(PUT /members/me/onboarding) 연결 후 성공했을 때만 완료 처리
+    setOnboarded(true);
     navigate('/', { replace: true });
   }
 
@@ -154,12 +157,7 @@ export function OnboardingPage() {
         </div>
 
         <div className={styles.loginBottom}>
-          <button
-            type="button"
-            className={styles.kakaoButton}
-            onClick={() => navigate('/onboarding/terms')}
-          >
-            {/* TODO: 카카오 로그인 연결 */}
+          <button type="button" className={styles.kakaoButton} onClick={startKakaoLogin}>
             <img src={kakaoIcon} alt="" />
             카카오로 시작하기
           </button>

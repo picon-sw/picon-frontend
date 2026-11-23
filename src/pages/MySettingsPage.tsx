@@ -1,4 +1,6 @@
-import { Link } from 'react-router';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { logout } from '../api/auth';
 import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import styles from './MySettingsPage.module.css';
@@ -13,6 +15,16 @@ const SETTING_ITEMS: { label: string; to?: string }[] = [
 ];
 
 export function MySettingsPage() {
+  const navigate = useNavigate();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    // 요청이 실패해도 이 기기에서는 로그아웃 처리됨
+    await logout().catch(() => undefined);
+    navigate('/onboarding', { replace: true });
+  }
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -39,6 +51,15 @@ export function MySettingsPage() {
           </li>
         ))}
       </ul>
+
+      <button
+        type="button"
+        className={`${styles.item} ${styles.logout}`}
+        onClick={handleLogout}
+        disabled={loggingOut}
+      >
+        로그아웃
+      </button>
     </main>
   );
 }

@@ -50,3 +50,11 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.logout {
+  color: #b9b9b9;
+}
+
+.logout:disabled {
+  cursor: default;
+}
