@@ -61,6 +61,8 @@ PIC:ON 프론트엔드 저장소입니다.
 
 - API는 `src/api/client.ts`로 `/api` 상대 경로 호출 (서버 주소 직접 작성 금지)
 - Secret, API Key, 토큰은 프론트 코드와 `.env`에 넣지 않음
+  - `VITE_*` 값은 빌드 결과(JS)에 그대로 들어가 누구나 볼 수 있음
+  - 예외: 웹페이지에 공개돼도 되는 식별자(카카오 client_id 등)만 `VITE_*`로 둘 수 있음
 - 이미지는 백엔드에서 받은 Pre-signed URL로 업로드·조회
 - 카카오 로그인 토큰 교환은 백엔드에서 처리, 토큰을 localStorage에 저장하지 않음
 - LLM 기능은 `/api`를 통해서만 호출
