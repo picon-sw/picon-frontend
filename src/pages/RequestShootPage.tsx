@@ -216,6 +216,8 @@ export function RequestShootPage() {
       moods,
       note,
       photoKey: saveDraftPhotos(photos.map(({ file }) => file)),
+      notice: initial?.notice,
+      excludeIds: initial?.excludeIds,
     };
     navigate(routerLocation.pathname, { replace: true, state: { draft } });
     const state: RequestExpertsState = {
@@ -225,6 +227,7 @@ export function RequestShootPage() {
         detail: `${formatShootSchedule(date, time)} · ${formatLocation(location)} · 촬영 인원 ${people}명`,
       },
       form: { date, time, location, people, budget, kind, moods, note: note.trim() },
+      excludeIds: initial?.excludeIds,
     };
     navigate('/requests/new/experts', { state });
   };
@@ -240,11 +243,6 @@ export function RequestShootPage() {
 
       <div className={styles.content}>
         <p className={styles.intro}>전문가를 골라 견적을 받아보세요.</p>
-        {initial?.notice && (
-          <p className={styles.notice} role="status">
-            {initial.notice}
-          </p>
-        )}
 
         <div className={styles.form}>
           <section className={styles.card} aria-label="촬영 일정">
@@ -264,10 +262,18 @@ export function RequestShootPage() {
                 onClick={openTimeSheet}
               />
             </div>
-            {timeReset && time === null && (
+            {timeReset && time === null ? (
               <p className={styles.warning} role="alert">
                 날짜가 바뀌어서 시간을 다시 골라 주세요
               </p>
+            ) : (
+              // 다시 요청할 때 날짜·시간을 비워서 들어온 경우 안내 (둘 다 고르면 사라짐)
+              initial?.notice &&
+              (date === null || time === null) && (
+                <p className={styles.warning} role="alert">
+                  {initial.notice}
+                </p>
+              )
             )}
 
             <div className={styles.schedule}>

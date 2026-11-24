@@ -19,9 +19,11 @@ const TABS: { value: MyRequestTab; label: string }[] = [
 const EMPTY_REQUESTS: Record<MyRequestTab, MyRequest[]> = { ongoing: [], completed: [] };
 
 // 카드를 눌렀을 때 갈 상세 화면. 아직 없는 화면은 null (누를 수 없는 카드)
-// TODO: 받은 제안·예약 상세·완료 상세 등 화면이 생기면 상태별로 연결
-function getDetailPath(request: MyRequest): string | null {
-  void request;
+// TODO: 예약 상세·완료 상세·편집 제안 등 화면이 생기면 상태별로 연결
+function getDetailPath({ id, kind, status }: MyRequest): string | null {
+  if (kind === 'shoot' && (status === 'proposal' || status === 'waiting' || status === 'closed')) {
+    return `/requests/${id}/proposals`;
+  }
   return null;
 }
 

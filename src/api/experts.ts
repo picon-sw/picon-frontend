@@ -135,6 +135,45 @@ const EXPERTS: Expert[] = [
     basePrice: 60000,
     extraPrice: 4000,
   },
+  {
+    id: 7,
+    name: '도하 작가',
+    rating: 4.8,
+    reviewCount: 27,
+    deliveryDays: 4,
+    introduction: '걷는 사이사이의 순간을 놓치지 않아요.',
+    moodTags: ['자연스러움', '밝음'],
+    shootingStyle:
+      '골목과 공원을 함께 걸으며 대화하듯 촬영해요. 정해진 포즈보다 움직임 속 표정을 담아 드려요.',
+    basePrice: 85000,
+    extraPrice: 5000,
+  },
+  {
+    id: 8,
+    name: '이안 작가',
+    rating: 4.9,
+    reviewCount: 36,
+    deliveryDays: 3,
+    introduction: '깔끔한 구도로 오래 두고 보는 사진을 찍어요.',
+    moodTags: ['세련됨', '차분함'],
+    shootingStyle:
+      '배경을 정돈하고 빛을 맞춰 깔끔한 사진을 만들어요. 기념일·프로필 촬영을 많이 해 왔어요.',
+    basePrice: 92000,
+    extraPrice: 6000,
+  },
+  {
+    id: 9,
+    name: '소울 작가',
+    rating: 4.7,
+    reviewCount: 19,
+    deliveryDays: 5,
+    introduction: '필름 같은 색감으로 하루를 기록해요.',
+    moodTags: ['몽환적', '자연스러움'],
+    shootingStyle:
+      '따뜻한 필름 톤을 좋아해요. 해 질 녘 빛을 활용해 영화 같은 장면을 만들어 드려요.',
+    basePrice: 75000,
+    extraPrice: 5000,
+  },
 ].map((expert) => ({
   ...expert,
   // TODO: 시연용 사진 (API 연동 시 삭제)

@@ -273,6 +273,15 @@ export function RequestExpertsPage() {
           />
         ) : (
           <>
+            {excludeIds && excludeIds.length > 0 && (
+              <div className={styles.reRequest} role="status">
+                <p className={styles.reRequestTitle}>같은 조건으로 작가를 다시 찾았어요</p>
+                <p className={styles.reRequestText}>
+                  이미 요청한 작가 {excludeIds.length}명은 빼고 보여 드려요.
+                </p>
+              </div>
+            )}
+
             <section className={styles.guide}>
               <div className={styles.guideTop}>
                 <h2 className={styles.guideTitle}>전문가</h2>
@@ -322,7 +331,9 @@ export function RequestExpertsPage() {
             disabled={selectedCount === 0 || sending}
             onClick={send}
           >
-            선택한 {selectedCount}명에게 요청 보내기
+            {selectedCount === 0
+              ? '전문가를 선택해 주세요'
+              : `선택한 ${selectedCount}명에게 요청 보내기`}
           </button>
         )}
       </div>

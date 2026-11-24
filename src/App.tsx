@@ -25,6 +25,10 @@ import { RequestEditPage } from './pages/RequestEditPage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestPage } from './pages/RequestPage';
+import { RequestProposalDetailPage } from './pages/RequestProposalDetailPage';
+import { RequestProposalsPage } from './pages/RequestProposalsPage';
+import { RequestQuotePage } from './pages/RequestQuotePage';
+import { RequestReservedPage } from './pages/RequestReservedPage';
 import { RequestShootPage } from './pages/RequestShootPage';
 import { RequestTypePage } from './pages/RequestTypePage';
 
@@ -65,6 +69,13 @@ export function App() {
       <Route path="/requests/new/experts" element={<RequestExpertsPage />} />
       <Route path="/requests/new/experts/:expertId" element={<RequestExpertProfilePage />} />
       <Route path="/requests/done" element={<RequestDonePage />} />
+      <Route path="/requests/:requestId/proposals" element={<RequestProposalsPage />} />
+      <Route
+        path="/requests/:requestId/proposals/:expertId"
+        element={<RequestProposalDetailPage />}
+      />
+      <Route path="/requests/:requestId/proposals/:expertId/quote" element={<RequestQuotePage />} />
+      <Route path="/requests/:requestId/reserved" element={<RequestReservedPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

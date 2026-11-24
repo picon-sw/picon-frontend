@@ -1,4 +1,8 @@
 import { demoProfileImage } from '../constants/demoImages';
+import { formatMonthDay } from '../utils/date';
+import { getExpert } from './experts';
+import { formatLocation } from './places';
+import { daysUntil, listShootRequests, type ShootRequestDetail } from './proposals';
 
 // ---- 나의 의뢰 (의뢰 메인 목록) ----
 // TODO: API 나오면 이 파일의 fetch 함수 안만 client.get('/requests/me', ...) 등으로 교체 (지금은 임시 데이터)
@@ -129,20 +133,6 @@ const MY_REQUESTS: Record<MyRequestTab, MyRequest[]> = {
   ],
   completed: [
     {
-      id: 5,
-      kind: 'shoot',
-      status: 'closed',
-      title: '연남 스냅',
-      date: '11월 28일 (토)',
-      time: '15:00',
-      place: '마포구 연남',
-      people: 2,
-      scheduleLabel: '11월 22일 (일) 마감',
-      photographers: [],
-      headline: '받은 제안 3개',
-      message: '선택하지 않아 마감됐어요. 받은 제안은 계속 볼 수 있어요.',
-    },
-    {
       id: 6,
       kind: 'shoot',
       status: 'completed',
@@ -169,7 +159,97 @@ const MY_REQUESTS: Record<MyRequestTab, MyRequest[]> = {
   ],
 };
 
+function expertPhotographer(id: number): RequestPhotographer[] {
+  const expert = getExpert(id);
+  return expert ? [photographer(id, expert.name)] : [];
+}
+
+// 받은 제안 임시 데이터(proposals.ts)로 만든 촬영 의뢰 카드
+// 제안 마감·의뢰 취소는 완료 탭, 나머지는 진행 중 탭
+function shootRequestCard(detail: ShootRequestDetail): { tab: MyRequestTab; card: MyRequest } {
+  const { id, title, form, proposals, phase, selectDeadline } = detail;
+  const base = {
+    id,
+    kind: 'shoot' as const,
+    title,
+    date: formatMonthDay(form.date),
+    time: form.time,
+    place: formatLocation(form.location),
+    people: form.people,
+  };
+  const deadline = formatMonthDay(selectDeadline);
+
+  switch (phase) {
+    case 'open':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'proposal',
+          scheduleLabel: `${deadline}까지 선택`,
+          photographers: proposals.flatMap(({ expertId }) => expertPhotographer(expertId)),
+          message: `새로운 제안 ${proposals.length}개가 도착했어요.`,
+        },
+      };
+    case 'expired':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'waiting',
+          scheduleLabel: '제안 기간 끝',
+          photographers: [],
+          headline: '받은 제안 0개',
+          message: '24시간 동안 제안이 오지 않았어요.',
+        },
+      };
+    case 'closed':
+      return {
+        tab: 'completed',
+        card: {
+          ...base,
+          status: 'closed',
+          scheduleLabel: `${deadline} 마감`,
+          photographers: [],
+          headline: `받은 제안 ${proposals.length}개`,
+          message: '선택하지 않아 마감됐어요. 받은 제안은 계속 볼 수 있어요.',
+        },
+      };
+    case 'canceled':
+      return {
+        tab: 'completed',
+        card: {
+          ...base,
+          status: 'canceled',
+          scheduleLabel: '',
+          photographers: [],
+          headline: '의뢰 취소',
+          message: '의뢰를 취소했어요.',
+        },
+      };
+    case 'reserved':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'confirmed',
+          scheduleLabel: `촬영 D-${daysUntil(form.date)}`,
+          photographers: expertPhotographer(detail.reservedExpertId ?? 0),
+          message: '일정이 확정되었어요.',
+        },
+      };
+  }
+}
+
 // 진행 중 / 완료 목록 (임시 데이터, 바로 돌려줌)
+// 촬영 의뢰 카드는 편집 카드 다음, 예약 확정 카드 앞에 둠
 export async function fetchMyRequests(): Promise<Record<MyRequestTab, MyRequest[]>> {
-  return MY_REQUESTS;
+  const shootCards = listShootRequests().map(shootRequestCard);
+  const cardsOf = (tab: MyRequestTab) =>
+    shootCards.filter((item) => item.tab === tab).map(({ card }) => card);
+  const [editCard, ...ongoingRest] = MY_REQUESTS.ongoing;
+  return {
+    ongoing: [editCard, ...cardsOf('ongoing'), ...ongoingRest],
+    completed: [...cardsOf('completed'), ...MY_REQUESTS.completed],
+  };
 }

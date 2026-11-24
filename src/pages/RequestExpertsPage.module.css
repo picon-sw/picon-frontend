@@ -71,6 +71,31 @@
   gap: 4px;
 }
 
+/* 같은 조건으로 다시 요청할 때 안내 */
+.reRequest {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #eaf6fc;
+  color: #000;
+}
+
+.reRequestTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.reRequestText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #5c5c5c;
+}
+
 .guideTop {
   display: flex;
   align-items: center;

@@ -64,8 +64,10 @@ export interface ShootFormDraft extends Omit<ShootRequestForm, 'date' | 'time'> 
   time: string | null;
   // 참고 사진 파일은 history state에 넣으면 브라우저가 버릴 수 있어서 메모리에 두고 key만 저장
   photoKey?: string;
-  // 요청서 위에 보여 줄 안내 (예: 촬영일이 가까워 날짜와 시간을 다시 골라 주세요)
+  // 날짜·시간 칸 아래 안내 (예: 촬영일이 가까워 날짜와 시간을 다시 골라 주세요)
   notice?: string;
+  // 같은 조건으로 다시 요청할 때 이미 요청한 작가 (전문가 선택에서 뺌)
+  excludeIds?: number[];
 }
 
 // 앱을 새로고침하기 전까지만 유지 (새로고침하면 사진은 다시 올려야 함)
