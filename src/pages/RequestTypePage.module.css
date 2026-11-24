@@ -106,12 +106,6 @@
   background-color: #eaf6fc;
 }
 
-.pencil {
-  position: absolute;
-  top: 13px;
-  left: 29px;
-}
-
 .text {
   display: flex;
   flex: 1;

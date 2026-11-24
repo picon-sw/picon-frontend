@@ -9,25 +9,25 @@ interface MoodPhotoPickerProps {
   onRemove: (id: string) => void;
 }
 
-// 원하는 분위기 사진 카드. 올린 순서대로 왼쪽 정렬, + 칸은 마지막 사진 오른쪽
+// 참고 사진 카드. 올린 순서대로 왼쪽 정렬, + 칸은 마지막 사진 오른쪽
 export function MoodPhotoPicker({ photos, onAdd, onRemove }: MoodPhotoPickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <section className={styles.card}>
       <div className={styles.top}>
-        <h2 className={styles.title}>원하는 분위기</h2>
-        <span className={styles.limit}>사진 최대 {MAX_MOOD_PHOTOS}장</span>
+        <h2 className={styles.title}>참고 사진</h2>
+        <span className={styles.limit}>사진 {MAX_MOOD_PHOTOS}장</span>
       </div>
 
       <ul className={styles.slots}>
         {photos.map(({ id, previewUrl }, index) => (
           <li key={id} className={styles.slot}>
-            <img className={styles.photo} src={previewUrl} alt={`분위기 사진 ${index + 1}`} />
+            <img className={styles.photo} src={previewUrl} alt={`참고 사진 ${index + 1}`} />
             <button
               type="button"
               className={styles.remove}
-              aria-label={`분위기 사진 ${index + 1} 삭제`}
+              aria-label={`참고 사진 ${index + 1} 삭제`}
               onClick={() => onRemove(id)}
             >
               <img src={closeIcon} alt="" />
@@ -40,7 +40,7 @@ export function MoodPhotoPicker({ photos, onAdd, onRemove }: MoodPhotoPickerProp
             <button
               type="button"
               className={`${styles.slot} ${styles.add}`}
-              aria-label="분위기 사진 추가"
+              aria-label="참고 사진 추가"
               onClick={() => inputRef.current?.click()}
             >
               +
@@ -54,7 +54,7 @@ export function MoodPhotoPicker({ photos, onAdd, onRemove }: MoodPhotoPickerProp
         className={styles.fileInput}
         type="file"
         accept="image/*"
-        multiple
+        multiple={MAX_MOOD_PHOTOS > 1}
         tabIndex={-1}
         aria-hidden="true"
         onChange={(event) => {

@@ -3,13 +3,12 @@ import { useLocation, useNavigate } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import cameraIcon from '../assets/icons/request/camera.svg';
 import imageIcon from '../assets/icons/request/image.svg';
-import pencilIcon from '../assets/icons/request/pencil.svg';
 import radioOffIcon from '../assets/icons/request/radio-off.svg';
 import radioOnIcon from '../assets/icons/request/radio-on.svg';
 import styles from './RequestTypePage.module.css';
 
-// shoot: 촬영만, shootEdit: 촬영 + 편집, edit: 편집만
-type RequestType = 'shoot' | 'shootEdit' | 'edit';
+// shoot: 촬영, edit: 편집
+type RequestType = 'shoot' | 'edit';
 
 interface RequestTypeOption {
   value: RequestType;
@@ -18,25 +17,19 @@ interface RequestTypeOption {
 }
 
 const REQUEST_TYPES: RequestTypeOption[] = [
-  { value: 'shoot', title: '촬영만', description: '작가가 찍고, 기본 보정된\n사진을 받아요' },
-  {
-    value: 'shootEdit',
-    title: '촬영 + 편집',
-    description: '촬영에 원하는 보정까지\n꼼꼼하게 요청해요',
-  },
-  { value: 'edit', title: '편집만', description: '이미 찍은 사진을\n보정 전문가에게 맡겨요' },
+  { value: 'shoot', title: '촬영', description: '작가가 찍고, 기본 보정된\n사진을 받아요' },
+  { value: 'edit', title: '편집', description: '이미 찍은 사진을\n보정 전문가에게 맡겨요' },
 ];
 
 interface TypeIconProps {
   type: RequestType;
 }
 
-// 촬영: 카메라, 촬영 + 편집: 카메라 + 연필, 편집: 사진
+// 촬영: 카메라, 편집: 사진
 function TypeIcon({ type }: TypeIconProps) {
   return (
     <span className={styles.icon}>
       <img src={type === 'edit' ? imageIcon : cameraIcon} alt="" />
-      {type === 'shootEdit' && <img className={styles.pencil} src={pencilIcon} alt="" />}
     </span>
   );
 }
@@ -52,8 +45,7 @@ export function RequestTypePage() {
     else navigate(-1);
   };
 
-  // 촬영만 · 촬영 + 편집은 촬영 요청서, 편집만은 편집 요청서
-  // TODO: 촬영 + 편집 요청서 구성이 정해지면 작업 유형을 state로 넘기기
+  // 촬영은 촬영 요청서, 편집은 편집 요청서
   const goNext = () => {
     if (selectedType === null) return;
     navigate(selectedType === 'edit' ? '/requests/new/edit' : '/requests/new/shoot');

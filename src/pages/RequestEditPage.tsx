@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import type { RequestExpertsState } from '../api/requests';
 import backIcon from '../assets/icons/request/arrow-left.svg';
+import { fetchEditDraft } from '../api/requests';
 import { AiFillBar } from '../components/AiFillBar';
 import { EditPhotoPicker } from '../components/EditPhotoPicker';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
@@ -59,7 +60,7 @@ export function RequestEditPage() {
 
   const { status: aiStatus, fill } = useAiFill({
     photos,
-    kind: 'edit',
+    request: fetchEditDraft,
     // 생성된 문장은 요청 사항 뒤에 추가, 500자 넘으면 잘라냄
     onFilled: (text) => {
       const next = note.trim() ? `${note}\n${text}` : text;
@@ -197,7 +198,11 @@ export function RequestEditPage() {
       <div className={shootStyles.footer}>
         {photos.length > 0 && (
           <div className={shootStyles.aiBar}>
-            <AiFillBar photoCount={photos.length} status={aiStatus} onFill={fill} />
+            <AiFillBar
+              status={aiStatus}
+              idleMessage="사진 분위기로 요청 사항을 채워드릴게요"
+              onFill={fill}
+            />
           </div>
         )}
         <div className={shootStyles.bottomBar}>

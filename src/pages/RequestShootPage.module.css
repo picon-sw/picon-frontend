@@ -97,15 +97,30 @@
   font-weight: 600;
 }
 
-.etcInput {
-  width: 100%;
-  padding: 10px;
-  border: 0;
-  border-radius: 10px;
-  background-color: #f5f5f5;
-  font: inherit;
-  font-size: 12px;
+.cardTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardHint {
+  font-size: 11px;
+  color: #8f8f8f;
+}
+
+/* 중분류 머리말 (예: 인물 · 세부 종류) */
+.subLabel {
+  margin: 0;
+  font-size: 11px;
   color: #000;
+}
+
+/* 날짜를 바꿔 시간이 초기화됐을 때 안내 */
+.warning {
+  margin: -4px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #e5484d;
 }
 
 .schedule {

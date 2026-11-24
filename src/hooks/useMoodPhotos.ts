@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const MAX_MOOD_PHOTOS = 3;
+// 참고 사진은 지금 1장 (나중에 늘릴 수 있게 상수로 둠)
+export const MAX_MOOD_PHOTOS = 1;
 
 export interface MoodPhoto {
   id: string;
@@ -9,7 +10,7 @@ export interface MoodPhoto {
   previewUrl: string;
 }
 
-// 요청서의 원하는 분위기 사진 (최대 3장). 촬영 · 편집 요청서가 함께 사용
+// 요청서의 참고 사진 (최대 MAX_MOOD_PHOTOS장). 촬영 · 편집 요청서가 함께 사용
 // TODO: 업로드 API 연동 시 Pre-signed URL로 PUT 후 파일 key만 요청서에 담기
 export function useMoodPhotos() {
   const [photos, setPhotos] = useState<MoodPhoto[]>([]);
