@@ -2,56 +2,38 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import checkIcon from '../assets/icons/request/check.svg';
+import clockIcon from '../assets/icons/request/clock-large.svg';
 import {
+  fetchAvailableExperts,
+  formatSlot,
+  formatWon,
+  type AvailableExperts,
+  type Expert,
+  type NearbySlot,
+} from '../api/experts';
+import { formatLocation } from '../api/places';
+import {
+  formatShootSchedule,
   readExpertsState,
   sendRequest,
   type RequestDoneState,
   type RequestExpertsState,
   type RequestSummary,
 } from '../api/requests';
-import { DEMO_REQUEST_PORTFOLIO_IMAGES, demoProfileImage } from '../constants/demoImages';
 import styles from './RequestExpertsPage.module.css';
 
 const MAX_SELECTION = 5;
 
-interface Expert {
-  id: number;
-  name: string;
-  rating: number;
-  reviewCount: number;
-  // 최소 가격 (원)
-  minPrice: number;
-  // 백엔드에서 받은 이미지 URL. 없으면 빈 칸으로 표시
-  profileImageUrl?: string;
-  portfolio: { id: number; imageUrl?: string }[];
-}
-
-// TODO: 시연용 사진 (API 연동 시 imageUrl 삭제)
-const SAMPLE_PORTFOLIO = DEMO_REQUEST_PORTFOLIO_IMAGES.map((imageUrl, index) => ({
-  id: index + 1,
-  imageUrl,
-}));
-
 // 주소로 바로 들어와서 요청서 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 const SAMPLE_SUMMARY: RequestSummary = {
-  title: '서울숲 우정 스냅',
-  detail: '10월 20일 (화) · 서울숲 · 촬영 인원 3명',
+  title: '경의선책거리 스냅',
+  detail: '10월 20일 (화) 14:00 · 마포구 경의선책거리 · 촬영 인원 3명',
 };
 
-// TODO: API 연동 시 교체 (임시 데이터 — 서버가 연관성 높은 순으로 내려준 목록을 그대로 표시)
-const EXPERTS: Expert[] = [
-  { id: 1, name: '김하늘 작가', rating: 4.9, reviewCount: 32, minPrice: 89000 },
-  { id: 2, name: '윤슬 작가', rating: 4.8, reviewCount: 24, minPrice: 79000 },
-  { id: 3, name: '민서 작가', rating: 4.9, reviewCount: 41, minPrice: 85000 },
-  { id: 4, name: '서하 작가', rating: 4.7, reviewCount: 18, minPrice: 70000 },
-  { id: 5, name: '무드필름', rating: 4.8, reviewCount: 56, minPrice: 95000 },
-  { id: 6, name: '이젤 작가', rating: 4.6, reviewCount: 12, minPrice: 60000 },
-].map((expert) => ({
-  ...expert,
-  portfolio: SAMPLE_PORTFOLIO,
-  // TODO: 시연용 사진 (API 연동 시 삭제)
-  profileImageUrl: demoProfileImage(expert.name),
-}));
+const TYPE_GUIDE = {
+  shoot: '확인 후 촬영 계획과 견적서를 보내요. 촬영 후 구매한 사진은 골라서 편집을 맡길 수 있어요.',
+  edit: '확인 후 보정 샘플 1장과 견적서를 보내요.',
+};
 
 interface ExpertCardProps {
   expert: Expert;
@@ -61,7 +43,7 @@ interface ExpertCardProps {
 }
 
 function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardProps) {
-  const { name, rating, reviewCount, minPrice, profileImageUrl, portfolio } = expert;
+  const { name, rating, reviewCount, basePrice, profileImageUrl, portfolio } = expert;
 
   return (
     <li
@@ -79,7 +61,7 @@ function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardPro
           <p className={styles.name}>{name}</p>
           <p className={styles.meta}>
             <span>
-              ★ {rating.toFixed(1)} ({reviewCount}) · {minPrice.toLocaleString('ko-KR')}원~
+              ★ {rating.toFixed(1)} ({reviewCount}) · {formatWon(basePrice)}~
             </span>
             <button
               type="button"
@@ -94,9 +76,10 @@ function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardPro
           </p>
         </div>
 
+        {/* 선택 전: 빈 동그라미 / 선택 후: ✓ 선택됨 */}
         <button
           type="button"
-          className={selected ? `${styles.select} ${styles.selectOn}` : styles.select}
+          className={selected ? `${styles.select} ${styles.selectOn}` : styles.selectCircle}
           aria-pressed={selected}
           aria-label={`${name} ${selected ? '선택 해제' : '선택'}`}
           onClick={(event) => {
@@ -104,8 +87,12 @@ function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardPro
             onToggle();
           }}
         >
-          {selected && <img src={checkIcon} alt="" />}
-          {selected ? '선택됨' : '선택'}
+          {selected && (
+            <>
+              <img src={checkIcon} alt="" />
+              선택됨
+            </>
+          )}
         </button>
       </div>
 
@@ -125,14 +112,63 @@ function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardPro
   );
 }
 
+interface NoExpertsProps {
+  // 예: 10월 20일 (화) 14:00 마포구
+  condition: string;
+  nearby: NearbySlot[];
+  onPickSlot: (slot: NearbySlot) => void;
+}
+
+// 요청서 조건에 맞는 작가가 없을 때: 가까운 시간 추천
+function NoExperts({ condition, nearby, onPickSlot }: NoExpertsProps) {
+  return (
+    <section className={styles.noExperts}>
+      <span className={styles.noExpertsIcon}>
+        <img src={clockIcon} alt="" />
+      </span>
+      <h2 className={styles.noExpertsTitle}>이 시간에 가능한 작가가 없어요</h2>
+      <p className={styles.noExpertsText}>
+        {condition}에서 촬영할 수 있는
+        <br />
+        작가가 없어요. 가까운 시간에는 가능한 작가가 있어요.
+      </p>
+      <ul className={styles.slots} aria-label="가까운 시간">
+        {nearby.map((slot) => (
+          <li key={`${slot.date} ${slot.time}`}>
+            <button type="button" className={styles.slot} onClick={() => onPickSlot(slot)}>
+              <span className={styles.slotTime}>{formatSlot(slot)}</span>
+              <span className={styles.slotCount}>작가 {slot.expertCount}명</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export function RequestExpertsPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const pageState = readExpertsState(location.state);
   const summary = pageState?.summary ?? SAMPLE_SUMMARY;
+  const form = pageState?.form;
+  const kind = pageState?.kind ?? (form || !pageState ? 'shoot' : 'edit');
+  const excludeIds = pageState?.excludeIds;
+  const [result, setResult] = useState<AvailableExperts | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>(pageState?.selectedIds ?? []);
   const [sending, setSending] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // 요청서 조건이 바뀌면(가까운 시간 선택 등) 목록을 다시 받아 옴
+  useEffect(() => {
+    let ignore = false;
+    fetchAvailableExperts(form, excludeIds).then((next) => {
+      if (!ignore) setResult(next);
+    });
+    return () => {
+      ignore = true;
+    };
+  }, [form, excludeIds]);
 
   // 토스트는 2초 뒤 사라짐
   useEffect(() => {
@@ -159,12 +195,38 @@ export function RequestExpertsPage() {
     setSelectedIds([...selectedIds, id]);
   };
 
+  const currentState = (): RequestExpertsState => ({
+    summary,
+    kind,
+    form,
+    excludeIds,
+    selectedIds,
+  });
+
   // 프로필을 보고 뒤로 돌아와도 고른 전문가가 남도록 지금 화면 state에 저장해 두고 이동
   const openProfile = (id: number) => {
-    const state: RequestExpertsState = { summary, selectedIds };
-    navigate(location.pathname, { replace: true, state });
+    navigate(location.pathname, { replace: true, state: currentState() });
     navigate(`/requests/new/experts/${id}`);
   };
+
+  // 추천 시간을 고르면 요청서의 날짜·시간을 바꿔서 다시 찾음
+  const pickSlot = (slot: NearbySlot) => {
+    if (!form) return;
+    const nextForm = { ...form, date: slot.date, time: slot.time };
+    const state: RequestExpertsState = {
+      ...currentState(),
+      form: nextForm,
+      summary: {
+        ...summary,
+        detail: `${formatShootSchedule(slot.date, slot.time)} · ${formatLocation(form.location)} · 촬영 인원 ${form.people}명`,
+      },
+      selectedIds: [],
+    };
+    setSelectedIds([]);
+    navigate(location.pathname, { replace: true, state });
+  };
+
+  const experts = result?.kind === 'available' ? result.experts : [];
 
   // 뒤로 가기로 전문가 선택 화면에 다시 들어오지 않도록 replace 이동
   const send = async () => {
@@ -174,9 +236,9 @@ export function RequestExpertsPage() {
       await sendRequest(selectedIds);
       const state: RequestDoneState = {
         summary,
-        experts: EXPERTS.filter(({ id }) => selectedIds.includes(id)).map(
-          ({ id, name, profileImageUrl }) => ({ id, name, profileImageUrl }),
-        ),
+        experts: experts
+          .filter(({ id }) => selectedIds.includes(id))
+          .map(({ id, name, profileImageUrl }) => ({ id, name, profileImageUrl })),
       };
       navigate('/requests/done', { replace: true, state });
     } catch {
@@ -186,6 +248,7 @@ export function RequestExpertsPage() {
   };
 
   const selectedCount = selectedIds.length;
+  const noExperts = result?.kind === 'none';
 
   return (
     <main className={styles.page}>
@@ -202,46 +265,43 @@ export function RequestExpertsPage() {
           <p className={styles.summaryDetail}>{summary.detail}</p>
         </section>
 
-        <section className={styles.guide}>
-          <div className={styles.guideTop}>
-            <h2 className={styles.guideTitle}>전문가</h2>
-            <span className={styles.count} aria-live="polite">
-              선택한 전문가 {selectedCount}/{MAX_SELECTION}
-            </span>
-          </div>
-          <p className={styles.guideText}>
-            포트폴리오를 참고해 전문가를 선택해 주세요. (최대 {MAX_SELECTION}명)
-          </p>
-        </section>
-
-        {EXPERTS.length > 0 ? (
-          <ul className={styles.list}>
-            {EXPERTS.map((expert) => (
-              <ExpertCard
-                key={expert.id}
-                expert={expert}
-                selected={selectedIds.includes(expert.id)}
-                onToggle={() => toggleExpert(expert.id)}
-                onOpenProfile={() => openProfile(expert.id)}
-              />
-            ))}
-          </ul>
+        {result?.kind === 'none' && form ? (
+          <NoExperts
+            condition={`${formatShootSchedule(form.date, form.time)} ${form.location.sigungu}`}
+            nearby={result.nearby}
+            onPickSlot={pickSlot}
+          />
         ) : (
-          <div className={styles.empty}>
-            <p>조건에 맞는 전문가가 없어요.</p>
-            <button type="button" className={styles.editButton} onClick={goBack}>
-              요청서 수정하기
-            </button>
-          </div>
-        )}
+          <>
+            <section className={styles.guide}>
+              <div className={styles.guideTop}>
+                <h2 className={styles.guideTitle}>전문가</h2>
+                <span className={styles.count} aria-live="polite">
+                  선택한 전문가 {selectedCount}/{MAX_SELECTION}
+                </span>
+              </div>
+              <p className={styles.guideText}>
+                포트폴리오를 참고해 전문가를 선택해 주세요. (최대 {MAX_SELECTION}명)
+              </p>
+            </section>
 
-        <div className={styles.typeGuide}>
-          <p>사진 편집만: 확인 후 샘플과 견적서를 보내요.</p>
-          <p>
-            촬영·촬영+편집: 확인 후 촬영 계획과 견적서를 보내요. 편집은 촬영 후 받은 사진에서 골라
-            바로 요청해요.
-          </p>
-        </div>
+            <ul className={styles.list}>
+              {experts.map((expert) => (
+                <ExpertCard
+                  key={expert.id}
+                  expert={expert}
+                  selected={selectedIds.includes(expert.id)}
+                  onToggle={() => toggleExpert(expert.id)}
+                  onOpenProfile={() => openProfile(expert.id)}
+                />
+              ))}
+            </ul>
+
+            <div className={styles.typeGuide}>
+              <p>{TYPE_GUIDE[kind]}</p>
+            </div>
+          </>
+        )}
       </div>
 
       {toast && (
@@ -251,14 +311,20 @@ export function RequestExpertsPage() {
       )}
 
       <div className={styles.bottomBar}>
-        <button
-          type="button"
-          className={styles.sendButton}
-          disabled={selectedCount === 0 || sending}
-          onClick={send}
-        >
-          선택한 {selectedCount}명에게 요청 보내기
-        </button>
+        {noExperts ? (
+          <button type="button" className={styles.sendButton} onClick={goBack}>
+            날짜·시간 바꾸기
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={styles.sendButton}
+            disabled={selectedCount === 0 || sending}
+            onClick={send}
+          >
+            선택한 {selectedCount}명에게 요청 보내기
+          </button>
+        )}
       </div>
     </main>
   );

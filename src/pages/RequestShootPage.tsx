@@ -8,8 +8,12 @@ import { formatLocation, type ShootLocation } from '../api/places';
 import {
   fetchShootDraft,
   formatShootSchedule,
+  loadDraftPhotos,
+  readShootFormDraft,
+  saveDraftPhotos,
   type RequestExpertsState,
   type ShootDraft,
+  type ShootFormDraft,
 } from '../api/requests';
 import { AiFillBar } from '../components/AiFillBar';
 import { DatePickerSheet } from '../components/DatePickerSheet';
@@ -105,20 +109,22 @@ function PickField({ label, value, placeholder, icon, onClick }: PickFieldProps)
 export function RequestShootPage() {
   const navigate = useNavigate();
   const routerLocation = useLocation();
+  // 전문가 선택 등에서 돌아왔을 때 적어 둔 값 (처음 들어오면 null)
+  const [initial] = useState(() => readShootFormDraft(routerLocation.state));
   // 희망 날짜는 'YYYY-MM-DD', 희망 시간은 'HH:mm'
-  const [date, setDate] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null>(initial?.date ?? null);
+  const [time, setTime] = useState<string | null>(initial?.time ?? null);
   // 날짜를 바꿔서 시간이 지워졌을 때 안내
   const [timeReset, setTimeReset] = useState(false);
-  const [location, setLocation] = useState<ShootLocation | null>(null);
+  const [location, setLocation] = useState<ShootLocation | null>(initial?.location ?? null);
   const [openSheet, setOpenSheet] = useState<'date' | 'time' | 'location' | null>(null);
-  const [people, setPeople] = useState(1);
-  const [budget, setBudget] = useState<Budget | null>(null);
-  const [kind, setKind] = useState<ShootKind | null>(null);
-  const [moods, setMoods] = useState<string[]>([]);
-  const [note, setNote] = useState('');
+  const [people, setPeople] = useState(initial?.people ?? 1);
+  const [budget, setBudget] = useState<Budget | null>(initial?.budget ?? null);
+  const [kind, setKind] = useState<ShootKind | null>(initial?.kind ?? null);
+  const [moods, setMoods] = useState<string[]>(initial?.moods ?? []);
+  const [note, setNote] = useState(initial?.note ?? '');
   const [toast, setToast] = useState<string | null>(null);
-  const { photos, addPhotos, removePhoto } = useMoodPhotos();
+  const { photos, addPhotos, removePhoto } = useMoodPhotos(loadDraftPhotos(initial?.photoKey));
 
   const { status: aiStatus, fill } = useAiFill<ShootDraft>({
     photos,
@@ -199,6 +205,19 @@ export function RequestShootPage() {
   const goToExperts = () => {
     if (!canSubmit || date === null || time === null || location === null) return;
     if (budget === null || !isShootKindDone(kind)) return;
+    // 뒤로 와서 다시 고칠 수 있게 지금 화면 기록에 적어 둔 값 저장
+    const draft: ShootFormDraft = {
+      date,
+      time,
+      location,
+      people,
+      budget,
+      kind,
+      moods,
+      note,
+      photoKey: saveDraftPhotos(photos.map(({ file }) => file)),
+    };
+    navigate(routerLocation.pathname, { replace: true, state: { draft } });
     const state: RequestExpertsState = {
       summary: {
         // 제목 규칙: 상세 주소 + 스냅
@@ -221,6 +240,11 @@ export function RequestShootPage() {
 
       <div className={styles.content}>
         <p className={styles.intro}>전문가를 골라 견적을 받아보세요.</p>
+        {initial?.notice && (
+          <p className={styles.notice} role="status">
+            {initial.notice}
+          </p>
+        )}
 
         <div className={styles.form}>
           <section className={styles.card} aria-label="촬영 일정">

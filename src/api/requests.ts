@@ -57,12 +57,46 @@ export interface ShootRequestForm {
   note: string;
 }
 
+// 촬영 요청서 화면에 다시 돌아왔을 때 채울 값 (history state에 저장)
+// 날짜·시간은 비워서 넘길 수 있음 (촬영일이 가까워 다시 고르게 할 때)
+export interface ShootFormDraft extends Omit<ShootRequestForm, 'date' | 'time'> {
+  date: string | null;
+  time: string | null;
+  // 참고 사진 파일은 history state에 넣으면 브라우저가 버릴 수 있어서 메모리에 두고 key만 저장
+  photoKey?: string;
+  // 요청서 위에 보여 줄 안내 (예: 촬영일이 가까워 날짜와 시간을 다시 골라 주세요)
+  notice?: string;
+}
+
+// 앱을 새로고침하기 전까지만 유지 (새로고침하면 사진은 다시 올려야 함)
+const draftPhotos = new Map<string, File[]>();
+
+export function saveDraftPhotos(files: File[]): string {
+  const key = crypto.randomUUID();
+  draftPhotos.set(key, files);
+  return key;
+}
+
+export function loadDraftPhotos(key: string | undefined): File[] {
+  return key ? (draftPhotos.get(key) ?? []) : [];
+}
+
+export function readShootFormDraft(state: unknown): ShootFormDraft | null {
+  if (!isRecord(state) || !isRecord(state.draft)) return null;
+  const draft = state.draft;
+  return isRecord(draft.location) ? (draft as unknown as ShootFormDraft) : null;
+}
+
 // 요청서 → 전문가 선택
 // TODO: API 나오면 요청서 저장 응답의 requestId를 담아 전문가 목록 요청·요청 보내기에 사용
 export interface RequestExpertsState {
   summary: RequestSummary;
+  // 요청서 종류 (없으면 form이 있으면 촬영, 없으면 편집으로 봄)
+  kind?: 'shoot' | 'edit';
   // 촬영 요청서 값 (편집 요청서는 없음)
   form?: ShootRequestForm;
+  // 같은 조건으로 다시 요청할 때 이미 요청한 작가 (목록에서 뺌)
+  excludeIds?: number[];
   // 작가 프로필을 보고 돌아왔을 때 고른 전문가를 유지하려고 담아 둠
   selectedIds?: number[];
 }
@@ -83,21 +117,27 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+function readNumbers(value: unknown): number[] | undefined {
+  return Array.isArray(value)
+    ? value.filter((item): item is number => typeof item === 'number')
+    : undefined;
+}
+
 function isSummary(value: unknown): value is RequestSummary {
   return isRecord(value) && typeof value.title === 'string' && typeof value.detail === 'string';
 }
 
 export function readExpertsState(state: unknown): RequestExpertsState | null {
   if (!isRecord(state) || !isSummary(state.summary)) return null;
-  const selectedIds = Array.isArray(state.selectedIds)
-    ? state.selectedIds.filter((id): id is number => typeof id === 'number')
-    : undefined;
+  const selectedIds = readNumbers(state.selectedIds);
+  const excludeIds = readNumbers(state.excludeIds);
+  const kind = state.kind === 'shoot' || state.kind === 'edit' ? state.kind : undefined;
   // form은 이 앱의 요청서 화면이 넘긴 값이라 모양만 간단히 확인
   const form =
     isRecord(state.form) && typeof state.form.date === 'string'
       ? (state.form as unknown as ShootRequestForm)
       : undefined;
-  return { summary: state.summary, form, selectedIds };
+  return { summary: state.summary, kind, form, excludeIds, selectedIds };
 }
 
 export function readDoneState(state: unknown): RequestDoneState | null {

@@ -102,6 +102,7 @@ export function RequestEditPage() {
       .join(' · ');
     const state: RequestExpertsState = {
       summary: { title: `사진 보정 ${editPhotos.length}장`, detail },
+      kind: 'edit',
     };
     navigate('/requests/new/experts', { state });
   };

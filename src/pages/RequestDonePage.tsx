@@ -1,13 +1,15 @@
 import { useLocation, useNavigate } from 'react-router';
 import { readDoneState, type RequestDoneState } from '../api/requests';
-import backIcon from '../assets/icons/request/arrow-left.svg';
 import { demoProfileImage } from '../constants/demoImages';
 import styles from './RequestDonePage.module.css';
 
 // 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 // 전문가 사진(profileImageUrl)이 없으면 빈 동그라미로 표시
 const SAMPLE_DONE: RequestDoneState = {
-  summary: { title: '서울숲 우정 스냅', detail: '10월 20일 (화) · 서울숲 · 3명' },
+  summary: {
+    title: '경의선책거리 스냅',
+    detail: '10월 20일 (화) 14:00 · 마포구 경의선책거리 · 촬영 인원 3명',
+  },
   experts: [
     { id: 1, name: '김하늘' },
     { id: 2, name: '윤슬' },
@@ -29,14 +31,6 @@ export function RequestDonePage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <button
-          type="button"
-          className={styles.back}
-          aria-label="의뢰 메인으로 가기"
-          onClick={goToRequests}
-        >
-          <img src={backIcon} alt="" />
-        </button>
         <h1 className={styles.title}>의뢰 요청 완료</h1>
       </header>
 
@@ -49,7 +43,7 @@ export function RequestDonePage() {
               ) : (
                 <span className={`${styles.avatar} ${styles.avatarEmpty}`} />
               )}
-              <span className={styles.expertName}>{name}</span>
+              <span className={styles.expertName}>{name.replace(/ 작가$/, '')}</span>
             </li>
           ))}
         </ul>
@@ -65,7 +59,8 @@ export function RequestDonePage() {
       <article className={styles.card}>
         <span className={styles.badge}>제안 대기</span>
         <p className={styles.cardTitle}>{summary.title}</p>
-        <p className={styles.cardSummary}>{summary.detail}</p>
+        {/* 카드에서는 '촬영 인원 3명' 대신 '3명'으로 짧게 */}
+        <p className={styles.cardSummary}>{summary.detail.replace('촬영 인원 ', '')}</p>
       </article>
 
       <div className={styles.bottomBar}>

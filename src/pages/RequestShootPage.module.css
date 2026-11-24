@@ -49,6 +49,17 @@
   color: #000;
 }
 
+/* 다시 요청할 때 안내 (연한 파란 상자) */
+.notice {
+  margin: -4px 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #eaf6fc;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #000;
+}
+
 .form {
   display: flex;
   flex-direction: column;
