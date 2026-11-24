@@ -215,8 +215,22 @@
   background-color: #fff;
 }
 
-.secondaryButton:disabled {
+.secondaryButtonUsed {
   border-color: #ebebeb;
   color: #c4c4c4;
-  cursor: default;
+}
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 110;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
 }
