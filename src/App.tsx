@@ -22,7 +22,14 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
 import { RequestCompletedPage } from './pages/RequestCompletedPage';
 import { RequestDonePage } from './pages/RequestDonePage';
+import { RequestEditCompletedPage } from './pages/RequestEditCompletedPage';
 import { RequestEditPage } from './pages/RequestEditPage';
+import { RequestEditPaidPage } from './pages/RequestEditPaidPage';
+import { RequestEditProposalDetailPage } from './pages/RequestEditProposalDetailPage';
+import { RequestEditProposalsPage } from './pages/RequestEditProposalsPage';
+import { RequestEditQuotePage } from './pages/RequestEditQuotePage';
+import { RequestEditResultPage } from './pages/RequestEditResultPage';
+import { RequestEditWorkPage } from './pages/RequestEditWorkPage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestInquiriesPage } from './pages/RequestInquiriesPage';
@@ -88,6 +95,23 @@ export function App() {
       <Route path="/requests/:requestId/photos/purchase" element={<RequestPhotoPurchasePage />} />
       <Route path="/requests/:requestId/purchased" element={<RequestPurchasedPage />} />
       <Route path="/requests/:requestId/completed" element={<RequestCompletedPage />} />
+      <Route path="/requests/edits/:requestId/proposals" element={<RequestEditProposalsPage />} />
+      <Route
+        path="/requests/edits/:requestId/proposals/:expertId"
+        element={<RequestEditProposalDetailPage />}
+      />
+      <Route
+        path="/requests/edits/:requestId/proposals/:expertId/quote"
+        element={<RequestEditQuotePage />}
+      />
+      <Route path="/requests/edits/:requestId/paid" element={<RequestEditPaidPage />} />
+      <Route path="/requests/edits/:requestId/work" element={<RequestEditWorkPage />} />
+      <Route
+        path="/requests/edits/:requestId/inquiries"
+        element={<RequestInquiriesPage kind="edit" />}
+      />
+      <Route path="/requests/edits/:requestId/result" element={<RequestEditResultPage />} />
+      <Route path="/requests/edits/:requestId/completed" element={<RequestEditCompletedPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

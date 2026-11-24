@@ -20,8 +20,19 @@ const EMPTY_REQUESTS: Record<MyRequestTab, MyRequest[]> = { ongoing: [], complet
 
 // 카드를 눌렀을 때 갈 상세 화면. 아직 없는 화면은 null (누를 수 없는 카드)
 // TODO: 예약 상세·완료 상세·편집 제안 등 화면이 생기면 상태별로 연결
+// 편집 의뢰 상세 (받은 제안 · 작업 상세 · 완료 사진 확인 · 완료 상세)
+function getEditDetailPath(id: number, status: MyRequest['status']): string | null {
+  if (status === 'proposal') return `/requests/edits/${id}/proposals`;
+  if (status === 'editWaiting' || status === 'editing' || status === 'revising') {
+    return `/requests/edits/${id}/work`;
+  }
+  if (status === 'photosArrived') return `/requests/edits/${id}/result`;
+  if (status === 'completed') return `/requests/edits/${id}/completed`;
+  return null;
+}
+
 function getDetailPath({ id, kind, status }: MyRequest): string | null {
-  if (kind !== 'shoot') return null;
+  if (kind === 'edit') return getEditDetailPath(id, status);
   if (status === 'proposal' || status === 'waiting' || status === 'closed') {
     return `/requests/${id}/proposals`;
   }

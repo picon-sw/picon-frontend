@@ -15,13 +15,22 @@ interface ReviewSheetProps {
   subtitle: string;
   // 이미 남긴 후기가 있으면 보기만
   review?: Review;
+  // 고를 수 있는 키워드 (없으면 촬영 후기 키워드)
+  keywordOptions?: readonly ReviewKeyword[];
   // 실패하면 throw (시트는 열린 채로 둠)
   onSubmit?: (review: Omit<Review, 'createdAt'>) => Promise<void>;
   onClose: () => void;
 }
 
 // 후기 작성 · 보기 시트: 별점(필수) · 좋았던 점 · 한 줄 후기
-export function ReviewSheet({ expert, subtitle, review, onSubmit, onClose }: ReviewSheetProps) {
+export function ReviewSheet({
+  expert,
+  subtitle,
+  review,
+  keywordOptions = REVIEW_KEYWORDS,
+  onSubmit,
+  onClose,
+}: ReviewSheetProps) {
   const readOnly = Boolean(review);
   const [rating, setRating] = useState(review?.rating ?? 0);
   const [keywords, setKeywords] = useState<ReviewKeyword[]>(review?.keywords ?? []);
@@ -92,7 +101,7 @@ export function ReviewSheet({ expert, subtitle, review, onSubmit, onClose }: Rev
       <div className={styles.keywords}>
         <p className={styles.keywordsTitle}>어떤 점이 좋았나요?</p>
         <div className={styles.chips}>
-          {REVIEW_KEYWORDS.map((keyword) => {
+          {keywordOptions.map((keyword) => {
             const on = keywords.includes(keyword);
             return (
               <button

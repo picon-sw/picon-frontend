@@ -6,7 +6,7 @@ import clockIcon from '../assets/icons/request/clock-large.svg';
 import {
   fetchAvailableExperts,
   formatSlot,
-  formatWon,
+  formatStartPrice,
   type AvailableExperts,
   type Expert,
   type NearbySlot,
@@ -43,7 +43,7 @@ interface ExpertCardProps {
 }
 
 function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardProps) {
-  const { name, rating, reviewCount, basePrice, profileImageUrl, portfolio } = expert;
+  const { name, rating, reviewCount, profileImageUrl, portfolio } = expert;
 
   return (
     <li
@@ -61,7 +61,7 @@ function ExpertCard({ expert, selected, onToggle, onOpenProfile }: ExpertCardPro
           <p className={styles.name}>{name}</p>
           <p className={styles.meta}>
             <span>
-              ★ {rating.toFixed(1)} ({reviewCount}) · {formatWon(basePrice)}~
+              ★ {rating.toFixed(1)} ({reviewCount}) · {formatStartPrice(expert)}
             </span>
             <button
               type="button"
@@ -162,13 +162,13 @@ export function RequestExpertsPage() {
   // 요청서 조건이 바뀌면(가까운 시간 선택 등) 목록을 다시 받아 옴
   useEffect(() => {
     let ignore = false;
-    fetchAvailableExperts(form, excludeIds).then((next) => {
+    fetchAvailableExperts(form, excludeIds, kind).then((next) => {
       if (!ignore) setResult(next);
     });
     return () => {
       ignore = true;
     };
-  }, [form, excludeIds]);
+  }, [form, excludeIds, kind]);
 
   // 토스트는 2초 뒤 사라짐
   useEffect(() => {
@@ -239,6 +239,7 @@ export function RequestExpertsPage() {
         experts: experts
           .filter(({ id }) => selectedIds.includes(id))
           .map(({ id, name, profileImageUrl }) => ({ id, name, profileImageUrl })),
+        kind,
       };
       navigate('/requests/done', { replace: true, state });
     } catch {
@@ -290,7 +291,8 @@ export function RequestExpertsPage() {
                 </span>
               </div>
               <p className={styles.guideText}>
-                포트폴리오를 참고해 전문가를 선택해 주세요. (최대 {MAX_SELECTION}명)
+                {kind === 'edit' ? '보정 전후 사진을' : '포트폴리오를'} 참고해 전문가를 선택해
+                주세요. (최대 {MAX_SELECTION}명)
               </p>
             </section>
 

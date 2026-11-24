@@ -1,5 +1,12 @@
 import { demoProfileImage } from '../constants/demoImages';
 import { formatMonthDay } from '../utils/date';
+import {
+  confirmDeadline,
+  editDueDate,
+  getEditPrice,
+  listEditRequests,
+  type EditRequestDetail,
+} from './editRequests';
 import { formatWon, getExpert } from './experts';
 import { formatLocation } from './places';
 import {
@@ -82,28 +89,6 @@ function photographer(id: number, name: string): RequestPhotographer {
   // TODO: 시연용 사진 (API 연동 시 백엔드 이미지 URL 사용)
   return { id, name, profileImageUrl: demoProfileImage(name) };
 }
-
-const MY_REQUESTS: Record<MyRequestTab, MyRequest[]> = {
-  ongoing: [
-    {
-      id: 1,
-      kind: 'edit',
-      status: 'proposal',
-      title: '사진 편집 - 5장',
-      requestedDate: '10월 18일 (일)',
-      photoCount: 5,
-      scheduleLabel: '10월 20일 (화)까지 선택',
-      photographers: [
-        photographer(1, '서하 작가'),
-        photographer(2, '윤슬 작가'),
-        photographer(3, '무드필름'),
-      ],
-      message: '새로운 제안 3개가 도착했어요.',
-    },
-  ],
-  // 완료한 촬영은 받은 제안 임시 데이터(proposals.ts)에서 만듦
-  completed: [],
-};
 
 function expertPhotographer(id: number): RequestPhotographer[] {
   const expert = getExpert(id);
@@ -230,14 +215,118 @@ function shootRequestCard(detail: ShootRequestDetail): { tab: MyRequestTab; card
   }
 }
 
-// 진행 중 / 완료 목록 (임시 데이터, 바로 돌려줌)
-// 촬영 의뢰 카드는 편집 카드 다음에 둠
-export async function fetchMyRequests(): Promise<Record<MyRequestTab, MyRequest[]>> {
-  const shootCards = listShootRequests().map(shootRequestCard);
-  const cardsOf = (tab: MyRequestTab) =>
-    shootCards.filter((item) => item.tab === tab).map(({ card }) => card);
-  return {
-    ongoing: [...MY_REQUESTS.ongoing, ...cardsOf('ongoing')],
-    completed: [...cardsOf('completed'), ...MY_REQUESTS.completed],
+// 편집 의뢰 임시 데이터(editRequests.ts)로 만든 편집 의뢰 카드
+// 의뢰 취소·확인 완료는 완료 탭, 나머지는 진행 중 탭
+function editRequestCard(detail: EditRequestDetail): { tab: MyRequestTab; card: MyRequest } {
+  const { id, title, photos, proposals, phase, expertId } = detail;
+  const base = {
+    id,
+    kind: 'edit' as const,
+    title,
+    requestedDate: formatMonthDay(detail.requestedAt),
+    photoCount: photos.length,
   };
+  const assigned = expertPhotographer(expertId ?? 0);
+  const due = editDueDate(detail);
+  const dueLabel = due ? `완료 D-${daysUntil(due)}` : '';
+
+  switch (phase) {
+    case 'open':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'proposal',
+          scheduleLabel: `${formatMonthDay(detail.selectDeadline)}까지 선택`,
+          photographers: proposals.flatMap((proposal) => expertPhotographer(proposal.expertId)),
+          message: `새로운 제안 ${proposals.length}개가 도착했어요.`,
+        },
+      };
+    case 'waiting':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'editWaiting',
+          scheduleLabel: dueLabel,
+          photographers: assigned,
+          message: '작가가 곧 작업을 시작해요.',
+        },
+      };
+    case 'editing':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'editing',
+          scheduleLabel: dueLabel,
+          photographers: assigned,
+          message: '보정 작업을 하고 있어요.',
+        },
+      };
+    case 'delivered': {
+      const deadline = confirmDeadline(detail);
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'photosArrived',
+          scheduleLabel: deadline ? `확인 D-${daysUntil(deadline)}` : '',
+          photographers: assigned,
+          message: `보정한 사진 ${photos.length}장이 도착했어요. 확인해 주세요.`,
+        },
+      };
+    }
+    case 'revising':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'revising',
+          scheduleLabel: '',
+          photographers: assigned,
+          message: '요청하신 수정을 반영하고 있어요.',
+        },
+      };
+    case 'completed': {
+      const expert = getExpert(expertId ?? 0);
+      const total = expert ? getEditPrice(expert, photos.length) : 0;
+      return {
+        tab: 'completed',
+        card: {
+          ...base,
+          status: 'completed',
+          scheduleLabel: detail.completedAt ? `완료일 ${formatMonthDay(detail.completedAt)}` : '',
+          photographers: assigned,
+          message: `보정 사진 ${photos.length}장 · 결제 총액 ${formatWon(total)}`,
+        },
+      };
+    }
+    case 'canceled':
+      return {
+        tab: 'completed',
+        card: {
+          ...base,
+          status: 'canceled',
+          scheduleLabel: '',
+          photographers: [],
+          headline: '의뢰 취소',
+          message: expertId
+            ? '의뢰를 취소했어요. 결제 금액은 전액 환불돼요.'
+            : '의뢰를 취소했어요.',
+        },
+      };
+  }
+}
+
+// 진행 중 / 완료 목록 (임시 데이터, 바로 돌려줌)
+// 편집 의뢰 카드는 촬영 의뢰 카드 앞에 둠
+export async function fetchMyRequests(): Promise<Record<MyRequestTab, MyRequest[]>> {
+  const cards = [
+    ...listEditRequests().map(editRequestCard),
+    ...listShootRequests().map(shootRequestCard),
+  ];
+  const cardsOf = (tab: MyRequestTab) =>
+    cards.filter((item) => item.tab === tab).map(({ card }) => card);
+  return { ongoing: cardsOf('ongoing'), completed: cardsOf('completed') };
 }

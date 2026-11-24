@@ -37,6 +37,8 @@ export interface Expert {
   region: { sido: string; sigungu: string };
   // 편집 의뢰도 받는지
   acceptsEdit: boolean;
+  // 편집 전문가의 1장당 보정 금액 (편집 전문가만)
+  editPrice?: number;
 }
 
 export const BASE_PHOTO_COUNT = 10;
@@ -71,9 +73,53 @@ const EXPERT_REGIONS: Record<number, Expert['region']> = {
   11: { sido: '서울', sigungu: '강남구' },
 };
 // 편집도 받는 작가
-const EDIT_EXPERT_IDS = [1, 2, 3, 5, 6, 7, 8, 9];
+const EDIT_EXPERT_IDS = [1, 2, 3, 5, 6, 7, 8, 9, 21, 22, 23];
+
+// 편집 의뢰 전문가 (보정만 함)
+const EDIT_EXPERTS = [
+  {
+    id: 21,
+    name: '하린 작가',
+    rating: 4.9,
+    reviewCount: 58,
+    deliveryDays: 2,
+    introduction: '원래 얼굴은 그대로, 피부와 색감만 맑게 다듬어요.',
+    moodTags: ['피부·잡티', '색감'],
+    shootingStyle: '피부결은 살리고 잡티만 정리해요. 색감은 맑고 자연스럽게 맞춰요.',
+    basePrice: 40000,
+    extraPrice: 8000,
+    editPrice: 8000,
+  },
+  {
+    id: 22,
+    name: '도윤 작가',
+    rating: 4.8,
+    reviewCount: 24,
+    deliveryDays: 3,
+    introduction: '따뜻한 필름 느낌의 색감을 잘 만들어요.',
+    moodTags: ['색감'],
+    shootingStyle: '필름 카메라로 찍은 듯한 따뜻한 색감으로 보정해요.',
+    basePrice: 30000,
+    extraPrice: 6000,
+    editPrice: 6000,
+  },
+  {
+    id: 23,
+    name: '수아 작가',
+    rating: 4.9,
+    reviewCount: 41,
+    deliveryDays: 2,
+    introduction: '얼굴형과 배경까지 꼼꼼하게 다듬어요.',
+    moodTags: ['얼굴형', '배경 정리·합성'],
+    shootingStyle: '얼굴형은 티 나지 않게, 배경은 깔끔하게 정리해요.',
+    basePrice: 45000,
+    extraPrice: 9000,
+    editPrice: 9000,
+  },
+];
 
 const EXPERTS: Expert[] = [
+  ...EDIT_EXPERTS,
   {
     id: 1,
     name: '김하늘 작가',
@@ -268,6 +314,18 @@ export function formatExpertSummary(expert: Expert): string {
   return `${sido} ${sigungu} · ${fields} · ${formatWon(expert.basePrice)}~`;
 }
 
+// 편집 의뢰 전문가인지 (1장당 금액이 있음)
+export function isEditExpert(expert: Expert): boolean {
+  return expert.editPrice !== undefined;
+}
+
+// 예: 1장 8,000원~ (편집) / 89,000원~ (촬영)
+export function formatStartPrice(expert: Expert): string {
+  return expert.editPrice !== undefined
+    ? `1장 ${formatWon(expert.editPrice)}~`
+    : `${formatWon(expert.basePrice)}~`;
+}
+
 // 작가 한 명 (없으면 null)
 export function getExpert(id: number): Expert | null {
   return EXPERTS.find((expert) => expert.id === id) ?? null;
@@ -294,7 +352,15 @@ export type AvailableExperts =
 export async function fetchAvailableExperts(
   form: ShootRequestForm | undefined,
   excludeIds: readonly number[] = [],
+  kind: 'shoot' | 'edit' = 'shoot',
 ): Promise<AvailableExperts> {
+  // 편집은 편집 전문가만 (날짜·지역 조건 없음)
+  if (kind === 'edit') {
+    return {
+      kind: 'available',
+      experts: EXPERTS.filter((expert) => isEditExpert(expert) && !excludeIds.includes(expert.id)),
+    };
+  }
   if (form && form.time >= '19:00') {
     return {
       kind: 'none',
@@ -305,7 +371,10 @@ export async function fetchAvailableExperts(
       ],
     };
   }
-  return { kind: 'available', experts: EXPERTS.filter(({ id }) => !excludeIds.includes(id)) };
+  return {
+    kind: 'available',
+    experts: EXPERTS.filter((expert) => !isEditExpert(expert) && !excludeIds.includes(expert.id)),
+  };
 }
 
 function nextDateKey(dateKey: string, days: number): string {

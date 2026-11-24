@@ -113,6 +113,8 @@ export interface SentExpert {
 export interface RequestDoneState {
   summary: RequestSummary;
   experts: SentExpert[];
+  // 편집이면 '보정 샘플과 견적' 안내 (없으면 촬영)
+  kind?: 'shoot' | 'edit';
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -148,7 +150,7 @@ export function readDoneState(state: unknown): RequestDoneState | null {
     (expert): expert is SentExpert =>
       isRecord(expert) && typeof expert.id === 'number' && typeof expert.name === 'string',
   );
-  return { summary: state.summary, experts };
+  return { summary: state.summary, experts, kind: state.kind === 'edit' ? 'edit' : 'shoot' };
 }
 
 // TODO: API 나오면 이 함수 안만 client.post(`/requests/${requestId}/send`, { expertIds }) 등으로 교체

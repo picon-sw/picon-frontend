@@ -194,6 +194,9 @@
   font-size: 12px;
   color: #333;
   white-space: nowrap;
+  /* 편집 금액(1장 8,000원~)처럼 길면 프로필 보기를 아랫줄로 */
+  flex-wrap: wrap;
+  row-gap: 2px;
 }
 
 .profileLink {

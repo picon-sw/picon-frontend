@@ -83,7 +83,15 @@ export const REVIEW_KEYWORDS = [
   '시간 약속을 지켜요',
   '소통이 빨라요',
 ] as const;
-export type ReviewKeyword = (typeof REVIEW_KEYWORDS)[number];
+// 편집 의뢰 후기 키워드
+export const EDIT_REVIEW_KEYWORDS = [
+  '결과물이 좋아요',
+  '요청을 잘 반영해요',
+  '작업이 빨라요',
+  '소통이 빨라요',
+] as const;
+export type ReviewKeyword =
+  (typeof REVIEW_KEYWORDS)[number] | (typeof EDIT_REVIEW_KEYWORDS)[number];
 
 export interface Review {
   // 1~5

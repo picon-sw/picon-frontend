@@ -23,7 +23,9 @@ const SAMPLE_DONE: RequestDoneState = {
 export function RequestDonePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { summary, experts } = readDoneState(location.state) ?? SAMPLE_DONE;
+  const { summary, experts, kind } = readDoneState(location.state) ?? SAMPLE_DONE;
+  // 편집은 제안과 함께 보정 샘플이 옴
+  const proposalText = kind === 'edit' ? '보정 샘플과 견적을 보내요.' : '제안을 보내요.';
   // 바로 의뢰하기처럼 1명에게만 보냈으면 작가 이름으로 안내
   const single = experts.length === 1 ? experts[0] : null;
 
@@ -56,8 +58,8 @@ export function RequestDonePage() {
         </h2>
         <p className={styles.description}>
           {single
-            ? `${withSubject(single.name)} 24시간 안에 제안을 보내요.`
-            : `선택한 전문가 ${experts.length}명이 24시간 안에 제안을 보내요.`}
+            ? `${withSubject(single.name)} 24시간 안에 ${proposalText}`
+            : `선택한 전문가 ${experts.length}명이 24시간 안에 ${proposalText}`}
           <br />
           도착하면 나의 의뢰에서 확인할 수 있어요.
         </p>

@@ -45,6 +45,10 @@ const PROFILE_IMAGES_BY_NAME: Record<string, string> = {
   김하늘: profile7,
   민서: profile8,
   수민: profile9,
+  // 편집 전문가 (시연용, 다른 작가 사진을 같이 씀)
+  하린: profile8,
+  도윤: profile6,
+  수아: profile4,
 };
 
 // '서하 작가'와 '서하' 모두 같은 사진

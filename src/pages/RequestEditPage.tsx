@@ -97,11 +97,16 @@ export function RequestEditPage() {
     if (!canSubmit) return;
     // 보정 항목은 누른 순서가 아니라 화면에 보이는 순서로
     const itemText = ITEMS.filter((item) => items.includes(item)).join(', ');
-    const detail = [itemText || null, strength, `${editPhotos.length}장`]
+    const detail = [
+      `사진 ${editPhotos.length}장`,
+      strength ? `보정 강도 ${strength}` : null,
+      itemText || null,
+    ]
       .filter((part): part is string => part !== null)
       .join(' · ');
     const state: RequestExpertsState = {
-      summary: { title: `사진 보정 ${editPhotos.length}장`, detail },
+      // 제목 규칙: 사진 편집 - N장 (의뢰 메인 카드와 같음)
+      summary: { title: `사진 편집 - ${editPhotos.length}장`, detail },
       kind: 'edit',
     };
     navigate('/requests/new/experts', { state });

@@ -2,23 +2,57 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import { getExpert } from '../api/experts';
-import { fetchShootRequest, sendInquiry, type ShootRequestDetail } from '../api/proposals';
+import { fetchEditRequest, sendEditInquiry } from '../api/editRequests';
+import { fetchShootRequest, sendInquiry, type Inquiry } from '../api/proposals';
 import { InquirySheet } from '../components/InquirySheet';
 import { formatMonthDay } from '../utils/date';
 import styles from './RequestInquiriesPage.module.css';
 
-// 예약한 작가에게 남긴 문의와 답변
-export function RequestInquiriesPage() {
+interface InquiryTarget {
+  id: number;
+  title: string;
+  expertId?: number;
+  inquiries: Inquiry[];
+}
+
+// 촬영 의뢰(예약한 작가) · 편집 의뢰(맡긴 작가)의 문의 목록
+async function fetchInquiryTarget(
+  kind: 'shoot' | 'edit',
+  id: number,
+): Promise<InquiryTarget | null> {
+  if (kind === 'edit') {
+    const detail = await fetchEditRequest(id);
+    return detail
+      ? { id, title: detail.title, expertId: detail.expertId, inquiries: [...detail.inquiries] }
+      : null;
+  }
+  const detail = await fetchShootRequest(id);
+  return detail
+    ? {
+        id,
+        title: detail.title,
+        expertId: detail.reservedExpertId,
+        inquiries: [...detail.inquiries],
+      }
+    : null;
+}
+
+interface RequestInquiriesPageProps {
+  kind?: 'shoot' | 'edit';
+}
+
+// 예약한(맡긴) 작가에게 남긴 문의와 답변
+export function RequestInquiriesPage({ kind = 'shoot' }: RequestInquiriesPageProps) {
   const { requestId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const [detail, setDetail] = useState<ShootRequestDetail | null>(null);
+  const [detail, setDetail] = useState<InquiryTarget | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
   useEffect(() => {
     let ignore = false;
-    fetchShootRequest(Number(requestId)).then((result) => {
+    fetchInquiryTarget(kind, Number(requestId)).then((result) => {
       if (ignore) return;
       setDetail(result);
       setLoaded(true);
@@ -26,21 +60,22 @@ export function RequestInquiriesPage() {
     return () => {
       ignore = true;
     };
-  }, [requestId]);
+  }, [kind, requestId]);
 
   const goBack = () => {
-    if (location.key === 'default') navigate(`/requests/${requestId}/reservation`);
-    else navigate(-1);
+    if (location.key !== 'default') navigate(-1);
+    else if (kind === 'edit') navigate(`/requests/edits/${requestId}/work`);
+    else navigate(`/requests/${requestId}/reservation`);
   };
 
-  const expert = detail?.reservedExpertId ? getExpert(detail.reservedExpertId) : null;
+  const expert = detail?.expertId ? getExpert(detail.expertId) : null;
 
   // 보낸 문의를 목록 맨 위에 바로 보여 줌
   const submitInquiry = async (content: string) => {
     if (!detail || !expert) return;
-    await sendInquiry(detail.id, expert.id, content);
-    const next = await fetchShootRequest(detail.id);
-    setDetail(next ? { ...next, inquiries: [...next.inquiries] } : null);
+    if (kind === 'edit') await sendEditInquiry(detail.id, content);
+    else await sendInquiry(detail.id, expert.id, content);
+    setDetail(await fetchInquiryTarget(kind, detail.id));
     setSheetOpen(false);
   };
 
