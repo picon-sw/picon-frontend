@@ -232,6 +232,21 @@ function editRequestCard(detail: EditRequestDetail): { tab: MyRequestTab; card: 
 
   switch (phase) {
     case 'open':
+      // 바로 요청해 아직 제안이 없으면 제안 대기
+      if (proposals.length === 0) {
+        return {
+          tab: 'ongoing',
+          card: {
+            ...base,
+            status: 'waiting',
+            scheduleLabel: '',
+            photographers: detail.requestedIds.flatMap((requestedId) =>
+              expertPhotographer(requestedId),
+            ),
+            message: '24시간 안에 샘플과 견적이 도착해요.',
+          },
+        };
+      }
       return {
         tab: 'ongoing',
         card: {

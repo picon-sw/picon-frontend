@@ -13,7 +13,9 @@ import {
   type Review,
   type ShootRequestDetail,
 } from '../api/proposals';
+import { editDetailPath, findEditBySource, type EditRequestDetail } from '../api/editRequests';
 import { ReviewSheet } from '../components/ReviewSheet';
+import { withSubject } from '../utils/korean';
 import { formatMonthDay, fromDateKey } from '../utils/date';
 import styles from './RequestCompletedPage.module.css';
 
@@ -31,6 +33,22 @@ function capturedMessage(people: number): string {
 function formatMonthDayShort(dateKey: string): string {
   const date = fromDateKey(dateKey);
   return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+}
+
+// 이어서 맡긴 편집 의뢰 안내 (예: 사진 3장 · 지훈 작가가 보정하고 있어요)
+function editProgressText(edit: EditRequestDetail, expertName: string): string {
+  const who = withSubject(expertName);
+  const photos = `사진 ${edit.photos.length}장`;
+  switch (edit.phase) {
+    case 'open':
+      return `${photos} · ${who} 샘플과 견적을 준비하고 있어요`;
+    case 'delivered':
+      return `${photos} · 보정한 사진이 도착했어요`;
+    case 'completed':
+      return `보정 사진 ${edit.photos.length}장`;
+    default:
+      return `${photos} · ${who} 보정하고 있어요`;
+  }
 }
 
 // 사진을 구매해 끝난 촬영 의뢰 상세 (구매 사진 · 결제 정보 · 후기)
@@ -101,6 +119,9 @@ export function RequestCompletedPage() {
   const price = getPhotoPrice(expert, photos.length);
   const rest = photos.length - PREVIEW_COUNT;
   const visiblePhotos = showAll || rest <= 0 ? photos : photos.slice(0, PREVIEW_COUNT);
+  // 구매한 사진으로 맡긴 편집 의뢰 (취소한 의뢰는 없음으로 봄)
+  const edit = findEditBySource(detail.id);
+  const editPath = edit ? editDetailPath(edit) : null;
   const pickDeadline = detail.delivery ? pickDeadlineOf(detail.delivery.arrivedAt) : null;
 
   return (
@@ -164,20 +185,37 @@ export function RequestCompletedPage() {
           </ul>
         </section>
 
-        {/* TODO: 편집 맡기기(구매 사진으로 편집 요청) 화면이 생기면 그 화면으로 연결 */}
-        <button
-          type="button"
-          className={styles.editLink}
-          onClick={() => navigate('/requests/new/edit')}
-        >
-          <span className={styles.editInfo}>
-            <span className={styles.editTitle}>보정도 맡길까요?</span>
-            <span className={styles.editText}>
-              구매한 사진 중 골라 {expert.name}에게 바로 요청해요
+        {edit ? (
+          <button
+            type="button"
+            className={styles.editLink}
+            onClick={() => editPath && navigate(editPath)}
+          >
+            <span className={styles.editInfo}>
+              <span className={styles.editTitle}>
+                {edit.phase === 'completed' ? '편집 의뢰 완료' : '편집 의뢰 진행 중'}
+              </span>
+              <span className={styles.editText}>{editProgressText(edit, expert.name)}</span>
             </span>
-          </span>
-          <span className={styles.editAction}>편집 맡기기 ›</span>
-        </button>
+            <span className={styles.editAction}>편집 의뢰 보기 ›</span>
+          </button>
+        ) : (
+          expert.acceptsEdit && (
+            <button
+              type="button"
+              className={styles.editLink}
+              onClick={() => navigate(`/requests/${detail.id}/edit-photos`)}
+            >
+              <span className={styles.editInfo}>
+                <span className={styles.editTitle}>보정도 맡길까요?</span>
+                <span className={styles.editText}>
+                  구매한 사진 중 골라 {expert.name}에게 바로 요청해요
+                </span>
+              </span>
+              <span className={styles.editAction}>편집 맡기기 ›</span>
+            </button>
+          )
+        )}
 
         <section className={styles.card} aria-label="결제 정보">
           <h2 className={styles.cardTitle}>결제 정보</h2>

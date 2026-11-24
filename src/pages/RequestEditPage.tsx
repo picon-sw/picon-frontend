@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
-import type { RequestExpertsState } from '../api/requests';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
+import type { RequestDoneState, RequestExpertsState } from '../api/requests';
 import backIcon from '../assets/icons/request/arrow-left.svg';
+import { createDirectEditRequest } from '../api/editRequests';
+import { formatWon, getExpert, editPriceOf } from '../api/experts';
+import { fetchShootRequest, purchasedPhotos, type ShootRequestDetail } from '../api/proposals';
 import { fetchEditDraft } from '../api/requests';
 import { AiFillBar } from '../components/AiFillBar';
+import { DirectExpertBanner } from '../components/DirectExpertBanner';
 import { EditPhotoPicker } from '../components/EditPhotoPicker';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
+import { PickedEditPhotos } from '../components/PickedEditPhotos';
+import { withSubject } from '../utils/korean';
 import { useAiFill } from '../hooks/useAiFill';
 import { useEditPhotos } from '../hooks/useEditPhotos';
 import { useMoodPhotos } from '../hooks/useMoodPhotos';
@@ -42,9 +48,22 @@ function Chip({ label, selected, role, onClick }: ChipProps) {
   );
 }
 
+// 촬영 후 편집 맡기기 주소: ?from=촬영 의뢰 id&photos=고른 사진 id 목록
+function readPhotoIds(value: string | null): number[] {
+  return (value ?? '')
+    .split(',')
+    .map(Number)
+    .filter((id) => Number.isInteger(id) && id > 0);
+}
+
 export function RequestEditPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const fromId = searchParams.has('from') ? Number(searchParams.get('from')) : null;
+  const pickedIds = readPhotoIds(searchParams.get('photos'));
+  const [source, setSource] = useState<ShootRequestDetail | null>(null);
+  const [sending, setSending] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const {
     photos: editPhotos,
@@ -72,6 +91,27 @@ export function RequestEditPage() {
     onError: () => setToast('요청 사항을 만들지 못했어요'),
   });
 
+  // 촬영 후 편집 맡기기면 원래 촬영 의뢰(구매한 사진 · 작가)를 불러옴
+  useEffect(() => {
+    if (fromId === null) return;
+    let ignore = false;
+    fetchShootRequest(fromId).then((result) => {
+      if (!ignore) setSource(result);
+    });
+    return () => {
+      ignore = true;
+    };
+  }, [fromId]);
+
+  const sourceExpert =
+    source?.phase === 'purchased' && source.reservedExpertId
+      ? getExpert(source.reservedExpertId)
+      : null;
+  const directExpert = sourceExpert?.acceptsEdit ? sourceExpert : null;
+  const pickedPhotos = source
+    ? purchasedPhotos(source).filter((photo) => pickedIds.includes(photo.id))
+    : [];
+
   // 토스트는 2초 뒤 사라짐
   useEffect(() => {
     if (!toast) return;
@@ -90,25 +130,61 @@ export function RequestEditPage() {
   };
 
   // 보정할 사진이 1장 이상이고, 모두 업로드가 끝나야 다음으로
-  const canSubmit = editPhotos.length > 0 && editPhotos.every(({ status }) => status === 'done');
+  // 촬영 후 편집 맡기기는 구매한 사진에서 1장 이상 골랐으면 됨
+  const canSubmit =
+    fromId !== null
+      ? directExpert !== null && pickedPhotos.length > 0 && !sending
+      : editPhotos.length > 0 && editPhotos.every(({ status }) => status === 'done');
+  const itemText = ITEMS.filter((item) => items.includes(item)).join(', ');
+
+  const summaryOf = (photoCount: number) => ({
+    // 제목 규칙: 사진 편집 - N장 (의뢰 메인 카드와 같음)
+    title: `사진 편집 - ${photoCount}장`,
+    detail: [`사진 ${photoCount}장`, strength ? `보정 강도 ${strength}` : null, itemText || null]
+      .filter((part): part is string => part !== null)
+      .join(' · '),
+  });
+
+  // 같은 작가에게 바로 요청 (전문가 선택 없이 요청 완료로)
+  const sendDirect = async () => {
+    if (!canSubmit || !source || !directExpert) return;
+    setSending(true);
+    try {
+      await createDirectEditRequest({
+        expertId: directExpert.id,
+        sourceRequestId: source.id,
+        photos: pickedPhotos.map(({ url }) => url),
+        strength,
+        items: ITEMS.filter((item) => items.includes(item)),
+        note: note.trim(),
+      });
+      const { id, name, profileImageUrl } = directExpert;
+      const state: RequestDoneState = {
+        summary: summaryOf(pickedPhotos.length),
+        experts: [{ id, name, profileImageUrl }],
+        kind: 'edit',
+      };
+      navigate('/requests/done', { replace: true, state });
+    } catch {
+      setToast('요청을 보내지 못했어요. 잠시 후 다시 시도해 주세요.');
+      setSending(false);
+    }
+  };
+
+  // 다시 고르기: 사진 고르기 화면으로 (고른 사진 유지)
+  const repick = () => {
+    if (!source) return;
+    navigate(`/requests/${source.id}/edit-photos`, {
+      replace: true,
+      state: { selectedIds: pickedPhotos.map(({ id }) => id) },
+    });
+  };
 
   // TODO: API 나오면 여기서 요청서(업로드한 파일 key 포함)를 저장하고 받은 requestId도 state에 담기
   const goToExperts = () => {
     if (!canSubmit) return;
     // 보정 항목은 누른 순서가 아니라 화면에 보이는 순서로
-    const itemText = ITEMS.filter((item) => items.includes(item)).join(', ');
-    const detail = [
-      `사진 ${editPhotos.length}장`,
-      strength ? `보정 강도 ${strength}` : null,
-      itemText || null,
-    ]
-      .filter((part): part is string => part !== null)
-      .join(' · ');
-    const state: RequestExpertsState = {
-      // 제목 규칙: 사진 편집 - N장 (의뢰 메인 카드와 같음)
-      summary: { title: `사진 편집 - ${editPhotos.length}장`, detail },
-      kind: 'edit',
-    };
+    const state: RequestExpertsState = { summary: summaryOf(editPhotos.length), kind: 'edit' };
     navigate('/requests/new/experts', { state });
   };
 
@@ -122,15 +198,34 @@ export function RequestEditPage() {
       </header>
 
       <div className={shootStyles.content}>
-        <p className={shootStyles.intro}>전문가를 골라 견적을 받아보세요.</p>
+        <p className={shootStyles.intro}>
+          {directExpert
+            ? `${withSubject(directExpert.name)} 확인하고 샘플과 견적을 보내 드려요.`
+            : '전문가를 골라 견적을 받아보세요.'}
+        </p>
 
         <div className={shootStyles.form}>
-          <EditPhotoPicker
-            photos={editPhotos}
-            onAdd={addEditPhotos}
-            onRemove={removeEditPhoto}
-            onRetry={retryPhoto}
-          />
+          {directExpert && source ? (
+            <>
+              <DirectExpertBanner
+                expert={directExpert}
+                title={`${directExpert.name}에게 바로 편집을 맡겨요`}
+                text={`${source.title}에서 구매한 사진 · 1장 ${formatWon(editPriceOf(directExpert))}~`}
+              />
+              <PickedEditPhotos
+                photos={pickedPhotos.map(({ url }) => url)}
+                expertName={directExpert.name}
+                onRepick={repick}
+              />
+            </>
+          ) : (
+            <EditPhotoPicker
+              photos={editPhotos}
+              onAdd={addEditPhotos}
+              onRemove={removeEditPhoto}
+              onRetry={retryPhoto}
+            />
+          )}
 
           <section className={shootStyles.card}>
             <h2 className={shootStyles.cardTitle}>보정 옵션</h2>
@@ -216,9 +311,9 @@ export function RequestEditPage() {
             type="button"
             className={shootStyles.nextButton}
             disabled={!canSubmit}
-            onClick={goToExperts}
+            onClick={fromId !== null ? sendDirect : goToExperts}
           >
-            작가 고르러 가기
+            {directExpert ? `${directExpert.name}에게 요청 보내기` : '작가 고르러 가기'}
           </button>
         </div>
       </div>

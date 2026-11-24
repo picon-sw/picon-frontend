@@ -73,7 +73,10 @@ const EXPERT_REGIONS: Record<number, Expert['region']> = {
   11: { sido: '서울', sigungu: '강남구' },
 };
 // 편집도 받는 작가
-const EDIT_EXPERT_IDS = [1, 2, 3, 5, 6, 7, 8, 9, 21, 22, 23];
+const EDIT_EXPERT_IDS = [1, 2, 3, 5, 6, 7, 8, 9, 10, 21, 22, 23];
+
+// 편집도 받는 촬영 작가의 1장당 보정 금액 (촬영 후 편집 맡기기)
+const SHOOT_EXPERT_EDIT_PRICE = 8000;
 
 // 편집 의뢰 전문가 (보정만 함)
 const EDIT_EXPERTS = [
@@ -317,6 +320,11 @@ export function formatExpertSummary(expert: Expert): string {
 // 편집 의뢰 전문가인지 (1장당 금액이 있음)
 export function isEditExpert(expert: Expert): boolean {
   return expert.editPrice !== undefined;
+}
+
+// 1장당 보정 금액 (편집 전문가는 자기 금액, 편집도 받는 촬영 작가는 공통 금액)
+export function editPriceOf(expert: Expert): number {
+  return expert.editPrice ?? SHOOT_EXPERT_EDIT_PRICE;
 }
 
 // 예: 1장 8,000원~ (편집) / 89,000원~ (촬영)

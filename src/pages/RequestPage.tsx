@@ -22,7 +22,7 @@ const EMPTY_REQUESTS: Record<MyRequestTab, MyRequest[]> = { ongoing: [], complet
 // TODO: 예약 상세·완료 상세·편집 제안 등 화면이 생기면 상태별로 연결
 // 편집 의뢰 상세 (받은 제안 · 작업 상세 · 완료 사진 확인 · 완료 상세)
 function getEditDetailPath(id: number, status: MyRequest['status']): string | null {
-  if (status === 'proposal') return `/requests/edits/${id}/proposals`;
+  if (status === 'proposal' || status === 'waiting') return `/requests/edits/${id}/proposals`;
   if (status === 'editWaiting' || status === 'editing' || status === 'revising') {
     return `/requests/edits/${id}/work`;
   }

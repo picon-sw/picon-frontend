@@ -83,20 +83,22 @@ export function RequestPurchasedPage() {
             </p>
           </section>
 
-          {/* TODO: 편집 맡기기(구매 사진으로 편집 요청) 화면이 생기면 그 화면으로 연결 */}
-          <button
-            type="button"
-            className={ownStyles.editLink}
-            onClick={() => navigate('/requests/new/edit')}
-          >
-            <span className={ownStyles.editInfo}>
-              <span className={ownStyles.editTitle}>보정도 맡길까요?</span>
-              <span className={ownStyles.editText}>
-                구매한 사진 중 골라 {expert.name}에게 바로 요청해요
+          {/* 편집도 받는 작가면 구매한 사진으로 바로 편집 맡기기 */}
+          {expert.acceptsEdit && (
+            <button
+              type="button"
+              className={ownStyles.editLink}
+              onClick={() => navigate(`/requests/${detail.id}/edit-photos`)}
+            >
+              <span className={ownStyles.editInfo}>
+                <span className={ownStyles.editTitle}>보정도 맡길까요?</span>
+                <span className={ownStyles.editText}>
+                  구매한 사진 중 골라 {expert.name}에게 바로 요청해요
+                </span>
               </span>
-            </span>
-            <span className={ownStyles.editAction}>편집 맡기기 ›</span>
-          </button>
+              <span className={ownStyles.editAction}>편집 맡기기 ›</span>
+            </button>
+          )}
         </div>
       ) : (
         detail && <p className={styles.notFound}>구매 정보를 찾을 수 없어요.</p>

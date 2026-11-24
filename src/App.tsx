@@ -25,6 +25,7 @@ import { RequestDonePage } from './pages/RequestDonePage';
 import { RequestEditCompletedPage } from './pages/RequestEditCompletedPage';
 import { RequestEditPage } from './pages/RequestEditPage';
 import { RequestEditPaidPage } from './pages/RequestEditPaidPage';
+import { RequestEditPickPage } from './pages/RequestEditPickPage';
 import { RequestEditProposalDetailPage } from './pages/RequestEditProposalDetailPage';
 import { RequestEditProposalsPage } from './pages/RequestEditProposalsPage';
 import { RequestEditQuotePage } from './pages/RequestEditQuotePage';
@@ -95,6 +96,7 @@ export function App() {
       <Route path="/requests/:requestId/photos/purchase" element={<RequestPhotoPurchasePage />} />
       <Route path="/requests/:requestId/purchased" element={<RequestPurchasedPage />} />
       <Route path="/requests/:requestId/completed" element={<RequestCompletedPage />} />
+      <Route path="/requests/:requestId/edit-photos" element={<RequestEditPickPage />} />
       <Route path="/requests/edits/:requestId/proposals" element={<RequestEditProposalsPage />} />
       <Route
         path="/requests/edits/:requestId/proposals/:expertId"

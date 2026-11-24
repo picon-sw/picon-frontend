@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import checkCircleIcon from '../assets/icons/request/check-circle.svg';
+import mailIcon from '../assets/icons/request/mail-large.svg';
 import moreIcon from '../assets/icons/request/more.svg';
 import radioOffIcon from '../assets/icons/request/radio-off.svg';
-import { formatWon, type Expert } from '../api/experts';
+import { formatWon, getExpert, type Expert } from '../api/experts';
 import {
   cancelEditRequest,
   editProposalsWithExperts,
@@ -15,6 +16,7 @@ import {
 } from '../api/editRequests';
 import { ActionSheet } from '../components/ActionSheet';
 import { formatMonthDay } from '../utils/date';
+import { withSubject } from '../utils/korean';
 // 카드 모양은 촬영 의뢰의 받은 제안과 같음
 import styles from './RequestProposalsPage.module.css';
 
@@ -160,6 +162,8 @@ export function RequestEditProposalsPage() {
 
   const proposals = detail ? editProposalsWithExperts(detail.proposals) : [];
   const open = detail?.phase === 'open';
+  // 작가 한 명에게 바로 요청한 경우(촬영 후 편집 맡기기) 그 작가 이름으로 안내
+  const directExpert = detail?.requestedIds.length === 1 ? getExpert(detail.requestedIds[0]) : null;
 
   return (
     <main className={styles.page}>
@@ -187,30 +191,44 @@ export function RequestEditProposalsPage() {
             <div className={styles.statusRow}>
               <span className={styles.badge}>제안 {proposals.length}개</span>
               <span className={styles.statusText}>
-                {formatMonthDay(detail.selectDeadline)}까지 선택해 주세요
+                {proposals.length > 0
+                  ? `${formatMonthDay(detail.selectDeadline)}까지 선택해 주세요`
+                  : '24시간 안에 도착해요'}
               </span>
             </div>
           </section>
 
-          <ul className={styles.list} role="radiogroup">
-            {proposals.map(({ proposal, expert }) => (
-              <EditProposalCard
-                key={expert.id}
-                proposal={proposal}
-                expert={expert}
-                photoCount={detail.photos.length}
-                selected={selectedId === expert.id}
-                onSelect={() => setSelectedId(expert.id)}
-                onOpenDetail={() => openDetail(expert.id)}
-              />
-            ))}
-          </ul>
+          {proposals.length === 0 ? (
+            <section className={styles.empty}>
+              <img src={mailIcon} alt="" />
+              <h2 className={styles.emptyTitle}>샘플과 견적을 기다리고 있어요</h2>
+              <p className={styles.emptyText}>
+                {directExpert ? withSubject(directExpert.name) : '작가가'} 고른 사진을 보고
+                <br />
+                24시간 안에 보정 샘플과 견적을 보내요.
+              </p>
+            </section>
+          ) : (
+            <ul className={styles.list} role="radiogroup">
+              {proposals.map(({ proposal, expert }) => (
+                <EditProposalCard
+                  key={expert.id}
+                  proposal={proposal}
+                  expert={expert}
+                  photoCount={detail.photos.length}
+                  selected={selectedId === expert.id}
+                  onSelect={() => setSelectedId(expert.id)}
+                  onOpenDetail={() => openDetail(expert.id)}
+                />
+              ))}
+            </ul>
+          )}
         </div>
       ) : (
         loaded && <p className={styles.notFound}>볼 수 있는 제안이 없어요.</p>
       )}
 
-      {detail && open && (
+      {detail && open && proposals.length > 0 && (
         <div className={styles.bottomBar}>
           <button
             type="button"
@@ -226,7 +244,11 @@ export function RequestEditProposalsPage() {
       {cancelOpen && detail && (
         <ActionSheet
           title="의뢰를 취소할까요?"
-          description={`받은 제안 ${proposals.length}개가 모두 사라지고,\n작가들에게 취소 알림이 가요.`}
+          description={
+            proposals.length > 0
+              ? `받은 제안 ${proposals.length}개가 모두 사라지고,\n작가들에게 취소 알림이 가요.`
+              : '요청한 작가에게 취소 알림이 가요.'
+          }
           info="아직 결제 전이라 취소해도 비용은 들지 않아요."
           buttons={[
             { label: '유지하기', variant: 'secondary', onClick: () => setCancelOpen(false) },

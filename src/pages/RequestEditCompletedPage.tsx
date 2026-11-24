@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import checkIcon from '../assets/icons/request/photo-check-on.svg';
-import { formatWon, getExpert } from '../api/experts';
+import { editPriceOf, formatWon, getExpert } from '../api/experts';
 import {
   fetchEditRequest,
   formatEditArchiveUntil,
@@ -138,7 +138,7 @@ export function RequestEditCompletedPage() {
             </div>
           </dl>
           <p className={styles.small}>
-            {photos.length}장 × {formatWon(expert.editPrice ?? 0)} · 수정{' '}
+            {photos.length}장 × {formatWon(editPriceOf(expert))} · 수정{' '}
             {detail.revisionUsed ? '1회 사용' : '사용 안 함'}
           </p>
           <hr className={styles.divider} />

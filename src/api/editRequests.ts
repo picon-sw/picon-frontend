@@ -1,6 +1,6 @@
 import { DEMO_DELIVERED_PHOTOS } from '../constants/demoImages';
 import { addDays, formatMonthDay, fromDateKey, startOfToday, toDateKey } from '../utils/date';
-import { getExpert, type Expert } from './experts';
+import { editPriceOf, getExpert, type Expert } from './experts';
 import type { Inquiry, PaymentMethod, Review } from './proposals';
 
 // ---- 편집 의뢰의 받은 제안 · 결제 · 작업 진행 ----
@@ -51,6 +51,8 @@ export interface EditRequestDetail {
   completedAt?: string;
   inquiries: Inquiry[];
   review?: Review;
+  // 촬영 후 편집 맡기기로 만든 의뢰면 원래 촬영 의뢰 id
+  sourceRequestId?: number;
 }
 
 // 완료 사진을 받은 날부터 이 날짜 수 안에 확인 (지나면 자동 확인 완료)
@@ -58,13 +60,13 @@ export const CONFIRM_DAYS = 3;
 
 // 편집 금액: 사진 장수 × 1장당 금액
 export function getEditPrice(expert: Expert, photoCount: number): number {
-  return (expert.editPrice ?? 0) * photoCount;
+  return editPriceOf(expert) * photoCount;
 }
 
 // 예: 5장 40,000원 · 1장당 8,000원
 export function formatEditPrice(expert: Expert, photoCount: number): string {
   const won = (amount: number) => `${amount.toLocaleString('ko-KR')}원`;
-  return `${photoCount}장 ${won(getEditPrice(expert, photoCount))} · 1장당 ${won(expert.editPrice ?? 0)}`;
+  return `${photoCount}장 ${won(getEditPrice(expert, photoCount))} · 1장당 ${won(editPriceOf(expert))}`;
 }
 
 // 완료 예정일: 결제일 + 작가 제안의 완료 기간
@@ -88,6 +90,8 @@ export function formatEditArchiveUntil(detail: EditRequestDetail): string {
 }
 
 // ---- 임시 데이터 ----
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function dayKey(days: number): string {
   return toDateKey(addDays(startOfToday(), days));
@@ -165,6 +169,66 @@ const EDIT_REQUESTS: EditRequestDetail[] = [
   }),
 ];
 
+// 편집 의뢰 상세 주소 (받은 제안 · 작업 상세 · 완료 사진 확인 · 완료 상세, 취소는 없음)
+export function editDetailPath({ id, phase }: EditRequestDetail): string | null {
+  switch (phase) {
+    case 'open':
+      return `/requests/edits/${id}/proposals`;
+    case 'waiting':
+    case 'editing':
+    case 'revising':
+      return `/requests/edits/${id}/work`;
+    case 'delivered':
+      return `/requests/edits/${id}/result`;
+    case 'completed':
+      return `/requests/edits/${id}/completed`;
+    case 'canceled':
+      return null;
+  }
+}
+
+// 촬영 의뢰에서 이어진 편집 의뢰 (없으면 null, 취소한 의뢰는 뺌)
+export function findEditBySource(sourceRequestId: number): EditRequestDetail | null {
+  return (
+    EDIT_REQUESTS.find(
+      (item) => item.sourceRequestId === sourceRequestId && item.phase !== 'canceled',
+    ) ?? null
+  );
+}
+
+export interface DirectEditRequestInput {
+  expertId: number;
+  sourceRequestId: number;
+  photos: string[];
+  strength: string | null;
+  items: string[];
+  note: string;
+}
+
+// 촬영 후 편집 맡기기: 구매한 사진으로 같은 작가에게 바로 요청 (제안 대기로 시작)
+// TODO: API 연동 시 client.post('/edit-requests', { ...input, photoIds })
+export async function createDirectEditRequest(input: DirectEditRequestInput): Promise<number> {
+  await delay(500);
+  const id = Math.max(0, ...EDIT_REQUESTS.map((item) => item.id)) + 1;
+  EDIT_REQUESTS.push({
+    id,
+    title: `사진 편집 - ${input.photos.length}장`,
+    requestedAt: dayKey(0),
+    photos: input.photos,
+    strength: input.strength,
+    items: input.items,
+    note: input.note,
+    requestedIds: [input.expertId],
+    proposals: [],
+    phase: 'open',
+    selectDeadline: dayKey(1),
+    revisionUsed: false,
+    inquiries: [],
+    sourceRequestId: input.sourceRequestId,
+  });
+  return id;
+}
+
 export function listEditRequests(): EditRequestDetail[] {
   return EDIT_REQUESTS;
 }
@@ -193,8 +257,6 @@ export function editProposalsWithExperts(
 function findTarget(id: number): EditRequestDetail | undefined {
   return EDIT_REQUESTS.find((item) => item.id === id);
 }
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 편집 금액 결제 (지금은 버튼을 누르면 바로 결제 완료)
 // TODO: 결제 연동 후 client.post(`/edit-requests/${id}/pay`, { expertId, method })
