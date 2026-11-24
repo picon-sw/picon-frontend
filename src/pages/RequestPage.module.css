@@ -123,8 +123,41 @@
   background-color: #fff;
 }
 
+/* 누를 수 있는 카드 (button) */
+.cardClickable {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .cardHighlighted {
   border-color: #b8ddf2;
+}
+
+/* 완료 탭 카드는 얇은 테두리 */
+.cardCompleted {
+  border-width: 1px;
+  border-color: #ebebeb;
+  border-radius: 16px;
+}
+
+.cardCompleted.cardHighlighted {
+  border-color: #b8ddf2;
+}
+
+.cardCompleted .divider {
+  border-top-width: 1px;
+  border-top-color: #ebebeb;
+}
+
+.cardCompleted .badge {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cardClosed .cardTitle {
+  color: #6a6a6a;
 }
 
 .cardTop {
@@ -141,23 +174,35 @@
 }
 
 .badge_proposal,
-.badge_completed {
+.badge_photosArrived {
   background-color: #eaf6fc;
   color: #70b9df;
 }
 
-.badge_confirmed {
+.badge_completed {
+  background-color: #eaf6fc;
+  color: #2f7fae;
+}
+
+.badge_waiting,
+.badge_confirmed,
+.badge_editWaiting,
+.badge_editing,
+.badge_revising {
   background-color: #d9d9d9;
   color: #6a6a6a;
+}
+
+.badge_closed,
+.badge_expertCanceled,
+.badge_canceled {
+  background-color: #f2f2f2;
+  color: #737373;
 }
 
 .scheduleLabel {
   font-size: 10px;
   color: #4b4b4b;
-}
-
-.scheduleLabelUrgent {
-  font-weight: 700;
 }
 
 .cardTitle {

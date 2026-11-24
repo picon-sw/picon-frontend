@@ -1,155 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import {
+  fetchMyRequests,
+  formatMyRequestMeta,
+  MY_REQUEST_STATUS_LABEL,
+  type MyRequest,
+  type MyRequestTab,
+} from '../api/myRequests';
 import calendarIcon from '../assets/icons/request/calendar.svg';
-import { DEMO_REQUEST_BANNER_IMAGE, demoProfileImage } from '../constants/demoImages';
+import { DEMO_REQUEST_BANNER_IMAGE } from '../constants/demoImages';
 import styles from './RequestPage.module.css';
 
-type RequestTab = 'ongoing' | 'completed';
-
-// proposal: 제안 도착, confirmed: 예약확정, completed: 완료
-type RequestStatus = 'proposal' | 'confirmed' | 'completed';
-
-interface Photographer {
-  id: number;
-  name: string;
-  // 백엔드에서 받은 이미지 URL. 없으면 빈 동그라미로 표시
-  profileImageUrl?: string;
-}
-
-interface BaseRequest {
-  id: number;
-  status: RequestStatus;
-  title: string;
-  date: string;
-  // 카드 오른쪽 위 안내 (2일 안에 선택해 주세요, 촬영 D-21, 촬영일 11월 3일 등)
-  scheduleLabel: string;
-  // 제안 선택 마감이 하루 이하로 남았을 때 굵게 표시
-  scheduleUrgent?: boolean;
-  // 제안 도착: 제안한 작가들 / 그 외: 담당 작가 1명
-  photographers: Photographer[];
-  message: string;
-}
-
-// 촬영 의뢰는 날짜·장소·인원, 사진 편집 의뢰는 장소·인원이 없으니 날짜만 표시
-type MyRequest = BaseRequest &
-  ({ kind: 'shoot'; place: string; people: number } | { kind: 'edit' });
-
-const STATUS_LABEL: Record<RequestStatus, string> = {
-  proposal: '제안 도착',
-  confirmed: '예약확정',
-  completed: '완료',
-};
-
-// 제안 선택 마감까지 남은 일수 → 안내 문구 (하루 이하면 '오늘 안에' + 굵게)
-function getProposalDeadline(daysLeft: number) {
-  const urgent = daysLeft <= 1;
-  return {
-    scheduleLabel: urgent ? '오늘 안에 선택해 주세요' : `${daysLeft}일 안에 선택해 주세요`,
-    scheduleUrgent: urgent,
-  };
-}
-
-const TABS: { value: RequestTab; label: string }[] = [
+const TABS: { value: MyRequestTab; label: string }[] = [
   { value: 'ongoing', label: '진행 중' },
   { value: 'completed', label: '완료' },
 ];
 
-// TODO: API 연동 시 교체 (임시 데이터)
-const REQUESTS: Record<RequestTab, MyRequest[]> = {
-  ongoing: [
-    {
-      id: 1,
-      kind: 'edit',
-      status: 'proposal',
-      title: '사진 편집 - 2장',
-      date: '10월 20일 (화)',
-      ...getProposalDeadline(2),
-      photographers: [
-        { id: 1, name: '서하 작가' },
-        { id: 2, name: '윤슬 작가' },
-        { id: 3, name: '무드필름' },
-      ],
-      message: '새로운 제안 3개가 도착했어요.',
-    },
-    {
-      id: 2,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '제주 여행 커플 스냅',
-      date: '11월 3일 (화)',
-      place: '애월',
-      people: 2,
-      scheduleLabel: '촬영 D-21',
-      photographers: [{ id: 4, name: '지훈 작가' }],
-      message: '일정이 확정되었어요.',
-    },
-    {
-      id: 3,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '성수 프로필 촬영',
-      date: '11월 10일 (화)',
-      place: '성수',
-      people: 1,
-      scheduleLabel: '촬영 D-28',
-      photographers: [{ id: 5, name: '이젤 작가' }],
-      message: '일정이 확정되었어요.',
-    },
-    {
-      id: 4,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '돌잔치 가족 스냅',
-      date: '11월 17일 (화)',
-      place: '분당',
-      people: 5,
-      scheduleLabel: '촬영 D-35',
-      photographers: [{ id: 6, name: '아리 작가' }],
-      message: '일정이 확정되었어요.',
-    },
-  ],
-  completed: [
-    {
-      id: 5,
-      kind: 'shoot',
-      status: 'completed',
-      title: '제주 여행 커플 스냅',
-      date: '11월 3일 (화)',
-      place: '애월',
-      people: 2,
-      scheduleLabel: '촬영일 11월 3일 (화)',
-      photographers: [{ id: 4, name: '지훈 작가' }],
-      message: '구매 사진 12장 · 결제 총액 98,000원',
-    },
-    {
-      id: 6,
-      kind: 'shoot',
-      status: 'completed',
-      title: '한강 우정 스냅',
-      date: '10월 12일 (월)',
-      place: '한강',
-      people: 3,
-      scheduleLabel: '촬영일 10월 12일 (월)',
-      photographers: [{ id: 7, name: '수민 작가' }],
-      message: '촬영이 완료되었어요.',
-    },
-  ],
-};
+const EMPTY_REQUESTS: Record<MyRequestTab, MyRequest[]> = { ongoing: [], completed: [] };
 
-// TODO: 시연용 사진 연결 (API 연동 시 삭제하고 REQUESTS 그대로 사용)
-const REQUESTS_WITH_DEMO_IMAGES: Record<RequestTab, MyRequest[]> = {
-  ongoing: REQUESTS.ongoing.map(withDemoImages),
-  completed: REQUESTS.completed.map(withDemoImages),
-};
-
-function withDemoImages(request: MyRequest): MyRequest {
-  return {
-    ...request,
-    photographers: request.photographers.map((photographer) => ({
-      ...photographer,
-      profileImageUrl: demoProfileImage(photographer.name),
-    })),
-  };
+// 카드를 눌렀을 때 갈 상세 화면. 아직 없는 화면은 null (누를 수 없는 카드)
+// TODO: 받은 제안·예약 상세·완료 상세 등 화면이 생기면 상태별로 연결
+function getDetailPath(request: MyRequest): string | null {
+  void request;
+  return null;
 }
 
 interface AvatarProps {
@@ -166,41 +39,38 @@ function Avatar({ imageUrl }: AvatarProps) {
 
 interface RequestCardProps {
   request: MyRequest;
+  tab: MyRequestTab;
   highlighted: boolean;
+  onOpen: (path: string) => void;
 }
 
-function formatMeta(request: MyRequest) {
-  return request.kind === 'shoot'
-    ? `${request.date} · ${request.place} · ${request.people}명`
-    : request.date;
-}
+function RequestCard({ request, tab, highlighted, onOpen }: RequestCardProps) {
+  const { status, title, scheduleLabel, photographers, headline, message } = request;
+  const path = getDetailPath(request);
+  const classNames = [
+    styles.card,
+    tab === 'completed' && styles.cardCompleted,
+    highlighted && styles.cardHighlighted,
+    status === 'closed' && styles.cardClosed,
+    path && styles.cardClickable,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-function RequestCard({ request, highlighted }: RequestCardProps) {
-  const { status, title, scheduleLabel, scheduleUrgent, photographers, message } = request;
-  const isCompleted = status === 'completed';
-
-  return (
-    <li className={highlighted ? `${styles.card} ${styles.cardHighlighted}` : styles.card}>
+  const content = (
+    <>
       <div className={styles.cardTop}>
-        <span className={`${styles.badge} ${styles[`badge_${status}`]}`}>
-          {STATUS_LABEL[status]}
+        <span className={`${styles.badge} ${styles[`badge_${status}`] ?? ''}`}>
+          {MY_REQUEST_STATUS_LABEL[status]}
         </span>
-        <span
-          className={
-            scheduleUrgent
-              ? `${styles.scheduleLabel} ${styles.scheduleLabelUrgent}`
-              : styles.scheduleLabel
-          }
-        >
-          {scheduleLabel}
-        </span>
+        <span className={styles.scheduleLabel}>{scheduleLabel}</span>
       </div>
 
       <p className={styles.cardTitle}>{title}</p>
 
       <p className={styles.cardMeta}>
-        {!isCompleted && <img src={calendarIcon} alt="" />}
-        {formatMeta(request)}
+        {tab === 'ongoing' && <img src={calendarIcon} alt="" />}
+        {formatMyRequestMeta(request)}
       </p>
 
       <hr className={styles.divider} />
@@ -216,12 +86,24 @@ function RequestCard({ request, highlighted }: RequestCardProps) {
         </div>
       ) : (
         <div className={styles.cardFooter}>
-          <Avatar imageUrl={photographers[0]?.profileImageUrl} />
+          {photographers[0] && <Avatar imageUrl={photographers[0].profileImageUrl} />}
           <div className={styles.photographerInfo}>
-            <span className={styles.photographerName}>{photographers[0]?.name}</span>
+            <span className={styles.photographerName}>{headline ?? photographers[0]?.name}</span>
             <span>{message}</span>
           </div>
         </div>
+      )}
+    </>
+  );
+
+  return (
+    <li>
+      {path ? (
+        <button type="button" className={classNames} onClick={() => onOpen(path)}>
+          {content}
+        </button>
+      ) : (
+        <div className={classNames}>{content}</div>
       )}
     </li>
   );
@@ -229,7 +111,18 @@ function RequestCard({ request, highlighted }: RequestCardProps) {
 
 export function RequestPage() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<RequestTab>('ongoing');
+  const [tab, setTab] = useState<MyRequestTab>('ongoing');
+  const [requests, setRequests] = useState(EMPTY_REQUESTS);
+
+  useEffect(() => {
+    let ignore = false;
+    fetchMyRequests().then((result) => {
+      if (!ignore) setRequests(result);
+    });
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <main className={styles.page}>
@@ -264,18 +157,24 @@ export function RequestPage() {
             className={tab === value ? `${styles.tab} ${styles.tabActive}` : styles.tab}
             onClick={() => setTab(value)}
           >
-            {label} {REQUESTS_WITH_DEMO_IMAGES[value].length}
+            {label} {requests[value].length}
           </button>
         ))}
       </div>
 
       <ul className={styles.list}>
-        {REQUESTS_WITH_DEMO_IMAGES[tab].map((request, index) => (
+        {requests[tab].map((request) => (
           <RequestCard
             key={request.id}
             request={request}
-            // 진행 중: 제안이 도착한 의뢰 / 완료: 가장 최근 의뢰를 강조
-            highlighted={tab === 'ongoing' ? request.status === 'proposal' : index === 0}
+            tab={tab}
+            // 진행 중: 제안이 도착한 의뢰 / 완료: 완료된 의뢰 중 가장 최근 것을 강조
+            highlighted={
+              tab === 'ongoing'
+                ? request.status === 'proposal'
+                : request === requests.completed.find(({ status }) => status === 'completed')
+            }
+            onOpen={(path) => navigate(path)}
           />
         ))}
       </ul>
