@@ -101,32 +101,8 @@ const MY_REQUESTS: Record<MyRequestTab, MyRequest[]> = {
       message: '새로운 제안 3개가 도착했어요.',
     },
   ],
-  completed: [
-    {
-      id: 6,
-      kind: 'shoot',
-      status: 'completed',
-      title: '애월 스냅',
-      date: '11월 3일 (화)',
-      place: '애월',
-      people: 2,
-      scheduleLabel: '촬영일 11월 3일 (화)',
-      photographers: [photographer(4, '지훈 작가')],
-      message: '구매 사진 12장 · 결제 총액 99,000원',
-    },
-    {
-      id: 7,
-      kind: 'shoot',
-      status: 'completed',
-      title: '한강 스냅',
-      date: '10월 12일 (월)',
-      place: '한강',
-      people: 3,
-      scheduleLabel: '촬영일 10월 12일 (월)',
-      photographers: [photographer(7, '수민 작가')],
-      message: '촬영이 완료되었어요.',
-    },
-  ],
+  // 완료한 촬영은 받은 제안 임시 데이터(proposals.ts)에서 만듦
+  completed: [],
 };
 
 function expertPhotographer(id: number): RequestPhotographer[] {

@@ -110,11 +110,10 @@ export function RequestPurchasedPage() {
         >
           의뢰 목록으로
         </button>
-        {/* TODO: 완료한 촬영 상세(구매한 사진 보기) 화면이 생기면 그 화면으로 연결 */}
         <button
           type="button"
           className={styles.primaryButton}
-          onClick={() => navigate('/requests', { replace: true })}
+          onClick={() => navigate(`/requests/${requestId}/completed`, { replace: true })}
         >
           사진 보러 가기
         </button>

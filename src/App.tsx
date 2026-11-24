@@ -20,6 +20,7 @@ import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
 import { MyTermsPage } from './pages/MyTermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
+import { RequestCompletedPage } from './pages/RequestCompletedPage';
 import { RequestDonePage } from './pages/RequestDonePage';
 import { RequestEditPage } from './pages/RequestEditPage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
@@ -86,6 +87,7 @@ export function App() {
       <Route path="/requests/:requestId/photos" element={<RequestPhotoPickPage />} />
       <Route path="/requests/:requestId/photos/purchase" element={<RequestPhotoPurchasePage />} />
       <Route path="/requests/:requestId/purchased" element={<RequestPurchasedPage />} />
+      <Route path="/requests/:requestId/completed" element={<RequestCompletedPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

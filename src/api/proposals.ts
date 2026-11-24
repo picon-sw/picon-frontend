@@ -73,6 +73,25 @@ export interface ShootRequestDetail {
   delivery?: { arrivedAt: string; photos: DeliveredPhoto[] };
   // 구매 후: 구매한 사진 · 결제일 · 기한이 지나 자동 구매됐는지
   purchase?: { photoIds: number[]; paidAt: string; auto: boolean };
+  // 구매 후 남긴 후기
+  review?: Review;
+}
+
+export const REVIEW_KEYWORDS = [
+  '결과물이 좋아요',
+  '포즈를 잘 알려 줘요',
+  '시간 약속을 지켜요',
+  '소통이 빨라요',
+] as const;
+export type ReviewKeyword = (typeof REVIEW_KEYWORDS)[number];
+
+export interface Review {
+  // 1~5
+  rating: number;
+  keywords: ReviewKeyword[];
+  // 한 줄 후기 (선택)
+  content: string;
+  createdAt: string;
 }
 
 // 예약금은 기본 금액의 20% (사진 구매 금액에서 빼 줌)
@@ -261,7 +280,7 @@ function reservation(
   id: number,
   form: ShootRequestForm,
   expertId: number,
-  phase: 'reserved' | 'expertCanceled' | 'photosArrived',
+  phase: 'reserved' | 'expertCanceled' | 'photosArrived' | 'purchased',
   inquiries: Inquiry[] = [],
 ): ShootRequestDetail {
   return {
@@ -283,6 +302,24 @@ function deliveredPhotos(count: number): DeliveredPhoto[] {
     url: DEMO_DELIVERED_PHOTOS[index % DEMO_DELIVERED_PHOTOS.length],
     recommended: RECOMMENDED_PHOTO_IDS.has(index + 1),
   }));
+}
+
+// 사진 도착 3일 뒤 구매 (자동 구매는 고르기 기한 다음 날)
+function purchasedRequest(
+  id: number,
+  form: ShootRequestForm,
+  expertId: number,
+  photoIds: number[],
+  auto: boolean,
+): ShootRequestDetail {
+  const arrivedAt = toDateKey(addDays(fromDateKey(form.date), 3));
+  const paidAt = toDateKey(addDays(fromDateKey(arrivedAt), auto ? PICK_DAYS : 2));
+  return {
+    ...reservation(id, form, expertId, 'purchased'),
+    reservedAt: toDateKey(addDays(fromDateKey(form.date), -14)),
+    delivery: { arrivedAt, photos: deliveredPhotos(24) },
+    purchase: { photoIds, paidAt, auto },
+  };
 }
 
 const SHOOT_REQUESTS: ShootRequestDetail[] = [
@@ -343,6 +380,25 @@ const SHOOT_REQUESTS: ShootRequestDetail[] = [
     reservedAt: dayKey(-20),
     delivery: { arrivedAt: dayKey(0), photos: deliveredPhotos(24) },
   },
+  // 고른 사진 12장 구매 완료
+  purchasedRequest(
+    6,
+    {
+      ...shootForm(dayKey(-21), '14:00', '제주시', '애월', 2),
+      moods: ['자연스러움', '차분함', '몽환적'],
+    },
+    10,
+    [1, 2, 3, 4, 5, 6, 8, 9, 13, 15, 18, 20],
+    false,
+  ),
+  // 기한 안에 고르지 않아 작가 추천 10장으로 자동 구매
+  purchasedRequest(
+    7,
+    shootForm(dayKey(-42), '16:00', '영등포구', '한강', 3),
+    4,
+    [...RECOMMENDED_PHOTO_IDS],
+    true,
+  ),
 ];
 
 export function listShootRequests(): ShootRequestDetail[] {
@@ -436,4 +492,17 @@ export async function purchasePhotos(
   target.phase = 'purchased';
   target.purchase = { photoIds, paidAt: dayKey(0), auto: false };
   photoPicks.delete(id);
+}
+
+// 구매한 사진 (작가가 보낸 순서대로)
+export function purchasedPhotos(detail: ShootRequestDetail): DeliveredPhoto[] {
+  const photoIds = detail.purchase?.photoIds ?? [];
+  return (detail.delivery?.photos ?? []).filter((photo) => photoIds.includes(photo.id));
+}
+
+// TODO: API 연동 시 client.post(`/requests/${id}/review`, review)
+export async function submitReview(id: number, review: Omit<Review, 'createdAt'>): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  const target = SHOOT_REQUESTS.find((item) => item.id === id);
+  if (target) target.review = { ...review, createdAt: dayKey(0) };
 }
