@@ -1,8 +1,14 @@
 import { demoProfileImage } from '../constants/demoImages';
 import { formatMonthDay } from '../utils/date';
-import { getExpert } from './experts';
+import { formatWon, getExpert } from './experts';
 import { formatLocation } from './places';
-import { daysUntil, listShootRequests, type ShootRequestDetail } from './proposals';
+import {
+  daysUntil,
+  getPhotoPrice,
+  listShootRequests,
+  pickDeadlineOf,
+  type ShootRequestDetail,
+} from './proposals';
 
 // ---- 나의 의뢰 (의뢰 메인 목록) ----
 // TODO: API 나오면 이 파일의 fetch 함수 안만 client.get('/requests/me', ...) 등으로 교체 (지금은 임시 데이터)
@@ -205,6 +211,35 @@ function shootRequestCard(detail: ShootRequestDetail): { tab: MyRequestTab; card
           message: '일정이 확정되었어요.',
         },
       };
+    case 'photosArrived': {
+      const photoCount = detail.delivery?.photos.length ?? 0;
+      const pickDeadline = pickDeadlineOf(detail.delivery?.arrivedAt ?? form.date);
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'photosArrived',
+          scheduleLabel: `고르기 D-${daysUntil(pickDeadline)}`,
+          photographers: expertPhotographer(detail.reservedExpertId ?? 0),
+          message: `사진 ${photoCount}장이 도착했어요. 마음에 드는 사진을 골라 주세요.`,
+        },
+      };
+    }
+    case 'purchased': {
+      const expert = getExpert(detail.reservedExpertId ?? 0);
+      const photoCount = detail.purchase?.photoIds.length ?? 0;
+      const total = expert ? getPhotoPrice(expert, photoCount).total : 0;
+      return {
+        tab: 'completed',
+        card: {
+          ...base,
+          status: 'completed',
+          scheduleLabel: `촬영일 ${formatMonthDay(form.date)}`,
+          photographers: expertPhotographer(detail.reservedExpertId ?? 0),
+          message: `구매 사진 ${photoCount}장 · 결제 총액 ${formatWon(total)}`,
+        },
+      };
+    }
     case 'expertCanceled':
       return {
         tab: 'ongoing',

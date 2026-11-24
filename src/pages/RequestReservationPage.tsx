@@ -9,7 +9,9 @@ import {
   fetchShootRequest,
   formatDeposit,
   formatRefundDeadline,
+  getPhotoPrice,
   getRefund,
+  pickDeadlineOf,
   reRequestTarget,
   sendInquiry,
   type CancelReason,
@@ -26,18 +28,34 @@ interface Step {
   label: string;
   detail: string;
   done: boolean;
+  // 지금 해야 할 단계 (사진 도착 후 사진 고르기·구매)
+  current?: boolean;
 }
 
 // 진행 단계: 예약 확정 → 촬영 → 사진 도착 → 사진 고르기·구매
 function reservationSteps(detail: ShootRequestDetail, expert: Expert): Step[] {
-  const { form, reservedAt } = detail;
+  const { form, reservedAt, delivery } = detail;
+  const confirmed = {
+    label: '예약 확정',
+    detail: reservedAt ? `${formatMonthDay(reservedAt)} 완료` : '완료',
+    done: true,
+  };
+  if (delivery) {
+    return [
+      confirmed,
+      { label: '촬영', detail: `${formatMonthDay(form.date)} 완료`, done: true },
+      { label: '사진 도착', detail: `${formatMonthDay(delivery.arrivedAt)} 도착`, done: true },
+      {
+        label: '사진 고르기·구매',
+        detail: `${formatMonthDay(pickDeadlineOf(delivery.arrivedAt))}까지`,
+        done: false,
+        current: true,
+      },
+    ];
+  }
   const arriveDate = toDateKey(addDays(fromDateKey(form.date), expert.deliveryDays));
   return [
-    {
-      label: '예약 확정',
-      detail: reservedAt ? `${formatMonthDay(reservedAt)} 완료` : '완료',
-      done: true,
-    },
+    confirmed,
     { label: '촬영', detail: `${formatMonthDay(form.date)} 예정`, done: false },
     { label: '사진 도착', detail: `${formatMonthDay(arriveDate)} 예정`, done: false },
     { label: '사진 고르기·구매', detail: '사진 도착 후', done: false },
@@ -126,7 +144,13 @@ export function RequestReservationPage() {
 
   const expert = detail?.reservedExpertId ? getExpert(detail.reservedExpertId) : null;
   const phase = detail?.phase;
-  const visible = detail && expert && (phase === 'reserved' || phase === 'expertCanceled');
+  const visible =
+    detail &&
+    expert &&
+    (phase === 'reserved' || phase === 'expertCanceled' || phase === 'photosArrived');
+  // 예약 확정 · 사진 도착은 같은 진행 화면 (작가 취소만 다름)
+  const active = phase === 'reserved' || phase === 'photosArrived';
+  const delivery = detail?.delivery;
 
   const submitInquiry = async (content: string) => {
     if (!detail || !expert) return;
@@ -173,13 +197,18 @@ export function RequestReservationPage() {
               {phase === 'reserved' && (
                 <span className={styles.dDay}>촬영 D-{daysUntil(detail.form.date)}</span>
               )}
+              {phase === 'photosArrived' && delivery && (
+                <span className={styles.dDay}>
+                  고르기 D-{daysUntil(pickDeadlineOf(delivery.arrivedAt))}
+                </span>
+              )}
             </div>
-            <span
-              className={
-                phase === 'reserved' ? styles.badge : `${styles.badge} ${styles.badgeCanceled}`
-              }
-            >
-              {phase === 'reserved' ? '예약 확정' : '작가 취소'}
+            <span className={active ? styles.badge : `${styles.badge} ${styles.badgeCanceled}`}>
+              {phase === 'reserved'
+                ? '예약 확정'
+                : phase === 'photosArrived'
+                  ? '사진 도착'
+                  : '작가 취소'}
             </span>
             <div className={styles.expert}>
               {expert.profileImageUrl ? (
@@ -190,28 +219,34 @@ export function RequestReservationPage() {
               <div className={styles.expertInfo}>
                 <p className={styles.expertName}>{expert.name}</p>
                 <p className={styles.expertMessage}>
-                  {phase === 'reserved'
-                    ? '함께할 순간을 준비하고 있어요.'
-                    : '작가 사정으로 예약이 취소됐어요.'}
+                  {phase === 'reserved' && '함께할 순간을 준비하고 있어요.'}
+                  {phase === 'photosArrived' &&
+                    `사진 ${delivery?.photos.length ?? 0}장을 보냈어요.`}
+                  {phase === 'expertCanceled' && '작가 사정으로 예약이 취소됐어요.'}
                 </p>
               </div>
             </div>
           </section>
 
-          {phase === 'reserved' ? (
+          {active ? (
             <ol className={styles.steps} aria-label="진행 단계">
-              {reservationSteps(detail, expert).map(({ label, detail: stepDetail, done }) => (
-                <li
-                  key={label}
-                  className={done ? `${styles.step} ${styles.stepDone}` : styles.step}
-                >
-                  <span className={styles.stepMarker} aria-hidden="true" />
-                  <span className={styles.stepInfo}>
-                    <span className={styles.stepLabel}>{label}</span>
-                    <span className={styles.stepDetail}>{stepDetail}</span>
-                  </span>
-                </li>
-              ))}
+              {reservationSteps(detail, expert).map(
+                ({ label, detail: stepDetail, done, current }) => (
+                  <li
+                    key={label}
+                    className={[styles.step, done && styles.stepDone, current && styles.stepCurrent]
+                      .filter(Boolean)
+                      .join(' ')}
+                    aria-current={current ? 'step' : undefined}
+                  >
+                    <span className={styles.stepMarker} aria-hidden="true" />
+                    <span className={styles.stepInfo}>
+                      <span className={styles.stepLabel}>{label}</span>
+                      <span className={styles.stepDetail}>{stepDetail}</span>
+                    </span>
+                  </li>
+                ),
+              )}
             </ol>
           ) : (
             <section className={styles.canceledBox}>
@@ -224,10 +259,31 @@ export function RequestReservationPage() {
             </section>
           )}
 
+          {phase === 'photosArrived' && delivery && (
+            <section className={styles.pickGuide}>
+              <p className={styles.pickTitle}>사진 {delivery.photos.length}장이 도착했어요</p>
+              <p className={styles.pickText}>
+                {formatMonthDay(pickDeadlineOf(delivery.arrivedAt))}까지 마음에 드는 사진을 골라
+                주세요.
+                <br />
+                지나면 작가 추천 10장으로 자동 구매되고,
+                <br />
+                예약금을 뺀 {formatWon(getPhotoPrice(expert, 10).toPay)}이 결제돼요.
+              </p>
+              <button
+                type="button"
+                className={styles.pickButton}
+                onClick={() => navigate(`/requests/${detail.id}/photos`)}
+              >
+                사진 고르러 가기
+              </button>
+            </section>
+          )}
+
           <ReservationInfo
             detail={detail}
             expert={expert}
-            depositText={`${formatDeposit(expert)} ${phase === 'reserved' ? '결제 완료' : '전액 환불'}`}
+            depositText={`${formatDeposit(expert)} ${active ? '결제 완료' : '전액 환불'}`}
           />
 
           {phase === 'reserved' && (
@@ -257,7 +313,7 @@ export function RequestReservationPage() {
 
       {visible && (
         <div className={styles.bottomBar}>
-          {phase === 'reserved' ? (
+          {active ? (
             <>
               <button
                 type="button"

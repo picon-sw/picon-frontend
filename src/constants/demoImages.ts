@@ -126,3 +126,19 @@ export const DEMO_MY_ACTIVITY_IMAGES = {
   liked: [search1, search3, search4], // 찜한 전문가 (탐색 카드 사진)
   votes: [contest1, home4], // 콘테스트 투표 내역
 };
+
+// 촬영 후 작가가 보낸 사진 (사진 고르기 · 구매)
+export const DEMO_DELIVERED_PHOTOS = [
+  portfolio1,
+  portfolio2,
+  portfolio3,
+  portfolio4,
+  home1,
+  search1,
+  home2,
+  search2,
+  home3,
+  search3,
+  home4,
+  search5,
+];

@@ -164,6 +164,16 @@
   background-color: #70b9df;
 }
 
+/* 지금 할 단계: 비어 있는 파란 동그라미 */
+.stepCurrent .stepMarker {
+  border-color: #70b9df;
+  border-width: 3px;
+}
+
+.stepCurrent .stepLabel {
+  font-weight: 600;
+}
+
 .stepInfo {
   display: flex;
   flex-direction: column;
@@ -181,6 +191,39 @@
 
 .stepDetail {
   font-size: 11px;
+}
+
+.pickGuide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: #eaf4fb;
+}
+
+.pickTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pickText {
+  margin: 0;
+  font-size: 13px;
+  color: #595959;
+}
+
+.pickButton {
+  height: 44px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
 }
 
 .canceledBox {

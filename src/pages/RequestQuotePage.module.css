@@ -175,40 +175,6 @@
   line-height: 1.45;
 }
 
-.methods {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.method {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border: 1px solid #ebebeb;
-  border-radius: 12px;
-  background-color: #fff;
-  font: inherit;
-  font-size: 14px;
-  color: #000;
-  text-align: left;
-  cursor: pointer;
-}
-
-.method img {
-  width: 20px;
-  height: 20px;
-}
-
-/* 테두리가 두꺼워져도 크기가 같도록 여백을 0.5px 줄임 */
-.methodSelected {
-  padding: 11.5px 13.5px;
-  border: 1.5px solid #70b9df;
-  background-color: #eaf4fb;
-  font-weight: 600;
-}
-
 .agreements {
   display: flex;
   flex-direction: column;

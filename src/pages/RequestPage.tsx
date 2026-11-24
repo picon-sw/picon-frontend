@@ -25,7 +25,9 @@ function getDetailPath({ id, kind, status }: MyRequest): string | null {
   if (status === 'proposal' || status === 'waiting' || status === 'closed') {
     return `/requests/${id}/proposals`;
   }
-  if (status === 'confirmed' || status === 'expertCanceled') return `/requests/${id}/reservation`;
+  if (status === 'confirmed' || status === 'expertCanceled' || status === 'photosArrived') {
+    return `/requests/${id}/reservation`;
+  }
   return null;
 }
 

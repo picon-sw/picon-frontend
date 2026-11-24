@@ -3,8 +3,6 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import checkboxOffIcon from '../assets/icons/request/checkbox-off.svg';
 import checkboxOnIcon from '../assets/icons/request/checkbox-on.svg';
-import radioOffIcon from '../assets/icons/request/radio-off.svg';
-import radioOnIcon from '../assets/icons/request/radio-on.svg';
 import { formatExpertPrice, getExpert } from '../api/experts';
 import { formatLocation } from '../api/places';
 import {
@@ -18,6 +16,7 @@ import {
   type ShootRequestDetail,
 } from '../api/proposals';
 import { formatShootSchedule } from '../api/requests';
+import { PaymentMethodList } from '../components/PaymentMethodList';
 import { formatShootKind } from '../constants/requestOptions';
 import styles from './RequestQuotePage.module.css';
 
@@ -153,24 +152,7 @@ export function RequestQuotePage() {
 
         <section className={styles.card} aria-label="결제 수단">
           <p className={styles.cardTitle}>결제 수단</p>
-          <div className={styles.methods} role="radiogroup">
-            {PAYMENT_METHODS.map((item) => {
-              const selected = item === method;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  className={selected ? `${styles.method} ${styles.methodSelected}` : styles.method}
-                  onClick={() => setMethod(item)}
-                >
-                  <img src={selected ? radioOnIcon : radioOffIcon} alt="" />
-                  {item}
-                </button>
-              );
-            })}
-          </div>
+          <PaymentMethodList value={method} onChange={setMethod} />
         </section>
 
         <section className={styles.agreements} aria-label="꼭 확인해 주세요">

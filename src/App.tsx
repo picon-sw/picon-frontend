@@ -26,8 +26,11 @@ import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
 import { RequestInquiriesPage } from './pages/RequestInquiriesPage';
 import { RequestPage } from './pages/RequestPage';
+import { RequestPhotoPickPage } from './pages/RequestPhotoPickPage';
+import { RequestPhotoPurchasePage } from './pages/RequestPhotoPurchasePage';
 import { RequestProposalDetailPage } from './pages/RequestProposalDetailPage';
 import { RequestProposalsPage } from './pages/RequestProposalsPage';
+import { RequestPurchasedPage } from './pages/RequestPurchasedPage';
 import { RequestQuotePage } from './pages/RequestQuotePage';
 import { RequestReservationPage } from './pages/RequestReservationPage';
 import { RequestReservedPage } from './pages/RequestReservedPage';
@@ -80,6 +83,9 @@ export function App() {
       <Route path="/requests/:requestId/reserved" element={<RequestReservedPage />} />
       <Route path="/requests/:requestId/reservation" element={<RequestReservationPage />} />
       <Route path="/requests/:requestId/inquiries" element={<RequestInquiriesPage />} />
+      <Route path="/requests/:requestId/photos" element={<RequestPhotoPickPage />} />
+      <Route path="/requests/:requestId/photos/purchase" element={<RequestPhotoPurchasePage />} />
+      <Route path="/requests/:requestId/purchased" element={<RequestPurchasedPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

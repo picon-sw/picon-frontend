@@ -1,5 +1,6 @@
+import { DEMO_DELIVERED_PHOTOS } from '../constants/demoImages';
 import { addDays, formatMonthDay, fromDateKey, startOfToday, toDateKey } from '../utils/date';
-import { formatWon, getExpert, type Expert } from './experts';
+import { BASE_PHOTO_COUNT, formatWon, getExpert, type Expert } from './experts';
 import { formatLocation } from './places';
 import {
   formatShootSchedule,
@@ -26,8 +27,23 @@ export interface Proposal {
 // open: 제안을 받는 중이거나 고르는 중 / expired: 24시간 동안 아무도 제안하지 않음
 // closed: 기한 안에 고르지 않아 마감(미선택) / canceled: 의뢰 취소(예약 후 취소 포함)
 // reserved: 예약 확정 / expertCanceled: 작가가 예약을 취소
+// photosArrived: 촬영 후 사진 도착(고르는 중) / purchased: 사진 구매 완료
 export type ShootRequestPhase =
-  'open' | 'expired' | 'closed' | 'canceled' | 'reserved' | 'expertCanceled';
+  | 'open'
+  | 'expired'
+  | 'closed'
+  | 'canceled'
+  | 'reserved'
+  | 'expertCanceled'
+  | 'photosArrived'
+  | 'purchased';
+
+// 작가가 보낸 사진 (작가 추천 사진은 기한이 지나면 자동 구매되는 기본 장수)
+export interface DeliveredPhoto {
+  id: number;
+  url: string;
+  recommended: boolean;
+}
 
 // 작가에게 남긴 문의 (답변이 없으면 답변 대기)
 export interface Inquiry {
@@ -53,6 +69,10 @@ export interface ShootRequestDetail {
   reservedAt?: string;
   // 예약 후 작가에게 남긴 문의 (최근 것이 앞)
   inquiries: Inquiry[];
+  // 사진 도착 후: 도착일 'YYYY-MM-DD'와 작가가 보낸 사진
+  delivery?: { arrivedAt: string; photos: DeliveredPhoto[] };
+  // 구매 후: 구매한 사진 · 결제일 · 기한이 지나 자동 구매됐는지
+  purchase?: { photoIds: number[]; paidAt: string; auto: boolean };
 }
 
 // 예약금은 기본 금액의 20% (사진 구매 금액에서 빼 줌)
@@ -125,6 +145,39 @@ export function getRefund(
 // 예: 10장 기준 89,000원 → 예약금 17,800원
 export function formatDeposit(expert: Expert): string {
   return formatWon(getDeposit(expert));
+}
+
+// 사진이 도착한 뒤 이 날짜 수 안에 골라야 함 (지나면 작가 추천 사진으로 자동 구매)
+export const PICK_DAYS = 7;
+
+export function pickDeadlineOf(arrivedAt: string): string {
+  return toDateKey(addDays(fromDateKey(arrivedAt), PICK_DAYS));
+}
+
+// 원본 사진은 촬영일부터 1년 동안 보관 (예: 2027년 11월 3일 (수))
+export function formatArchiveUntil(form: ShootRequestForm): string {
+  const date = fromDateKey(form.date);
+  date.setFullYear(date.getFullYear() + 1);
+  return `${date.getFullYear()}년 ${formatMonthDay(toDateKey(date))}`;
+}
+
+export interface PhotoPrice {
+  extraCount: number;
+  extraAmount: number;
+  // 기본 금액 + 추가 금액
+  total: number;
+  deposit: number;
+  // 예약금을 뺀 실제 결제 금액
+  toPay: number;
+}
+
+// 기본 10장 포함, 넘는 장수만 1장당 추가 금액
+export function getPhotoPrice(expert: Expert, count: number): PhotoPrice {
+  const extraCount = Math.max(0, count - BASE_PHOTO_COUNT);
+  const extraAmount = extraCount * expert.extraPrice;
+  const total = expert.basePrice + extraAmount;
+  const deposit = getDeposit(expert);
+  return { extraCount, extraAmount, total, deposit, toPay: total - deposit };
 }
 
 // ---- 임시 데이터 ----
@@ -208,7 +261,7 @@ function reservation(
   id: number,
   form: ShootRequestForm,
   expertId: number,
-  phase: 'reserved' | 'expertCanceled',
+  phase: 'reserved' | 'expertCanceled' | 'photosArrived',
   inquiries: Inquiry[] = [],
 ): ShootRequestDetail {
   return {
@@ -221,6 +274,17 @@ function reservation(
 }
 
 // 의뢰 메인 카드 id와 같은 id 사용 (myRequests.ts)
+// 작가가 보낸 사진 24장 중 작가 추천 10장
+const RECOMMENDED_PHOTO_IDS = new Set([1, 2, 3, 5, 6, 8, 9, 13, 15, 18]);
+
+function deliveredPhotos(count: number): DeliveredPhoto[] {
+  return Array.from({ length: count }, (_, index) => ({
+    id: index + 1,
+    url: DEMO_DELIVERED_PHOTOS[index % DEMO_DELIVERED_PHOTOS.length],
+    recommended: RECOMMENDED_PHOTO_IDS.has(index + 1),
+  }));
+}
+
 const SHOOT_REQUESTS: ShootRequestDetail[] = [
   // 제안 3개 도착
   request(8, shootForm(dayKey(10), '14:00', '마포구', '경의선책거리', 3), 'open', [1, 2, 3]),
@@ -264,6 +328,21 @@ const SHOOT_REQUESTS: ShootRequestDetail[] = [
   // 작가가 예약을 취소
   reservation(3, shootForm(dayKey(28), '11:00', '성동구', '성수', 1), 6, 'expertCanceled'),
   reservation(4, shootForm(dayKey(35), '15:00', '성남시', '분당', 5), 11, 'reserved'),
+  // 촬영 후 사진 24장 도착 (오늘 도착해 고르기 D-7)
+  {
+    ...reservation(
+      12,
+      {
+        ...shootForm(dayKey(-3), '14:00', '제주시', '협재', 2),
+        moods: ['자연스러움', '차분함', '몽환적'],
+        note: '바다와 노을을 배경으로 차분하고 몽환적인 분위기의 커플 사진을 자연스럽게 남기고 싶어요.',
+      },
+      10,
+      'photosArrived',
+    ),
+    reservedAt: dayKey(-20),
+    delivery: { arrivedAt: dayKey(0), photos: deliveredPhotos(24) },
+  },
 ];
 
 export function listShootRequests(): ShootRequestDetail[] {
@@ -330,4 +409,31 @@ export async function payDeposit(
     target.reservedExpertId = expertId;
     target.reservedAt = dayKey(0);
   }
+}
+
+// 사진 고르기 중 고른 사진 (구매 확인에 갔다 돌아와도 유지, 새로고침하면 사라짐)
+const photoPicks = new Map<number, number[]>();
+
+export function loadPhotoPick(id: number): number[] {
+  return photoPicks.get(id) ?? [];
+}
+
+export function savePhotoPick(id: number, photoIds: number[]): void {
+  photoPicks.set(id, photoIds);
+}
+
+// 고른 사진 구매 (예약금을 뺀 금액 결제). 지금은 버튼을 누르면 바로 결제 완료
+// TODO: 결제 연동 후 client.post(`/requests/${id}/photos/purchase`, { photoIds, method })
+export async function purchasePhotos(
+  id: number,
+  photoIds: number[],
+  method: PaymentMethod,
+): Promise<void> {
+  void method;
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const target = SHOOT_REQUESTS.find((item) => item.id === id);
+  if (!target) return;
+  target.phase = 'purchased';
+  target.purchase = { photoIds, paidAt: dayKey(0), auto: false };
+  photoPicks.delete(id);
 }
