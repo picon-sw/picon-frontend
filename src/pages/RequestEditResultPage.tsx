@@ -29,6 +29,7 @@ export function RequestEditResultPage() {
   const [sheet, setSheet] = useState<'confirm' | 'revision' | null>(null);
   const [revision, setRevision] = useState('');
   const [sending, setSending] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -41,6 +42,12 @@ export function RequestEditResultPage() {
       ignore = true;
     };
   }, [requestId]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 2000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const goBack = () => {
     if (location.key === 'default') navigate('/requests');
@@ -138,12 +145,27 @@ export function RequestEditResultPage() {
         </p>
       </div>
 
+      {toast && (
+        <p className={styles.toast} role="status">
+          {toast}
+        </p>
+      )}
+
       <div className={styles.bottomBar}>
         <button
           type="button"
-          className={styles.secondaryButton}
-          disabled={detail.revisionUsed}
-          onClick={() => setSheet('revision')}
+          // 수정 요청을 이미 썼으면 흐리게 보이고, 누르면 안내 토스트
+          className={
+            detail.revisionUsed
+              ? `${styles.secondaryButton} ${styles.secondaryButtonUsed}`
+              : styles.secondaryButton
+          }
+          aria-disabled={detail.revisionUsed}
+          onClick={() =>
+            detail.revisionUsed
+              ? setToast('수정 요청은 1회까지 할 수 있어요')
+              : setSheet('revision')
+          }
         >
           수정 요청하기
         </button>
