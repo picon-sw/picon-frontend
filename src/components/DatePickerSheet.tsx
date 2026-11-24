@@ -10,6 +10,8 @@ interface DatePickerSheetProps {
   minDate: string;
   maxDate: string;
   guide?: string;
+  // 범위 안이어도 고를 수 없는 날짜 (예: 작가 일정이 찬 날). 취소선으로 표시
+  isAvailable?: (date: string) => boolean;
   onSelect: (date: string) => void;
   onClose: () => void;
 }
@@ -24,13 +26,16 @@ export function DatePickerSheet({
   minDate,
   maxDate,
   guide,
+  isAvailable,
   onSelect,
   onClose,
 }: DatePickerSheetProps) {
   const min = fromDateKey(minDate);
   const max = fromDateKey(maxDate);
-  // 이전에 고른 날짜가 범위를 벗어났으면 선택 안 한 것으로 봄
-  const initial = value && value >= minDate && value <= maxDate ? value : null;
+  const inRange = (key: string) => key >= minDate && key <= maxDate;
+  const blocked = (key: string) => isAvailable !== undefined && !isAvailable(key);
+  // 이전에 고른 날짜가 범위를 벗어났거나 고를 수 없으면 선택 안 한 것으로 봄
+  const initial = value && inRange(value) && !blocked(value) ? value : null;
   const [selected, setSelected] = useState<string | null>(initial);
   const [view, setView] = useState(() => {
     const base = initial ? fromDateKey(initial) : min;
@@ -90,11 +95,13 @@ export function DatePickerSheet({
         {Array.from({ length: daysInMonth }, (_, index) => {
           const day = index + 1;
           const key = toDateKey(new Date(year, month, day));
-          const disabled = key < minDate || key > maxDate;
+          const isBlocked = inRange(key) && blocked(key);
+          const disabled = !inRange(key) || isBlocked;
           const isSelected = key === selected;
           const className = [
             styles.day,
             (leadingBlanks + index) % 7 === 0 ? styles.sunday : '',
+            isBlocked ? styles.dayBlocked : '',
             isSelected ? styles.daySelected : '',
           ]
             .filter(Boolean)

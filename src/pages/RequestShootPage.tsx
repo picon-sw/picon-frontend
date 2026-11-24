@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import calendarIcon from '../assets/icons/request/calendar-box.svg';
 import clockIcon from '../assets/icons/request/clock.svg';
 import mapIcon from '../assets/icons/request/map.svg';
+import { expertAvailableTimes, formatWon, getExpert, isExpertDateAvailable } from '../api/experts';
 import { formatLocation, type ShootLocation } from '../api/places';
 import {
   fetchShootDraft,
@@ -11,12 +12,16 @@ import {
   loadDraftPhotos,
   readShootFormDraft,
   saveDraftPhotos,
+  sendRequest,
+  type RequestDoneState,
   type RequestExpertsState,
   type ShootDraft,
   type ShootFormDraft,
 } from '../api/requests';
 import { AiFillBar } from '../components/AiFillBar';
 import { DatePickerSheet } from '../components/DatePickerSheet';
+import { DirectExpertBanner } from '../components/DirectExpertBanner';
+import { ExpertRegionSheet } from '../components/ExpertRegionSheet';
 import { MoodPhotoPicker } from '../components/MoodPhotoPicker';
 import { RegionPickerSheet } from '../components/RegionPickerSheet';
 import { TimePickerSheet } from '../components/TimePickerSheet';
@@ -33,6 +38,7 @@ import {
 import { useAiFill } from '../hooks/useAiFill';
 import { useMoodPhotos } from '../hooks/useMoodPhotos';
 import { addDays, addMonths, formatMonthDay, startOfToday, toDateKey } from '../utils/date';
+import { withSubject } from '../utils/korean';
 import styles from './RequestShootPage.module.css';
 
 const MIN_PEOPLE = 1;
@@ -49,6 +55,8 @@ interface ChipGroupProps<T extends string> {
   selected: readonly string[];
   // 여러 개 고르는 칩이면 true (체크박스 역할)
   multiple?: boolean;
+  // 고를 수 없는 값 (예: 바로 의뢰 작가의 최소 견적보다 낮은 예산)
+  disabledOptions?: readonly T[];
   onToggle: (value: T) => void;
 }
 
@@ -58,6 +66,7 @@ function ChipGroup<T extends string>({
   options,
   selected,
   multiple = false,
+  disabledOptions = [],
   onToggle,
 }: ChipGroupProps<T>) {
   return (
@@ -71,6 +80,7 @@ function ChipGroup<T extends string>({
             role={multiple ? 'checkbox' : 'radio'}
             aria-checked={isSelected}
             className={isSelected ? `${styles.chip} ${styles.chipSelected}` : styles.chip}
+            disabled={disabledOptions.includes(option)}
             onClick={() => onToggle(option)}
           >
             {option}
@@ -106,9 +116,22 @@ function PickField({ label, value, placeholder, icon, onClick }: PickFieldProps)
   );
 }
 
+// 바로 의뢰 작가의 최소 견적(기본 금액)보다 낮은 예산
+function budgetsBelow(minPrice: number): Budget[] {
+  if (minPrice > 100000) return ['5만 원 이하', '5~10만 원'];
+  if (minPrice > 50000) return ['5만 원 이하'];
+  return [];
+}
+
 export function RequestShootPage() {
   const navigate = useNavigate();
   const routerLocation = useLocation();
+  const [searchParams] = useSearchParams();
+  // 작가 프로필에서 바로 의뢰하면 그 작가 (날짜·시간·지역·예산을 작가 기준으로 제한)
+  const directExpert = searchParams.has('expert')
+    ? getExpert(Number(searchParams.get('expert')))
+    : null;
+  const [sending, setSending] = useState(false);
   // 전문가 선택 등에서 돌아왔을 때 적어 둔 값 (처음 들어오면 null)
   const [initial] = useState(() => readShootFormDraft(routerLocation.state));
   // 희망 날짜는 'YYYY-MM-DD', 희망 시간은 'HH:mm'
@@ -119,7 +142,11 @@ export function RequestShootPage() {
   const [location, setLocation] = useState<ShootLocation | null>(initial?.location ?? null);
   const [openSheet, setOpenSheet] = useState<'date' | 'time' | 'location' | null>(null);
   const [people, setPeople] = useState(initial?.people ?? 1);
-  const [budget, setBudget] = useState<Budget | null>(initial?.budget ?? null);
+  const lowBudgets = directExpert ? budgetsBelow(directExpert.basePrice) : [];
+  const [budget, setBudget] = useState<Budget | null>(() => {
+    const saved = initial?.budget ?? null;
+    return saved && !lowBudgets.includes(saved) ? saved : null;
+  });
   const [kind, setKind] = useState<ShootKind | null>(initial?.kind ?? null);
   const [moods, setMoods] = useState<string[]>(initial?.moods ?? []);
   const [note, setNote] = useState(initial?.note ?? '');
@@ -202,7 +229,7 @@ export function RequestShootPage() {
     moods.length > 0;
 
   // TODO: API 나오면 여기서 요청서를 저장하고 받은 requestId도 state에 담기
-  const goToExperts = () => {
+  const goToExperts = async () => {
     if (!canSubmit || date === null || time === null || location === null) return;
     if (budget === null || !isShootKindDone(kind)) return;
     // 뒤로 와서 다시 고칠 수 있게 지금 화면 기록에 적어 둔 값 저장
@@ -219,13 +246,34 @@ export function RequestShootPage() {
       notice: initial?.notice,
       excludeIds: initial?.excludeIds,
     };
-    navigate(routerLocation.pathname, { replace: true, state: { draft } });
+    navigate(`${routerLocation.pathname}${routerLocation.search}`, {
+      replace: true,
+      state: { draft },
+    });
+    const summary = {
+      // 제목 규칙: 상세 주소 + 스냅
+      title: `${location.detail} 스냅`,
+      detail: `${formatShootSchedule(date, time)} · ${formatLocation(location)} · 촬영 인원 ${people}명`,
+    };
+
+    // 바로 의뢰: 전문가 선택 없이 그 작가에게 바로 보냄
+    if (directExpert) {
+      if (sending) return;
+      setSending(true);
+      try {
+        await sendRequest([directExpert.id]);
+        const { id, name, profileImageUrl } = directExpert;
+        const state: RequestDoneState = { summary, experts: [{ id, name, profileImageUrl }] };
+        navigate('/requests/done', { replace: true, state });
+      } catch {
+        setToast('요청을 보내지 못했어요');
+        setSending(false);
+      }
+      return;
+    }
+
     const state: RequestExpertsState = {
-      summary: {
-        // 제목 규칙: 상세 주소 + 스냅
-        title: `${location.detail} 스냅`,
-        detail: `${formatShootSchedule(date, time)} · ${formatLocation(location)} · 촬영 인원 ${people}명`,
-      },
+      summary,
       form: { date, time, location, people, budget, kind, moods, note: note.trim() },
       excludeIds: initial?.excludeIds,
     };
@@ -242,7 +290,16 @@ export function RequestShootPage() {
       </header>
 
       <div className={styles.content}>
-        <p className={styles.intro}>전문가를 골라 견적을 받아보세요.</p>
+        {directExpert && (
+          <div className={styles.direct}>
+            <DirectExpertBanner expert={directExpert} />
+          </div>
+        )}
+        <p className={styles.intro}>
+          {directExpert
+            ? `${withSubject(directExpert.name)} 확인하고 견적을 보내 드려요.`
+            : '전문가를 골라 견적을 받아보세요.'}
+        </p>
 
         <div className={styles.form}>
           <section className={styles.card} aria-label="촬영 일정">
@@ -320,8 +377,14 @@ export function RequestShootPage() {
               label="예산"
               options={BUDGETS}
               selected={budget ? [budget] : []}
+              disabledOptions={lowBudgets}
               onToggle={setBudget}
             />
+            {directExpert && (
+              <p className={styles.budgetNote}>
+                {directExpert.name}의 최소 견적은 {formatWon(directExpert.basePrice)}이에요
+              </p>
+            )}
           </section>
 
           <MoodPhotoPicker photos={photos} onAdd={addPhotos} onRemove={removePhoto} />
@@ -388,7 +451,12 @@ export function RequestShootPage() {
           value={date}
           minDate={toDateKey(addDays(startOfToday(), DATE_MIN_DAYS))}
           maxDate={toDateKey(addMonths(startOfToday(), DATE_MAX_MONTHS))}
-          guide="4일 후부터 한 달 안의 날짜를 고를 수 있어요"
+          guide={
+            directExpert
+              ? `${withSubject(directExpert.name)} 촬영할 수 있는 날짜만 고를 수 있어요`
+              : '4일 후부터 한 달 안의 날짜를 고를 수 있어요'
+          }
+          isAvailable={directExpert ? (key) => isExpertDateAvailable(directExpert, key) : undefined}
           onSelect={changeDate}
           onClose={() => setOpenSheet(null)}
         />
@@ -398,6 +466,12 @@ export function RequestShootPage() {
         <TimePickerSheet
           date={date}
           value={time}
+          availableTimes={directExpert ? expertAvailableTimes(directExpert, date) : undefined}
+          guide={
+            directExpert
+              ? `${withSubject(directExpert.name)} 가능한 시간만 고를 수 있어요`
+              : undefined
+          }
           onSelect={(next) => {
             setTime(next);
             setTimeReset(false);
@@ -407,7 +481,19 @@ export function RequestShootPage() {
         />
       )}
 
-      {openSheet === 'location' && (
+      {openSheet === 'location' && directExpert && (
+        <ExpertRegionSheet
+          expert={directExpert}
+          value={location}
+          onSelect={(next) => {
+            setLocation(next);
+            setOpenSheet(null);
+          }}
+          onClose={() => setOpenSheet(null)}
+        />
+      )}
+
+      {openSheet === 'location' && !directExpert && (
         <RegionPickerSheet
           value={location}
           onSelect={(next) => {
@@ -438,10 +524,10 @@ export function RequestShootPage() {
           <button
             type="button"
             className={styles.nextButton}
-            disabled={!canSubmit}
+            disabled={!canSubmit || sending}
             onClick={goToExperts}
           >
-            작가 고르러 가기
+            {directExpert ? `${directExpert.name}에게 요청 보내기` : '작가 고르러 가기'}
           </button>
         </div>
       </div>

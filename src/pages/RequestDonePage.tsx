@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router';
 import { readDoneState, type RequestDoneState } from '../api/requests';
 import { demoProfileImage } from '../constants/demoImages';
+import { withSubject } from '../utils/korean';
 import styles from './RequestDonePage.module.css';
 
 // 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
@@ -23,6 +24,8 @@ export function RequestDonePage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { summary, experts } = readDoneState(location.state) ?? SAMPLE_DONE;
+  // 바로 의뢰하기처럼 1명에게만 보냈으면 작가 이름으로 안내
+  const single = experts.length === 1 ? experts[0] : null;
 
   // 뒤로가기로 요청서·완료 화면에 다시 들어오지 않도록 replace 이동
   // 의뢰 메인은 '진행 중' 탭이 기본 선택
@@ -48,9 +51,13 @@ export function RequestDonePage() {
           ))}
         </ul>
 
-        <h2 className={styles.message}>요청서를 보냈어요</h2>
+        <h2 className={styles.message}>
+          {single ? `${single.name}에게 요청서를 보냈어요` : '요청서를 보냈어요'}
+        </h2>
         <p className={styles.description}>
-          선택한 전문가 {experts.length}명이 24시간 안에 제안을 보내요.
+          {single
+            ? `${withSubject(single.name)} 24시간 안에 제안을 보내요.`
+            : `선택한 전문가 ${experts.length}명이 24시간 안에 제안을 보내요.`}
           <br />
           도착하면 나의 의뢰에서 확인할 수 있어요.
         </p>

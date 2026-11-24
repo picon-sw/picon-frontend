@@ -12,6 +12,8 @@ interface TimePickerSheetProps {
   value: string | null;
   // 고를 수 있는 시간만 넘기면 나머지는 비활성 (없으면 전부 가능)
   availableTimes?: readonly string[];
+  // 날짜 뒤 안내 (기본: 30분 단위로 고를 수 있어요)
+  guide?: string;
   onSelect: (time: string) => void;
   onClose: () => void;
 }
@@ -24,6 +26,7 @@ export function TimePickerSheet({
   date,
   value,
   availableTimes,
+  guide = '30분 단위로 고를 수 있어요',
   onSelect,
   onClose,
 }: TimePickerSheetProps) {
@@ -57,7 +60,9 @@ export function TimePickerSheet({
 
   return (
     <BottomSheet title="희망 시간" onClose={onClose}>
-      <p className={dateStyles.guide}>{formatMonthDay(date)} · 30분 단위로 고를 수 있어요</p>
+      <p className={dateStyles.guide}>
+        {formatMonthDay(date)} · {guide}
+      </p>
 
       <div className={styles.groups}>
         {renderGroup('오전', MORNING)}

@@ -33,6 +33,10 @@ export interface Expert {
   // 카드에 보이는 대표 3장 / 프로필에 보이는 전체
   portfolio: PortfolioPhoto[];
   profilePortfolio: PortfolioPhoto[];
+  // 활동 지역 (바로 의뢰하면 이 지역에서만 촬영)
+  region: { sido: string; sigungu: string };
+  // 편집 의뢰도 받는지
+  acceptsEdit: boolean;
 }
 
 export const BASE_PHOTO_COUNT = 10;
@@ -55,6 +59,19 @@ const PROFILE_PORTFOLIO = DEMO_REQUEST_PROFILE_PORTFOLIO_IMAGES.map((imageUrl, i
   id: index + 1,
   imageUrl,
 }));
+
+const EXPERT_REGIONS: Record<number, Expert['region']> = {
+  1: { sido: '서울', sigungu: '마포구' },
+  2: { sido: '서울', sigungu: '용산구' },
+  3: { sido: '서울', sigungu: '성동구' },
+  4: { sido: '서울', sigungu: '마포구' },
+  5: { sido: '서울', sigungu: '성동구' },
+  6: { sido: '경기', sigungu: '성남시' },
+  10: { sido: '서울', sigungu: '서초구' },
+  11: { sido: '서울', sigungu: '강남구' },
+};
+// 편집도 받는 작가
+const EDIT_EXPERT_IDS = [1, 2, 3, 5, 6, 7, 8, 9];
 
 const EXPERTS: Expert[] = [
   {
@@ -106,7 +123,7 @@ const EXPERTS: Expert[] = [
     moodTags: ['밝음', '세련됨'],
     shootingStyle:
       '밝고 쨍한 색감을 좋아해요. 도심 속 컬러풀한 배경을 활용해 생기 있는 스냅을 찍어 드려요.',
-    basePrice: 70000,
+    basePrice: 80000,
     extraPrice: 5000,
   },
   {
@@ -202,11 +219,54 @@ const EXPERTS: Expert[] = [
   },
 ].map((expert) => ({
   ...expert,
+  // TODO: API 연동 시 작가 정보에서 받기 (지금은 임시 데이터)
+  region: EXPERT_REGIONS[expert.id] ?? { sido: '서울', sigungu: '마포구' },
+  acceptsEdit: EDIT_EXPERT_IDS.includes(expert.id),
   // TODO: 시연용 사진 (API 연동 시 삭제)
   profileImageUrl: demoProfileImage(expert.name),
   portfolio: CARD_PORTFOLIO,
   profilePortfolio: PROFILE_PORTFOLIO,
 }));
+
+// 탐색 프로필의 작가 이름('서하 작가')으로 의뢰 쪽 작가 찾기
+// TODO: API 연동 시 탐색과 의뢰가 같은 작가 id를 쓰면 삭제
+export function findExpertByName(name: string): Expert | null {
+  return EXPERTS.find((expert) => expert.name === name) ?? null;
+}
+
+// 바로 의뢰하기에서 작가가 촬영할 수 있는 시간 (오전 10~11시, 오후 1~4시)
+const AVAILABLE_TIMES = [
+  '10:00',
+  '10:30',
+  '11:00',
+  '13:00',
+  '13:30',
+  '14:00',
+  '14:30',
+  '15:00',
+  '15:30',
+  '16:00',
+];
+
+// 작가가 촬영할 수 있는 날짜인지 (임시 규칙: 날짜와 작가 id로 정한 일부 날짜는 일정이 참)
+// TODO: API 연동 시 client.get(`/experts/${id}/schedule`) 결과 사용
+export function isExpertDateAvailable(expert: Expert, dateKey: string): boolean {
+  return (fromDateKey(dateKey).getDate() * 7 + expert.id) % 5 >= 2;
+}
+
+// 지금은 날짜와 상관없이 같은 시간 (API 연동 시 날짜별 가능 시간)
+export function expertAvailableTimes(expert: Expert, dateKey: string): string[] {
+  void expert;
+  void dateKey;
+  return AVAILABLE_TIMES;
+}
+
+// 예: 서울 마포구 · 촬영 · 80,000원~
+export function formatExpertSummary(expert: Expert): string {
+  const { sido, sigungu } = expert.region;
+  const fields = expert.acceptsEdit ? '촬영·편집' : '촬영';
+  return `${sido} ${sigungu} · ${fields} · ${formatWon(expert.basePrice)}~`;
+}
 
 // 작가 한 명 (없으면 null)
 export function getExpert(id: number): Expert | null {

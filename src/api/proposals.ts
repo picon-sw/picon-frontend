@@ -329,6 +329,11 @@ const SHOOT_REQUESTS: ShootRequestDetail[] = [
   request(9, shootForm(dayKey(14), '16:00', '마포구', '망원한강공원', 2), 'open', [1, 3]),
   // 24시간 동안 제안 없음
   request(10, shootForm(dayKey(12), '11:00', '종로구', '서촌', 2), 'expired', []),
+  // 작가 프로필에서 서하 작가에게만 바로 의뢰했는데 제안 없음
+  {
+    ...request(13, shootForm(dayKey(9), '14:00', '마포구', '상수', 3), 'expired', []),
+    requestedIds: [4],
+  },
   // 기한 안에 고르지 않음 (촬영일이 가까워 다시 요청하면 날짜부터 다시 고름)
   {
     ...request(5, shootForm(dayKey(2), '15:00', '마포구', '연남', 2), 'closed', [1, 2, 3]),

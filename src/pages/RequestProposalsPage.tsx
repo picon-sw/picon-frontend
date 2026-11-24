@@ -5,7 +5,7 @@ import checkCircleIcon from '../assets/icons/request/check-circle.svg';
 import mailIcon from '../assets/icons/request/mail-large.svg';
 import moreIcon from '../assets/icons/request/more.svg';
 import radioOffIcon from '../assets/icons/request/radio-off.svg';
-import { formatExpertPrice, type Expert } from '../api/experts';
+import { formatExpertPrice, getExpert, type Expert } from '../api/experts';
 import {
   cancelShootRequest,
   fetchShootRequest,
@@ -16,6 +16,7 @@ import {
 } from '../api/proposals';
 import { ActionSheet } from '../components/ActionSheet';
 import { formatMonthDay } from '../utils/date';
+import { withSubject, withTopic } from '../utils/korean';
 import styles from './RequestProposalsPage.module.css';
 
 interface ProposalCardProps {
@@ -168,6 +169,8 @@ export function RequestProposalsPage() {
   const phase = detail?.phase;
   const canCancel = phase === 'open' || phase === 'expired';
   const requestedCount = detail?.requestedIds.length ?? 0;
+  // 작가 한 명에게만 요청한 경우(바로 의뢰하기) 그 작가 이름으로 안내
+  const directExpert = requestedCount === 1 && detail ? getExpert(detail.requestedIds[0]) : null;
 
   return (
     <main className={styles.page}>
@@ -212,12 +215,27 @@ export function RequestProposalsPage() {
           {phase === 'expired' ? (
             <section className={styles.empty}>
               <img src={mailIcon} alt="" />
-              <h2 className={styles.emptyTitle}>24시간 동안 제안이 오지 않았어요</h2>
-              <p className={styles.emptyText}>
-                같은 조건으로 다른 작가를 바로 찾아 드려요.
-                <br />
-                이미 요청한 작가는 빼고 보여 드려요.
-              </p>
+              {directExpert ? (
+                <>
+                  <h2 className={styles.emptyTitle}>
+                    {withSubject(directExpert.name)} 제안을 보내지 않았어요
+                  </h2>
+                  <p className={styles.emptyText}>
+                    같은 조건으로 촬영할 수 있는 작가를 바로 찾아 드려요.
+                    <br />
+                    {withTopic(directExpert.name)} 빼고 보여 드려요.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h2 className={styles.emptyTitle}>24시간 동안 제안이 오지 않았어요</h2>
+                  <p className={styles.emptyText}>
+                    같은 조건으로 다른 작가를 바로 찾아 드려요.
+                    <br />
+                    이미 요청한 작가는 빼고 보여 드려요.
+                  </p>
+                </>
+              )}
             </section>
           ) : (
             <ul className={styles.list} role={phase === 'open' ? 'radiogroup' : undefined}>
