@@ -89,11 +89,10 @@ export function RequestReservedPage() {
         >
           의뢰 목록으로
         </button>
-        {/* TODO: 예약 상세 화면(섹션 5)이 생기면 그 화면으로 연결 */}
         <button
           type="button"
           className={styles.primaryButton}
-          onClick={() => navigate('/requests', { replace: true })}
+          onClick={() => navigate(`/requests/${requestId}/reservation`, { replace: true })}
         >
           예약 상세 보기
         </button>

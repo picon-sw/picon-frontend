@@ -6,20 +6,14 @@ import mailIcon from '../assets/icons/request/mail-large.svg';
 import moreIcon from '../assets/icons/request/more.svg';
 import radioOffIcon from '../assets/icons/request/radio-off.svg';
 import { formatExpertPrice, type Expert } from '../api/experts';
-import { formatLocation } from '../api/places';
 import {
   cancelShootRequest,
   fetchShootRequest,
-  needsNewDate,
+  reRequestTarget,
   withExperts,
   type Proposal,
   type ShootRequestDetail,
 } from '../api/proposals';
-import {
-  formatShootSchedule,
-  type RequestExpertsState,
-  type ShootFormDraft,
-} from '../api/requests';
 import { ActionSheet } from '../components/ActionSheet';
 import { formatMonthDay } from '../utils/date';
 import styles from './RequestProposalsPage.module.css';
@@ -164,31 +158,10 @@ export function RequestProposalsPage() {
   };
 
   // 같은 조건으로 다시 요청 (이미 요청한 작가는 빼고, 처음엔 아무도 선택 안 됨)
-  // 촬영일까지 4일 미만이면 날짜·시간을 비운 요청서부터 다시
   const requestAgain = () => {
     if (!detail) return;
-    const { form, title, requestedIds } = detail;
-    if (needsNewDate(form)) {
-      const draft: ShootFormDraft = {
-        ...form,
-        date: null,
-        time: null,
-        excludeIds: requestedIds,
-        notice: '촬영일이 가까워 날짜와 시간을 다시 골라 주세요',
-      };
-      navigate('/requests/new/shoot', { state: { draft } });
-      return;
-    }
-    const state: RequestExpertsState = {
-      summary: {
-        title,
-        detail: `${formatShootSchedule(form.date, form.time)} · ${formatLocation(form.location)} · 촬영 인원 ${form.people}명`,
-      },
-      kind: 'shoot',
-      form,
-      excludeIds: requestedIds,
-    };
-    navigate('/requests/new/experts', { state });
+    const { to, state } = reRequestTarget(detail, detail.requestedIds);
+    navigate(to, { state });
   };
 
   const proposals = detail ? withExperts(detail.proposals) : [];

@@ -8,12 +8,10 @@ import {
   sendInquiry,
   type ShootRequestDetail,
 } from '../api/proposals';
-import { ActionSheet } from '../components/ActionSheet';
+import { InquirySheet } from '../components/InquirySheet';
 // 작가 소개 · 포트폴리오 · 견적 카드는 작가 프로필 화면과 같은 모양
 import profileStyles from './RequestExpertProfilePage.module.css';
 import styles from './RequestProposalDetailPage.module.css';
-
-const INQUIRY_MAX_LENGTH = 300;
 
 export function RequestProposalDetailPage() {
   const { requestId, expertId } = useParams();
@@ -21,8 +19,6 @@ export function RequestProposalDetailPage() {
   const location = useLocation();
   const [detail, setDetail] = useState<ShootRequestDetail | null>(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
-  const [inquiry, setInquiry] = useState('');
-  const [sending, setSending] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,20 +47,11 @@ export function RequestProposalDetailPage() {
     else navigate(-1);
   };
 
-  const submitInquiry = async () => {
-    const content = inquiry.trim();
-    if (!detail || !expert || !content || sending) return;
-    setSending(true);
-    try {
-      await sendInquiry(detail.id, expert.id, content);
-      setInquiryOpen(false);
-      setInquiry('');
-      setToast('문의를 보냈어요. 답변이 오면 알려 드릴게요');
-    } catch {
-      setToast('문의를 보내지 못했어요');
-    } finally {
-      setSending(false);
-    }
+  const submitInquiry = async (content: string) => {
+    if (!detail || !expert) return;
+    await sendInquiry(detail.id, expert.id, content);
+    setInquiryOpen(false);
+    setToast('문의를 보냈어요. 답변이 오면 알려 드릴게요');
   };
 
   // 제안을 고를 수 있을 때만 '이 작가 선택하기' (제안 마감이면 보기만)
@@ -168,32 +155,12 @@ export function RequestProposalDetailPage() {
       </div>
 
       {inquiryOpen && expert && (
-        <ActionSheet
-          title="작가에게 문의하기"
-          description={`${expert.name}에게 궁금한 점을 남겨 주세요.\n답변은 받은 제안 화면과 알림으로 알려 드려요.`}
-          buttons={[
-            {
-              label: '문의 보내기',
-              onClick: submitInquiry,
-              disabled: inquiry.trim().length === 0 || sending,
-            },
-          ]}
+        <InquirySheet
+          expertName={expert.name}
+          answerGuide="답변은 받은 제안 화면과 알림으로 알려 드려요."
+          onSubmit={submitInquiry}
           onClose={() => setInquiryOpen(false)}
-        >
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>문의 내용</span>
-            <textarea
-              className={styles.textarea}
-              value={inquiry}
-              maxLength={INQUIRY_MAX_LENGTH}
-              placeholder="촬영 장소, 준비물 등 궁금한 점을 적어 주세요"
-              onChange={(event) => setInquiry(event.target.value)}
-            />
-            <span className={styles.counter}>
-              {inquiry.length}/{INQUIRY_MAX_LENGTH}
-            </span>
-          </label>
-        </ActionSheet>
+        />
       )}
     </main>
   );

@@ -94,42 +94,6 @@ const MY_REQUESTS: Record<MyRequestTab, MyRequest[]> = {
       ],
       message: '새로운 제안 3개가 도착했어요.',
     },
-    {
-      id: 2,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '애월 스냅',
-      date: '11월 3일 (화)',
-      place: '애월',
-      people: 2,
-      scheduleLabel: '촬영 D-21',
-      photographers: [photographer(4, '지훈 작가')],
-      message: '일정이 확정되었어요.',
-    },
-    {
-      id: 3,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '성수 스냅',
-      date: '11월 10일 (화)',
-      place: '성수',
-      people: 1,
-      scheduleLabel: '촬영 D-28',
-      photographers: [photographer(5, '이젤 작가')],
-      message: '일정이 확정되었어요.',
-    },
-    {
-      id: 4,
-      kind: 'shoot',
-      status: 'confirmed',
-      title: '분당 스냅',
-      date: '11월 17일 (화)',
-      place: '분당',
-      people: 5,
-      scheduleLabel: '촬영 D-35',
-      photographers: [photographer(6, '아리 작가')],
-      message: '일정이 확정되었어요.',
-    },
   ],
   completed: [
     {
@@ -224,7 +188,10 @@ function shootRequestCard(detail: ShootRequestDetail): { tab: MyRequestTab; card
           scheduleLabel: '',
           photographers: [],
           headline: '의뢰 취소',
-          message: '의뢰를 취소했어요.',
+          // 예약 후 취소면 환불 안내
+          message: detail.reservedExpertId
+            ? '예약을 취소했어요. 예약금은 환불돼요.'
+            : '의뢰를 취소했어요.',
         },
       };
     case 'reserved':
@@ -238,18 +205,28 @@ function shootRequestCard(detail: ShootRequestDetail): { tab: MyRequestTab; card
           message: '일정이 확정되었어요.',
         },
       };
+    case 'expertCanceled':
+      return {
+        tab: 'ongoing',
+        card: {
+          ...base,
+          status: 'expertCanceled',
+          scheduleLabel: '예약금 전액 환불',
+          photographers: expertPhotographer(detail.reservedExpertId ?? 0),
+          message: '작가 사정으로 예약이 취소됐어요.',
+        },
+      };
   }
 }
 
 // 진행 중 / 완료 목록 (임시 데이터, 바로 돌려줌)
-// 촬영 의뢰 카드는 편집 카드 다음, 예약 확정 카드 앞에 둠
+// 촬영 의뢰 카드는 편집 카드 다음에 둠
 export async function fetchMyRequests(): Promise<Record<MyRequestTab, MyRequest[]>> {
   const shootCards = listShootRequests().map(shootRequestCard);
   const cardsOf = (tab: MyRequestTab) =>
     shootCards.filter((item) => item.tab === tab).map(({ card }) => card);
-  const [editCard, ...ongoingRest] = MY_REQUESTS.ongoing;
   return {
-    ongoing: [editCard, ...cardsOf('ongoing'), ...ongoingRest],
+    ongoing: [...MY_REQUESTS.ongoing, ...cardsOf('ongoing')],
     completed: [...cardsOf('completed'), ...MY_REQUESTS.completed],
   };
 }

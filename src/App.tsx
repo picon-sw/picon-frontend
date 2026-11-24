@@ -24,10 +24,12 @@ import { RequestDonePage } from './pages/RequestDonePage';
 import { RequestEditPage } from './pages/RequestEditPage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
+import { RequestInquiriesPage } from './pages/RequestInquiriesPage';
 import { RequestPage } from './pages/RequestPage';
 import { RequestProposalDetailPage } from './pages/RequestProposalDetailPage';
 import { RequestProposalsPage } from './pages/RequestProposalsPage';
 import { RequestQuotePage } from './pages/RequestQuotePage';
+import { RequestReservationPage } from './pages/RequestReservationPage';
 import { RequestReservedPage } from './pages/RequestReservedPage';
 import { RequestShootPage } from './pages/RequestShootPage';
 import { RequestTypePage } from './pages/RequestTypePage';
@@ -76,6 +78,8 @@ export function App() {
       />
       <Route path="/requests/:requestId/proposals/:expertId/quote" element={<RequestQuotePage />} />
       <Route path="/requests/:requestId/reserved" element={<RequestReservedPage />} />
+      <Route path="/requests/:requestId/reservation" element={<RequestReservationPage />} />
+      <Route path="/requests/:requestId/inquiries" element={<RequestInquiriesPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

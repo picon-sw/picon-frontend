@@ -174,6 +174,32 @@ const EXPERTS: Expert[] = [
     basePrice: 75000,
     extraPrice: 5000,
   },
+  {
+    id: 10,
+    name: '지훈 작가',
+    rating: 4.9,
+    reviewCount: 44,
+    deliveryDays: 3,
+    introduction: '바다와 노을을 가장 좋아하는 작가예요.',
+    moodTags: ['차분함', '몽환적'],
+    shootingStyle:
+      '해 질 녘 바닷가에서 차분한 커플·우정 사진을 찍어요. 날씨에 맞춰 촬영 장소를 함께 정해요.',
+    basePrice: 89000,
+    extraPrice: 5000,
+  },
+  {
+    id: 11,
+    name: '아리 작가',
+    rating: 4.8,
+    reviewCount: 22,
+    deliveryDays: 4,
+    introduction: '여럿이 함께하는 순간을 즐겁게 담아요.',
+    moodTags: ['밝음', '개성적'],
+    shootingStyle:
+      '가족·단체 촬영을 많이 해요. 모두가 편하게 웃을 수 있도록 촬영 내내 분위기를 이끌어요.',
+    basePrice: 99000,
+    extraPrice: 6000,
+  },
 ].map((expert) => ({
   ...expert,
   // TODO: 시연용 사진 (API 연동 시 삭제)
