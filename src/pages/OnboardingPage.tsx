@@ -1,7 +1,15 @@
-import { useRef, useState, type ChangeEvent } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import { startKakaoLogin } from '../api/auth';
 import { setOnboarded } from '../api/authStore';
+import {
+  completeOnboarding,
+  MAX_MOODS,
+  MOODS,
+  NICKNAME_MAX_LENGTH,
+  type ServiceType,
+} from '../api/members';
 import styles from './OnboardingPage.module.css';
 
 import loginBg from '../assets/icons/onboarding/login_bg.svg';
@@ -19,7 +27,8 @@ import dreamyPhoto from '../assets/icons/onboarding/05_dreamy.jpg';
 import uniquePhoto from '../assets/icons/onboarding/06_unique.jpg';
 import dramaticPhoto from '../assets/icons/onboarding/07_dramatic.jpg';
 
-const photoStyles = ['밝음', '자연스러움', '차분함', '세련됨', '몽환적', '개성적', '극적 표현'];
+// 화면에는 한글 이름, 저장할 때는 MOODS의 코드(BRIGHT 등)로 바꿔 보냄
+const photoStyles = MOODS.map((mood) => mood.label);
 
 const photoStyleImages: Record<string, string> = {
   밝음: brightPhoto,
@@ -33,6 +42,14 @@ const photoStyleImages: Record<string, string> = {
 
 // 약관: /onboarding/terms → 기존 3단계: help → style → profile
 const steps = ['help', 'style', 'profile'];
+
+// 도움 유형 선택값 → API 값 (둘 다 고르면 SHOOTING_EDITING)
+function toServiceType(help: string[]): ServiceType {
+  const shooting = help.includes('촬영');
+  const editing = help.includes('편집');
+  if (shooting && editing) return 'SHOOTING_EDITING';
+  return shooting ? 'SHOOTING' : 'EDITING';
+}
 
 export function OnboardingPage() {
   const navigate = useNavigate();
@@ -59,6 +76,16 @@ export function OnboardingPage() {
   const [expandedTerm, setExpandedTerm] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  // 안내 문구는 2초 뒤 사라짐
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 2000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
   const allAgreed = serviceAgreed && privacyAgreed && marketingAgreed;
   const requiredAgreed = serviceAgreed && privacyAgreed;
 
@@ -76,12 +103,13 @@ export function OnboardingPage() {
     navigate('/onboarding/help');
   }
 
-  // 오늘 날짜 (미래 생년월일 선택 방지)
-  const today = new Date();
+  // 어제 날짜 (생년월일은 오늘 이전만 저장 가능)
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
   const maxBirthDate = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, '0'),
-    String(today.getDate()).padStart(2, '0'),
+    yesterday.getFullYear(),
+    String(yesterday.getMonth() + 1).padStart(2, '0'),
+    String(yesterday.getDate()).padStart(2, '0'),
   ].join('-');
 
   function toggleItem(item: string, selected: string[], update: (items: string[]) => void) {
@@ -116,15 +144,53 @@ export function OnboardingPage() {
     reader.readAsDataURL(file);
   }
 
+  // 사진 분위기는 최대 3개까지
+  function toggleStyle(item: string) {
+    if (!selectedStyles.includes(item) && selectedStyles.length >= MAX_MOODS) {
+      setToast(`최대 ${MAX_MOODS}개까지 고를 수 있어요`);
+      return;
+    }
+    toggleItem(item, selectedStyles, setSelectedStyles);
+  }
+
+  // 약관 동의부터 프로필까지 한 번에 저장
+  async function saveOnboarding() {
+    setSaving(true);
+    try {
+      await completeOnboarding({
+        termsAgreed: serviceAgreed,
+        privacyAgreed,
+        marketingAgreed,
+        serviceType: toServiceType(help),
+        moods: MOODS.filter((mood) => selectedStyles.includes(mood.label)).map((mood) => mood.code),
+        nickname: nickname.trim(),
+        birth: birthDate || null,
+        gender: gender === '여성' ? 'FEMALE' : gender === '남성' ? 'MALE' : null,
+        phoneNumber: phone.trim() ? phone.replace(/-/g, '') : null,
+      });
+    } catch (error) {
+      // 409: 이미 온보딩을 끝낸 회원 → 홈으로
+      if (!axios.isAxiosError(error) || error.response?.status !== 409) {
+        setToast(
+          axios.isAxiosError(error) && error.response?.status === 400
+            ? '입력한 정보를 다시 확인해 주세요'
+            : '저장하지 못했어요. 다시 시도해 주세요',
+        );
+        setSaving(false);
+        return;
+      }
+    }
+
+    setOnboarded(true);
+    navigate('/', { replace: true });
+  }
+
   function nextStep() {
     if (step < 3) {
       navigate(`/onboarding/${steps[step]}`);
       return;
     }
-
-    // TODO: 온보딩 저장 API(PUT /members/me/onboarding) 연결 후 성공했을 때만 완료 처리
-    setOnboarded(true);
-    navigate('/', { replace: true });
+    void saveOnboarding();
   }
 
   const phoneValid = phone.trim() === '' || /^01[016789]-?\d{3,4}-?\d{4}$/.test(phone);
@@ -523,7 +589,11 @@ export function OnboardingPage() {
               골라주세요
             </h1>
 
-            <p className={styles.description}>선택한 태그로 취향에 맞는 전문가를 추천해 드려요.</p>
+            <p className={styles.description}>
+              최대 {MAX_MOODS}개까지 고를 수 있어요.
+              <br />
+              선택한 태그로 취향에 맞는 전문가를 추천해 드려요.
+            </p>
 
             <div className={styles.styleGrid}>
               {photoStyles.map((item) => {
@@ -535,7 +605,7 @@ export function OnboardingPage() {
                     key={item}
                     aria-pressed={active}
                     className={`${styles.styleCard} ${active ? styles.styleCardActive : ''}`}
-                    onClick={() => toggleItem(item, selectedStyles, setSelectedStyles)}
+                    onClick={() => toggleStyle(item)}
                   >
                     <img className={styles.stylePhoto} src={photoStyleImages[item]} alt="" />
                     <span className={styles.styleName}>{item}</span>
@@ -602,6 +672,7 @@ export function OnboardingPage() {
                 <input
                   type="text"
                   placeholder="닉네임 입력"
+                  maxLength={NICKNAME_MAX_LENGTH}
                   value={nickname}
                   onChange={(event) => setNickname(event.target.value)}
                 />
@@ -666,10 +737,21 @@ export function OnboardingPage() {
       </div>
 
       <footer className={styles.footer}>
-        <button type="button" className={styles.nextButton} disabled={!canNext} onClick={nextStep}>
+        <button
+          type="button"
+          className={styles.nextButton}
+          disabled={!canNext || saving}
+          onClick={nextStep}
+        >
           {step === 3 ? '시작하기' : '다음'}
         </button>
       </footer>
+
+      {toast && (
+        <p className={styles.toast} role="status">
+          {toast}
+        </p>
+      )}
     </main>
   );
 }

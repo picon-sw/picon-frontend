@@ -572,3 +572,19 @@
   background: #eaf6fc;
   color: #3b596b;
 }
+
+/* 안내 문구 (분위기 개수 초과, 저장 실패) */
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 110;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
+}
