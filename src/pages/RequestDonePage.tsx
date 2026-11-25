@@ -1,13 +1,16 @@
 import { useLocation, useNavigate } from 'react-router';
 import { readDoneState, type RequestDoneState } from '../api/requests';
-import backIcon from '../assets/icons/request/arrow-left.svg';
 import { demoProfileImage } from '../constants/demoImages';
+import { withSubject } from '../utils/korean';
 import styles from './RequestDonePage.module.css';
 
 // 주소로 바로 들어와서 전문가 선택 화면에서 넘겨받은 정보가 없을 때 보여 줄 임시 데이터
 // 전문가 사진(profileImageUrl)이 없으면 빈 동그라미로 표시
 const SAMPLE_DONE: RequestDoneState = {
-  summary: { title: '서울숲 우정 스냅', detail: '10월 20일 (화) · 서울숲 · 3명' },
+  summary: {
+    title: '경의선책거리 스냅',
+    detail: '10월 20일 (화) 14:00 · 마포구 경의선책거리 · 촬영 인원 3명',
+  },
   experts: [
     { id: 1, name: '김하늘' },
     { id: 2, name: '윤슬' },
@@ -20,7 +23,11 @@ const SAMPLE_DONE: RequestDoneState = {
 export function RequestDonePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { summary, experts } = readDoneState(location.state) ?? SAMPLE_DONE;
+  const { summary, experts, kind } = readDoneState(location.state) ?? SAMPLE_DONE;
+  // 편집은 제안과 함께 보정 샘플이 옴
+  const proposalText = kind === 'edit' ? '보정 샘플과 견적을 보내요.' : '제안을 보내요.';
+  // 바로 의뢰하기처럼 1명에게만 보냈으면 작가 이름으로 안내
+  const single = experts.length === 1 ? experts[0] : null;
 
   // 뒤로가기로 요청서·완료 화면에 다시 들어오지 않도록 replace 이동
   // 의뢰 메인은 '진행 중' 탭이 기본 선택
@@ -29,14 +36,6 @@ export function RequestDonePage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <button
-          type="button"
-          className={styles.back}
-          aria-label="의뢰 메인으로 가기"
-          onClick={goToRequests}
-        >
-          <img src={backIcon} alt="" />
-        </button>
         <h1 className={styles.title}>의뢰 요청 완료</h1>
       </header>
 
@@ -49,14 +48,18 @@ export function RequestDonePage() {
               ) : (
                 <span className={`${styles.avatar} ${styles.avatarEmpty}`} />
               )}
-              <span className={styles.expertName}>{name}</span>
+              <span className={styles.expertName}>{name.replace(/ 작가$/, '')}</span>
             </li>
           ))}
         </ul>
 
-        <h2 className={styles.message}>요청서를 보냈어요</h2>
+        <h2 className={styles.message}>
+          {single ? `${single.name}에게 요청서를 보냈어요` : '요청서를 보냈어요'}
+        </h2>
         <p className={styles.description}>
-          선택한 전문가 {experts.length}명이 24시간 안에 제안을 보내요.
+          {single
+            ? `${withSubject(single.name)} 24시간 안에 ${proposalText}`
+            : `선택한 전문가 ${experts.length}명이 24시간 안에 ${proposalText}`}
           <br />
           도착하면 나의 의뢰에서 확인할 수 있어요.
         </p>
@@ -65,7 +68,8 @@ export function RequestDonePage() {
       <article className={styles.card}>
         <span className={styles.badge}>제안 대기</span>
         <p className={styles.cardTitle}>{summary.title}</p>
-        <p className={styles.cardSummary}>{summary.detail}</p>
+        {/* 카드에서는 '촬영 인원 3명' 대신 '3명'으로 짧게 */}
+        <p className={styles.cardSummary}>{summary.detail.replace('촬영 인원 ', '')}</p>
       </article>
 
       <div className={styles.bottomBar}>

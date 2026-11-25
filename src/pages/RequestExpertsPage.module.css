@@ -71,6 +71,31 @@
   gap: 4px;
 }
 
+/* 같은 조건으로 다시 요청할 때 안내 */
+.reRequest {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background-color: #eaf6fc;
+  color: #000;
+}
+
+.reRequestTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.reRequestText {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #5c5c5c;
+}
+
 .guideTop {
   display: flex;
   align-items: center;
@@ -169,6 +194,9 @@
   font-size: 12px;
   color: #333;
   white-space: nowrap;
+  /* 편집 금액(1장 8,000원~)처럼 길면 프로필 보기를 아랫줄로 */
+  flex-wrap: wrap;
+  row-gap: 2px;
 }
 
 .profileLink {
@@ -204,6 +232,82 @@
   background-color: #b8ddf2;
 }
 
+/* 선택 전: 빈 동그라미 */
+.selectCircle {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1.5px solid #d9d9d9;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* 가능한 작가 없음 */
+.noExperts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 56px;
+  text-align: center;
+}
+
+.noExpertsIcon {
+  display: flex;
+  width: 72px;
+  height: 72px;
+}
+
+.noExpertsTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+}
+
+.noExpertsText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #737373;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 14px;
+  border: 1px solid #b8def2;
+  border-radius: 12px;
+  background-color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.slotTime {
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+.slotCount {
+  font-size: 12px;
+  color: #2f7fae;
+}
+
 .portfolio {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -227,33 +331,6 @@
 
 .imageEmpty {
   background-color: #f5f5f5;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 40px 0;
-  font-size: 13px;
-  color: #8f8f8f;
-}
-
-.empty p {
-  margin: 0;
-}
-
-.editButton {
-  height: 36px;
-  padding: 0 16px;
-  border: 1px solid #70b9df;
-  border-radius: 100px;
-  background-color: #fff;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
 }
 
 .typeGuide {

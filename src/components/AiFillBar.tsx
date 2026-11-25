@@ -3,15 +3,15 @@ import type { AiFillStatus } from '../hooks/useAiFill';
 import styles from './AiFillBar.module.css';
 
 interface AiFillBarProps {
-  photoCount: number;
   status: AiFillStatus;
+  // 채우기 전 안내 (요청서마다 채우는 항목이 다름)
+  idleMessage: string;
   onFill: () => void;
 }
 
-const MESSAGE: Record<AiFillStatus, string> = {
-  idle: '사진 분위기로 요청 사항을 채워드릴게요',
-  loading: '요청 사항을 만들고 있어요',
-  done: '요청 사항에 채워 넣었어요',
+const MESSAGE: Record<Exclude<AiFillStatus, 'idle'>, string> = {
+  loading: '요청서를 채우고 있어요',
+  done: '요청서에 채워 넣었어요',
   error: '채우지 못했어요. 다시 시도해 주세요',
 };
 
@@ -22,17 +22,17 @@ const BUTTON_LABEL: Record<AiFillStatus, string> = {
   error: '다시 시도',
 };
 
-// 분위기 사진을 보고 요청 사항을 채워 주는 안내 바 (사진 1장 이상일 때만 표시)
-export function AiFillBar({ photoCount, status, onFill }: AiFillBarProps) {
+// 참고 사진을 보고 요청서를 채워 주는 안내 바 (참고 사진을 올렸을 때만 표시)
+export function AiFillBar({ status, idleMessage, onFill }: AiFillBarProps) {
   return (
     <section className={styles.bar} aria-label="AI 요청 사항 채우기">
       <div className={styles.header}>
         <img src={sparklesIcon} alt="" />
-        <p className={styles.title}>참고 사진 {photoCount}장을 확인했어요.</p>
+        <p className={styles.title}>참고 사진을 확인했어요.</p>
       </div>
       <div className={styles.row}>
         <p className={styles.message} aria-live="polite">
-          {MESSAGE[status]}
+          {status === 'idle' ? idleMessage : MESSAGE[status]}
         </p>
         <button
           type="button"

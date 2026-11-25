@@ -1,0 +1,320 @@
+/* 아래쪽 고정 버튼 영역(88px)만큼 여백 */
+.page {
+  min-height: 100dvh;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  background-color: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.back,
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.back {
+  width: 22px;
+  height: 22px;
+}
+
+.more {
+  width: 24px;
+  height: 24px;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px 20px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #000;
+}
+
+.requestTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  padding: 6px 11px;
+  border-radius: 100px;
+  background-color: #eaf6fc;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badgeEmpty {
+  background-color: #f0f0f0;
+}
+
+.statusText {
+  font-size: 11px;
+}
+
+.partial {
+  margin: 0;
+  font-size: 11px;
+  color: #8f8f8f;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #ebebeb;
+  border-radius: 16px;
+  color: #000;
+  cursor: pointer;
+}
+
+/* 테두리가 두꺼워져도 내용이 움직이지 않게 안쪽 여백을 1px 줄임 */
+.cardSelected {
+  padding: 15px;
+  border: 2px solid #70b9df;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.expert {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+}
+
+.expertInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.detailLink {
+  font-size: 12px;
+  color: #8f8f8f;
+}
+
+.rating {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.radio {
+  display: flex;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.radio img {
+  width: 100%;
+  height: 100%;
+}
+
+.portfolio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portfolioItem {
+  height: 76px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.portfolioItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageEmpty {
+  background-color: #f5f5f5;
+}
+
+.tag {
+  padding: 7px 10px;
+  border: 1px solid #ebebeb;
+  border-radius: 100px;
+  font-size: 12px;
+}
+
+.summary {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background-color: #ebebeb;
+}
+
+.price {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 80px;
+  text-align: center;
+}
+
+.empty img {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 8px;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+}
+
+.emptyText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #8f8f8f;
+}
+
+.notFound {
+  margin: 40px 20px;
+  font-size: 13px;
+  color: #8f8f8f;
+  text-align: center;
+}
+
+.bottomBar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid #ebebeb;
+  background-color: #fff;
+}
+
+.primaryButton {
+  flex: 1;
+  height: 48px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  background-color: #d9d9d9;
+  color: #8f8f8f;
+  cursor: default;
+}
