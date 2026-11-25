@@ -1,0 +1,9 @@
+.repick {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  color: #8f8f8f;
+  cursor: pointer;
+}

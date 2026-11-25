@@ -1,0 +1,215 @@
+/* 어두운 전체 화면. 아래 고정 버튼 영역만큼 여백 */
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  padding-bottom: calc(114px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  background-color: #121212;
+  color: #fff;
+}
+
+.topBar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+}
+
+.close {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.counter {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+
+.toggleOn {
+  color: #70b9df;
+}
+
+.toggle img,
+.toggleCircle {
+  width: 28px;
+  height: 28px;
+}
+
+.toggleCircle {
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+/* 가운데 사진을 기준으로 옆 사진이 살짝 보이게 넘김 */
+.track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 12px;
+  margin-top: 48px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scroll-padding: 0 20px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  position: relative;
+  flex: 0 0 calc(100% - 40px);
+  box-sizing: border-box;
+  aspect-ratio: 362 / 483;
+  overflow: hidden;
+  border: 3px solid transparent;
+  border-radius: 12px;
+  opacity: 0.5;
+  scroll-snap-align: center;
+}
+
+.slideCurrent {
+  opacity: 1;
+}
+
+.slideCurrent.slideSelected {
+  border-color: #70b9df;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  bottom: 9px;
+  left: 9px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 15px 0 0;
+  font-size: 12px;
+  color: #a6a6a6;
+  text-align: center;
+}
+
+.thumbs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+  margin-top: 26px;
+  padding: 0 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.thumbCurrent {
+  border-color: #fff;
+  opacity: 1;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.bottomBar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 20px calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid #333;
+  background-color: #121212;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.count {
+  font-size: 15px;
+}
+
+.summaryText {
+  font-size: 13px;
+  color: #a6a6a6;
+}
+
+.enough {
+  color: #70b9df;
+}
+
+.doneButton {
+  height: 48px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
