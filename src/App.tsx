@@ -20,11 +20,29 @@ import { MyTermsDetailPage } from './pages/MyTermsDetailPage';
 import { MyTermsPage } from './pages/MyTermsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PhotographerProfilePage } from './pages/PhotographerProfilePage';
+import { RequestCompletedPage } from './pages/RequestCompletedPage';
 import { RequestDonePage } from './pages/RequestDonePage';
+import { RequestEditCompletedPage } from './pages/RequestEditCompletedPage';
 import { RequestEditPage } from './pages/RequestEditPage';
+import { RequestEditPaidPage } from './pages/RequestEditPaidPage';
+import { RequestEditPickPage } from './pages/RequestEditPickPage';
+import { RequestEditProposalDetailPage } from './pages/RequestEditProposalDetailPage';
+import { RequestEditProposalsPage } from './pages/RequestEditProposalsPage';
+import { RequestEditQuotePage } from './pages/RequestEditQuotePage';
+import { RequestEditResultPage } from './pages/RequestEditResultPage';
+import { RequestEditWorkPage } from './pages/RequestEditWorkPage';
 import { RequestExpertProfilePage } from './pages/RequestExpertProfilePage';
 import { RequestExpertsPage } from './pages/RequestExpertsPage';
+import { RequestInquiriesPage } from './pages/RequestInquiriesPage';
 import { RequestPage } from './pages/RequestPage';
+import { RequestPhotoPickPage } from './pages/RequestPhotoPickPage';
+import { RequestPhotoPurchasePage } from './pages/RequestPhotoPurchasePage';
+import { RequestProposalDetailPage } from './pages/RequestProposalDetailPage';
+import { RequestProposalsPage } from './pages/RequestProposalsPage';
+import { RequestPurchasedPage } from './pages/RequestPurchasedPage';
+import { RequestQuotePage } from './pages/RequestQuotePage';
+import { RequestReservationPage } from './pages/RequestReservationPage';
+import { RequestReservedPage } from './pages/RequestReservedPage';
 import { RequestShootPage } from './pages/RequestShootPage';
 import { RequestTypePage } from './pages/RequestTypePage';
 
@@ -65,6 +83,37 @@ export function App() {
       <Route path="/requests/new/experts" element={<RequestExpertsPage />} />
       <Route path="/requests/new/experts/:expertId" element={<RequestExpertProfilePage />} />
       <Route path="/requests/done" element={<RequestDonePage />} />
+      <Route path="/requests/:requestId/proposals" element={<RequestProposalsPage />} />
+      <Route
+        path="/requests/:requestId/proposals/:expertId"
+        element={<RequestProposalDetailPage />}
+      />
+      <Route path="/requests/:requestId/proposals/:expertId/quote" element={<RequestQuotePage />} />
+      <Route path="/requests/:requestId/reserved" element={<RequestReservedPage />} />
+      <Route path="/requests/:requestId/reservation" element={<RequestReservationPage />} />
+      <Route path="/requests/:requestId/inquiries" element={<RequestInquiriesPage />} />
+      <Route path="/requests/:requestId/photos" element={<RequestPhotoPickPage />} />
+      <Route path="/requests/:requestId/photos/purchase" element={<RequestPhotoPurchasePage />} />
+      <Route path="/requests/:requestId/purchased" element={<RequestPurchasedPage />} />
+      <Route path="/requests/:requestId/completed" element={<RequestCompletedPage />} />
+      <Route path="/requests/:requestId/edit-photos" element={<RequestEditPickPage />} />
+      <Route path="/requests/edits/:requestId/proposals" element={<RequestEditProposalsPage />} />
+      <Route
+        path="/requests/edits/:requestId/proposals/:expertId"
+        element={<RequestEditProposalDetailPage />}
+      />
+      <Route
+        path="/requests/edits/:requestId/proposals/:expertId/quote"
+        element={<RequestEditQuotePage />}
+      />
+      <Route path="/requests/edits/:requestId/paid" element={<RequestEditPaidPage />} />
+      <Route path="/requests/edits/:requestId/work" element={<RequestEditWorkPage />} />
+      <Route
+        path="/requests/edits/:requestId/inquiries"
+        element={<RequestInquiriesPage kind="edit" />}
+      />
+      <Route path="/requests/edits/:requestId/result" element={<RequestEditResultPage />} />
+      <Route path="/requests/edits/:requestId/completed" element={<RequestEditCompletedPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

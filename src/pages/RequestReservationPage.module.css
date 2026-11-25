@@ -1,0 +1,428 @@
+/* 아래쪽 고정 버튼 영역(88px)만큼 여백 */
+.page {
+  min-height: 100dvh;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  background-color: #fff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px 20px;
+  color: #000;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.requestTitle {
+  flex: 1;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.dDay {
+  flex-shrink: 0;
+  padding: 10px 14px;
+  border: 1px solid #b8ddf2;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge {
+  padding: 6px 11px;
+  border-radius: 100px;
+  background-color: #eaf6fc;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badgeCanceled {
+  background-color: #fcebeb;
+  color: #cc4040;
+}
+
+.expert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarEmpty {
+  border: 1px solid #d9d9d9;
+}
+
+.expertInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.45;
+}
+
+.expertName {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.expertMessage {
+  margin: 0;
+  font-size: 11px;
+}
+
+/* 진행 단계: 왼쪽 동그라미를 세로 선으로 이음 */
+.steps {
+  margin: 0;
+  padding: 16px;
+  border: 2px solid #b8ddf2;
+  border-radius: 16px;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  min-height: 50px;
+}
+
+.step:not(:last-child)::before {
+  position: absolute;
+  top: 18px;
+  bottom: -2px;
+  left: 9px;
+  width: 2px;
+  background-color: #b8ddf2;
+  content: '';
+}
+
+.stepMarker {
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #b8ddf2;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.stepDone .stepMarker {
+  border-color: #70b9df;
+  background-color: #70b9df;
+}
+
+/* 지금 할 단계: 비어 있는 파란 동그라미 */
+.stepCurrent .stepMarker {
+  border-color: #70b9df;
+  border-width: 3px;
+}
+
+.stepCurrent .stepLabel {
+  font-weight: 600;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1.45;
+}
+
+.stepLabel {
+  font-size: 13px;
+}
+
+.stepDone .stepLabel {
+  font-weight: 600;
+}
+
+.stepDetail {
+  font-size: 11px;
+}
+
+.pickGuide {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: #eaf4fb;
+}
+
+.pickTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pickText {
+  margin: 0;
+  font-size: 13px;
+  color: #595959;
+}
+
+.pickButton {
+  height: 44px;
+  border: 0;
+  border-radius: 100px;
+  background-color: #70b9df;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.canceledBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid #f5d1d1;
+  border-radius: 16px;
+  background-color: #fcf5f5;
+}
+
+.canceledTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.canceledText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #595959;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #ebebeb;
+  border-radius: 16px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row dt {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.row dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background-color: #ebebeb;
+}
+
+.text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.note {
+  white-space: pre-line;
+}
+
+.price {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.cancelGuide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.cancelLink {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reasonsTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.reasonChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reasonChip {
+  padding: 7px 10px;
+  border: 1px solid #ebebeb;
+  border-radius: 100px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 12px;
+  color: #000;
+  cursor: pointer;
+}
+
+.reasonChipOn {
+  border-color: #b8ddf2;
+  background-color: #b8ddf2;
+  font-weight: 600;
+}
+
+.notFound {
+  margin: 40px 20px;
+  font-size: 13px;
+  color: #8f8f8f;
+  text-align: center;
+}
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  left: 20px;
+  z-index: 110;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
+}
+
+.bottomBar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  gap: 12px;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  border-top: 1px solid #ebebeb;
+  background-color: #fff;
+}
+
+.primaryButton,
+.secondaryButton {
+  flex: 1;
+  height: 48px;
+  border-radius: 100px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border: 1px solid #70b9df;
+  background-color: #70b9df;
+}
+
+.secondaryButton {
+  border: 1px solid #b8ddf2;
+  background-color: #fff;
+}

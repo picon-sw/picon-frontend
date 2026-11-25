@@ -7,6 +7,7 @@ import heartIcon from '../assets/icons/profile/heart.svg';
 import starFilledIcon from '../assets/icons/profile/star-filled.svg';
 import starLargeIcon from '../assets/icons/profile/star-large.svg';
 import userIcon from '../assets/icons/profile/user.svg';
+import { findExpertByName } from '../api/experts';
 import { SortDropdown } from '../components/SortDropdown';
 import { DEMO_PORTFOLIO_IMAGES, DEMO_PROFILE_IMAGES } from '../constants/demoImages';
 import styles from './PhotographerProfilePage.module.css';
@@ -226,6 +227,12 @@ export function PhotographerProfilePage() {
     return b.date.localeCompare(a.date);
   });
 
+  // 의뢰 쪽 작가 정보로 바로 의뢰 (TODO: API 연동 시 같은 작가 id 사용)
+  const requestDirectly = () => {
+    const expert = findExpertByName(name);
+    navigate(expert ? `/requests/new?expert=${expert.id}` : '/requests/new');
+  };
+
   const tabs: { value: ProfileTab; label: string }[] = [
     { value: 'portfolio', label: '포트폴리오' },
     { value: 'review', label: `리뷰(${reviewCount})` },
@@ -361,9 +368,9 @@ export function PhotographerProfilePage() {
       )}
 
       {/* 하단바 바로 위에 고정 */}
-      {/* TODO: 의뢰 화면 이동은 이후 이슈에서 */}
+      {/* 의뢰 쪽 작가 정보로 바로 의뢰 (같은 작가가 없으면 일반 의뢰) */}
       <div className={styles.actions}>
-        <button type="button" className={styles.requestButton}>
+        <button type="button" className={styles.requestButton} onClick={requestDirectly}>
           바로 의뢰하기
         </button>
       </div>

@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import backIcon from '../assets/icons/request/arrow-left.svg';
 import cameraIcon from '../assets/icons/request/camera.svg';
 import imageIcon from '../assets/icons/request/image.svg';
-import pencilIcon from '../assets/icons/request/pencil.svg';
 import radioOffIcon from '../assets/icons/request/radio-off.svg';
 import radioOnIcon from '../assets/icons/request/radio-on.svg';
+import { getExpert } from '../api/experts';
+import { DirectExpertBanner } from '../components/DirectExpertBanner';
+import { withTopic } from '../utils/korean';
 import styles from './RequestTypePage.module.css';
 
-// shoot: 촬영만, shootEdit: 촬영 + 편집, edit: 편집만
-type RequestType = 'shoot' | 'shootEdit' | 'edit';
+// shoot: 촬영, edit: 편집
+type RequestType = 'shoot' | 'edit';
 
 interface RequestTypeOption {
   value: RequestType;
@@ -18,25 +20,19 @@ interface RequestTypeOption {
 }
 
 const REQUEST_TYPES: RequestTypeOption[] = [
-  { value: 'shoot', title: '촬영만', description: '작가가 찍고, 기본 보정된\n사진을 받아요' },
-  {
-    value: 'shootEdit',
-    title: '촬영 + 편집',
-    description: '촬영에 원하는 보정까지\n꼼꼼하게 요청해요',
-  },
-  { value: 'edit', title: '편집만', description: '이미 찍은 사진을\n보정 전문가에게 맡겨요' },
+  { value: 'shoot', title: '촬영', description: '작가가 찍고, 기본 보정된\n사진을 받아요' },
+  { value: 'edit', title: '편집', description: '이미 찍은 사진을\n보정 전문가에게 맡겨요' },
 ];
 
 interface TypeIconProps {
   type: RequestType;
 }
 
-// 촬영: 카메라, 촬영 + 편집: 카메라 + 연필, 편집: 사진
+// 촬영: 카메라, 편집: 사진
 function TypeIcon({ type }: TypeIconProps) {
   return (
     <span className={styles.icon}>
       <img src={type === 'edit' ? imageIcon : cameraIcon} alt="" />
-      {type === 'shootEdit' && <img className={styles.pencil} src={pencilIcon} alt="" />}
     </span>
   );
 }
@@ -44,7 +40,16 @@ function TypeIcon({ type }: TypeIconProps) {
 export function RequestTypePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedType, setSelectedType] = useState<RequestType | null>(null);
+  const [searchParams] = useSearchParams();
+  // 작가 프로필에서 바로 의뢰하면 그 작가 (편집을 받지 않는 작가면 편집은 고를 수 없음)
+  const directExpert = searchParams.has('expert')
+    ? getExpert(Number(searchParams.get('expert')))
+    : null;
+  const isDisabled = (type: RequestType) =>
+    type === 'edit' && directExpert !== null && !directExpert.acceptsEdit;
+  const [selectedType, setSelectedType] = useState<RequestType | null>(
+    directExpert ? 'shoot' : null,
+  );
 
   // 주소로 바로 들어온 경우(이전 화면 없음)는 의뢰 메인으로
   const goBack = () => {
@@ -52,11 +57,11 @@ export function RequestTypePage() {
     else navigate(-1);
   };
 
-  // 촬영만 · 촬영 + 편집은 촬영 요청서, 편집만은 편집 요청서
-  // TODO: 촬영 + 편집 요청서 구성이 정해지면 작업 유형을 state로 넘기기
+  // 촬영은 촬영 요청서, 편집은 편집 요청서
   const goNext = () => {
     if (selectedType === null) return;
-    navigate(selectedType === 'edit' ? '/requests/new/edit' : '/requests/new/shoot');
+    const path = selectedType === 'edit' ? '/requests/new/edit' : '/requests/new/shoot';
+    navigate(directExpert ? `${path}?expert=${directExpert.id}` : path);
   };
 
   return (
@@ -69,29 +74,44 @@ export function RequestTypePage() {
       </header>
 
       <section className={styles.content}>
+        {directExpert && (
+          <div className={styles.direct}>
+            <DirectExpertBanner expert={directExpert} />
+          </div>
+        )}
         <h2 className={styles.question}>어떤 작업이 필요하세요?</h2>
         <p className={styles.guide}>선택에 따라 요청서 항목이 달라져요</p>
 
         <div className={styles.options} role="radiogroup" aria-label="작업 유형">
           {REQUEST_TYPES.map(({ value, title, description }) => {
             const selected = selectedType === value;
+            const disabled = isDisabled(value);
+            const className = [
+              styles.option,
+              selected && styles.optionSelected,
+              disabled && styles.optionDisabled,
+            ]
+              .filter(Boolean)
+              .join(' ');
             return (
-              <label
-                key={value}
-                className={selected ? `${styles.option} ${styles.optionSelected}` : styles.option}
-              >
+              <label key={value} className={className}>
                 <input
                   className={styles.radio}
                   type="radio"
                   name="requestType"
                   value={value}
                   checked={selected}
+                  disabled={disabled}
                   onChange={() => setSelectedType(value)}
                 />
                 <TypeIcon type={value} />
                 <span className={styles.text}>
                   <span className={styles.optionTitle}>{title}</span>
-                  <span className={styles.optionDescription}>{description}</span>
+                  <span className={styles.optionDescription}>
+                    {disabled && directExpert
+                      ? `${withTopic(directExpert.name)} 편집을 받지 않아요`
+                      : description}
+                  </span>
                 </span>
                 <img
                   className={styles.radioMark}

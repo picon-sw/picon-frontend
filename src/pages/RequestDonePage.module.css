@@ -14,18 +14,6 @@
   border-bottom: 1px solid #f5f5f5;
 }
 
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
 .title {
   flex: 1;
   margin: 0;

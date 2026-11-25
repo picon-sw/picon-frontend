@@ -139,6 +139,22 @@
   line-height: 1.4;
 }
 
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 7px 10px;
+  border: 1px solid #ebebeb;
+  border-radius: 100px;
+  font-size: 12px;
+}
+
 .cardText {
   margin: 0;
   font-size: 13px;

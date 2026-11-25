@@ -45,6 +45,10 @@ const PROFILE_IMAGES_BY_NAME: Record<string, string> = {
   김하늘: profile7,
   민서: profile8,
   수민: profile9,
+  // 편집 전문가 (시연용, 다른 작가 사진을 같이 씀)
+  하린: profile8,
+  도윤: profile6,
+  수아: profile4,
 };
 
 // '서하 작가'와 '서하' 모두 같은 사진
@@ -126,3 +130,19 @@ export const DEMO_MY_ACTIVITY_IMAGES = {
   liked: [search1, search3, search4], // 찜한 전문가 (탐색 카드 사진)
   votes: [contest1, home4], // 콘테스트 투표 내역
 };
+
+// 촬영 후 작가가 보낸 사진 (사진 고르기 · 구매)
+export const DEMO_DELIVERED_PHOTOS = [
+  portfolio1,
+  portfolio2,
+  portfolio3,
+  portfolio4,
+  home1,
+  search1,
+  home2,
+  search2,
+  home3,
+  search3,
+  home4,
+  search5,
+];

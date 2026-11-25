@@ -1,0 +1,20 @@
+.regionTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #8f8f8f;
+}
+
+/* 고정된 작가 활동 지역 (고를 수 없음) */
+.region {
+  margin: 8px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #70b9df;
+  border-radius: 12px;
+  background-color: #eaf6fc;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
