@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import { DEMO_MY_ACTIVITY_IMAGES } from '../constants/demoImages';
 import { PageHeader } from '../components/PageHeader';
@@ -34,16 +35,24 @@ const SAMPLE_VOTES: ImageItem[] = toImageItems(DEMO_MY_ACTIVITY_IMAGES.votes);
 
 interface SectionHeaderProps {
   title: string;
+  // 전체 목록 화면 주소. 없으면 화살표만 표시
+  to?: string;
 }
 
-// 섹션 제목 + 오른쪽 화살표
-// TODO: 각 목록 전체 보기 화면은 이후 이슈에서 (지금은 화살표만 표시)
-function SectionHeader({ title }: SectionHeaderProps) {
-  return (
-    <div className={styles.sectionHeader}>
+// 섹션 제목 + 오른쪽 화살표 (누르면 전체 목록)
+function SectionHeader({ title, to }: SectionHeaderProps) {
+  const content = (
+    <>
       <h2 className={styles.sectionTitle}>{title}</h2>
       <img src={chevronRightIcon} alt="" />
-    </div>
+    </>
+  );
+  return to ? (
+    <Link to={to} className={styles.sectionHeader} aria-label={`${title} 전체 보기`}>
+      {content}
+    </Link>
+  ) : (
+    <div className={styles.sectionHeader}>{content}</div>
   );
 }
 
@@ -70,12 +79,12 @@ export function MyActivityPage() {
       <PageHeader title="나의 활동" backTo="/my" />
 
       <section className={styles.section}>
-        <SectionHeader title="내 의뢰 내역" />
+        <SectionHeader title="내 의뢰 내역" to="/my/activity/requests" />
         <ImageList items={SAMPLE_REQUESTS} variant="thumbnail" />
       </section>
 
       <section className={styles.section}>
-        <SectionHeader title="작성한 리뷰" />
+        <SectionHeader title="작성한 리뷰" to="/my/activity/reviews" />
         <p className={styles.reviewTarget}>
           <span className={styles.star} aria-hidden="true" />
           <span aria-label={`평점 ${SAMPLE_REVIEW.rating}`}>{SAMPLE_REVIEW.rating}</span>
@@ -85,12 +94,12 @@ export function MyActivityPage() {
       </section>
 
       <section className={styles.section}>
-        <SectionHeader title="찜한 전문가" />
+        <SectionHeader title="찜한 전문가" to="/my/activity/liked" />
         <ImageList items={SAMPLE_LIKED} variant="thumbnail" />
       </section>
 
       <section className={styles.section}>
-        <SectionHeader title="콘테스트 투표 내역" />
+        <SectionHeader title="콘테스트 투표 내역" to="/my/activity/votes" />
         <ImageList items={SAMPLE_VOTES} variant="card" />
       </section>
     </main>

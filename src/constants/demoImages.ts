@@ -146,3 +146,8 @@ export const DEMO_DELIVERED_PHOTOS = [
   home4,
   search5,
 ];
+
+// 나의 활동 상세 화면 (작성한 리뷰 사진 · 찜한 전문가 카드 · 콘테스트 투표 작품)
+export const DEMO_MY_REVIEW_PHOTOS = [portfolio2, portfolio3, search6, home3, search2];
+export const DEMO_MY_LIKED_EXPERT_IMAGES = [search1, search6, home3, home4, search3, portfolio1];
+export const DEMO_MY_VOTE_IMAGES = [contest1, home2, search2, search4];

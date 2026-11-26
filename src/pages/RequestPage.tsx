@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import {
   fetchMyRequests,
   formatMyRequestMeta,
+  getMyRequestDetailPath,
   MY_REQUEST_STATUS_LABEL,
   type MyRequest,
   type MyRequestTab,
@@ -17,31 +18,6 @@ const TABS: { value: MyRequestTab; label: string }[] = [
 ];
 
 const EMPTY_REQUESTS: Record<MyRequestTab, MyRequest[]> = { ongoing: [], completed: [] };
-
-// 카드를 눌렀을 때 갈 상세 화면. 아직 없는 화면은 null (누를 수 없는 카드)
-// TODO: 예약 상세·완료 상세·편집 제안 등 화면이 생기면 상태별로 연결
-// 편집 의뢰 상세 (받은 제안 · 작업 상세 · 완료 사진 확인 · 완료 상세)
-function getEditDetailPath(id: number, status: MyRequest['status']): string | null {
-  if (status === 'proposal' || status === 'waiting') return `/requests/edits/${id}/proposals`;
-  if (status === 'editWaiting' || status === 'editing' || status === 'revising') {
-    return `/requests/edits/${id}/work`;
-  }
-  if (status === 'photosArrived') return `/requests/edits/${id}/result`;
-  if (status === 'completed') return `/requests/edits/${id}/completed`;
-  return null;
-}
-
-function getDetailPath({ id, kind, status }: MyRequest): string | null {
-  if (kind === 'edit') return getEditDetailPath(id, status);
-  if (status === 'proposal' || status === 'waiting' || status === 'closed') {
-    return `/requests/${id}/proposals`;
-  }
-  if (status === 'confirmed' || status === 'expertCanceled' || status === 'photosArrived') {
-    return `/requests/${id}/reservation`;
-  }
-  if (status === 'completed') return `/requests/${id}/completed`;
-  return null;
-}
 
 interface AvatarProps {
   imageUrl?: string;
@@ -64,7 +40,7 @@ interface RequestCardProps {
 
 function RequestCard({ request, tab, highlighted, onOpen }: RequestCardProps) {
   const { status, title, scheduleLabel, photographers, headline, message } = request;
-  const path = getDetailPath(request);
+  const path = getMyRequestDetailPath(request);
   const classNames = [
     styles.card,
     tab === 'completed' && styles.cardCompleted,

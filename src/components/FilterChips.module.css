@@ -1,0 +1,39 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+
+.chip {
+  padding: 7px 14px;
+  border: 1px solid #ebebeb;
+  border-radius: 100px;
+  background-color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 16px;
+  color: #8f8f8f;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chipActive {
+  border-color: #70b9df;
+  background-color: #70b9df;
+  font-weight: 700;
+  color: #fff;
+}
+
+.sort {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8f8f8f;
+}

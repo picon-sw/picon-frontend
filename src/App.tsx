@@ -11,12 +11,16 @@ import { HomePage } from './pages/HomePage';
 import { KakaoCallbackPage } from './pages/KakaoCallbackPage';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { MyActivityPage } from './pages/MyActivityPage';
+import { MyContestVotesPage } from './pages/MyContestVotesPage';
 import { MyFaqPage } from './pages/MyFaqPage';
+import { MyLikedExpertsPage } from './pages/MyLikedExpertsPage';
 import { MyNoticeDetailPage } from './pages/MyNoticeDetailPage';
 import { MyNoticesPage } from './pages/MyNoticesPage';
 import { MyNotificationSettingsPage } from './pages/MyNotificationSettingsPage';
 import { MyPage } from './pages/MyPage';
 import { MyProfileEditPage } from './pages/MyProfileEditPage';
+import { MyRequestsPage } from './pages/MyRequestsPage';
+import { MyReviewsPage } from './pages/MyReviewsPage';
 import { MySettingsPage } from './pages/MySettingsPage';
 import { MySupportPage } from './pages/MySupportPage';
 import { MyTasteEditPage } from './pages/MyTasteEditPage';
@@ -71,6 +75,10 @@ export function App() {
           <Route path="/contests" element={<ContestPage />} />
           <Route path="/my" element={<MyPage />} />
           <Route path="/my/activity" element={<MyActivityPage />} />
+          <Route path="/my/activity/requests" element={<MyRequestsPage />} />
+          <Route path="/my/activity/reviews" element={<MyReviewsPage />} />
+          <Route path="/my/activity/liked" element={<MyLikedExpertsPage />} />
+          <Route path="/my/activity/votes" element={<MyContestVotesPage />} />
           <Route path="/my/profile/edit" element={<MyProfileEditPage />} />
           <Route path="/my/taste/edit" element={<MyTasteEditPage />} />
           <Route path="/my/settings" element={<MySettingsPage />} />
