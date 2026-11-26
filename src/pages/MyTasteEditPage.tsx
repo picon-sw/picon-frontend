@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import { useNavigate } from 'react-router';
 import { type InterestField, useMyTaste } from '../hooks/useMyTaste';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyTasteEditPage.module.css';
 
 interface TagGroup {
@@ -86,12 +86,7 @@ export function MyTasteEditPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>내 취향 설정</h1>
-      </header>
+      <PageHeader title="내 취향 설정" backTo="/my" />
 
       <p className={styles.description}>고른 취향에 맞춰 전문가와 콘텐츠를 추천해 드려요.</p>
 

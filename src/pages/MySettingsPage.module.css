@@ -1,29 +1,7 @@
 .page {
-  padding: 0 12px 24px 20px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 72px;
-  margin-left: -1px;
-}
-
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 36px;
-}
-
-.title {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 36px;
-  color: #b9b9b9;
+  --page-padding-left: 20px;
+  --page-padding-right: 12px;
+  padding: 0 var(--page-padding-right) 24px var(--page-padding-left);
 }
 
 .list {

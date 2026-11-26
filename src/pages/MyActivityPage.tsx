@@ -1,7 +1,6 @@
-import { Link } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import { DEMO_MY_ACTIVITY_IMAGES } from '../constants/demoImages';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyActivityPage.module.css';
 
 interface ImageItem {
@@ -68,12 +67,7 @@ function ImageList({ items, variant }: ImageListProps) {
 export function MyActivityPage() {
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>나의 활동</h1>
-      </header>
+      <PageHeader title="나의 활동" backTo="/my" />
 
       <section className={styles.section}>
         <SectionHeader title="내 의뢰 내역" />

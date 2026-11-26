@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
 import chevronDownIcon from '../assets/icons/explore/chevron-down.svg';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyFaqPage.module.css';
 
 interface Faq {
@@ -45,12 +45,7 @@ const FAQS: Faq[] = [
 export function MyFaqPage() {
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>자주 묻는 질문</h1>
-      </header>
+      <PageHeader title="자주 묻는 질문" backTo="/my/settings" />
 
       <ul className={styles.faqList}>
         {FAQS.map(({ question, answer }) => (

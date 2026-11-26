@@ -1,9 +1,9 @@
 import { type ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import { useNavigate } from 'react-router';
 import cameraIcon from '../assets/icons/onboarding/camera.svg';
 import humanIcon from '../assets/icons/onboarding/human.svg';
 import { type Gender, type MyProfileInfo, useMyProfile } from '../hooks/useMyProfile';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyProfileEditPage.module.css';
 
 // 입력 칸 값 (사진은 따로 관리)
@@ -86,12 +86,7 @@ export function MyProfileEditPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>프로필 수정</h1>
-      </header>
+      <PageHeader title="프로필 수정" backTo="/my" />
 
       <div className={styles.photoArea}>
         <div className={styles.photoWrap}>

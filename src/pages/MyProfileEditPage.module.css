@@ -1,31 +1,9 @@
 /* 헤더는 마이페이지 하위 화면(설정 및 지원 등)과 같게,
    사진 · 입력 칸은 온보딩 프로필 입력 화면과 같은 모양 */
 .page {
-  padding: 0 20px 24px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 72px;
-  margin-left: -1px;
-}
-
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 36px;
-}
-
-.title {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 36px;
-  color: #b9b9b9;
+  --page-padding-left: 20px;
+  --page-padding-right: 20px;
+  padding: 0 var(--page-padding-right) 24px var(--page-padding-left);
 }
 
 /* 프로필 사진 */
