@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import backIcon from '../assets/icons/request/arrow-left.svg';
 import starIcon from '../assets/icons/explore/star.svg';
 import aiSparkleIcon from '../assets/icons/profile/ai-sparkle.svg';
-import heartIcon from '../assets/icons/profile/heart.svg';
+import heartIcon from '../assets/icons/profile/heart-black.svg';
 import starFilledIcon from '../assets/icons/profile/star-filled.svg';
 import starLargeIcon from '../assets/icons/profile/star-large.svg';
 import userIcon from '../assets/icons/profile/user.svg';
@@ -54,7 +54,7 @@ const REVIEW_SORT_OPTIONS: { value: ReviewSort; label: string }[] = [
 const SAMPLE_REVIEWS: Review[] = [
   {
     id: 1,
-    nickname: '봄날',
+    nickname: '하루',
     rating: 5,
     date: '2027.02.25',
     service: '졸업사진 촬영',
@@ -63,7 +63,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: 2,
-    nickname: '하루',
+    nickname: '하늘',
     rating: 4,
     date: '2026.11.07',
     service: '프로필사진 촬영',
@@ -72,7 +72,7 @@ const SAMPLE_REVIEWS: Review[] = [
   },
   {
     id: 3,
-    nickname: '모카',
+    nickname: '보라',
     rating: 5,
     date: '2026.10.30',
     service: '졸업사진 촬영',
@@ -244,7 +244,7 @@ export function PhotographerProfilePage() {
         <button type="button" className={styles.back} aria-label="뒤로 가기" onClick={goBack}>
           <img src={backIcon} alt="" />
         </button>
-        <h1 className={styles.title}>Profile</h1>
+        <h1 className={styles.title}>SEARCH</h1>
         {/* TODO: 찜하기 기능은 이후 이슈에서 */}
         <button type="button" className={styles.like} aria-label="찜하기">
           <img src={heartIcon} alt="" />

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import backIcon from '../assets/icons/request/arrow-left.svg';
 import chevronDownIcon from '../assets/icons/explore/chevron-down.svg';
 import clockIcon from '../assets/icons/explore/clock.svg';
 import closeIcon from '../assets/icons/explore/close.svg';
