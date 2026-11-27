@@ -23,11 +23,14 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # 단계별 제한의 합보다 길게 둬서, 앞 단계가 오래 걸려도 서버 배포 단계는 제 시간을 다 씀
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v6
+        timeout-minutes: 5
 
       - name: AWS 임시 자격 증명 받기 (OIDC)
+        timeout-minutes: 5
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
@@ -35,6 +38,7 @@ jobs:
           mask-aws-account-id: true
 
       - name: 이미지 빌드, ECR 푸시
+        timeout-minutes: 20
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           VITE_KAKAO_CLIENT_ID: ${{ vars.VITE_KAKAO_CLIENT_ID }}
@@ -58,6 +62,7 @@ jobs:
           echo "TAG=$TAG" >> "$GITHUB_ENV"
 
       - name: 서버 배포 (web만 교체)
+        timeout-minutes: 25
         env:
           INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
         run: |
