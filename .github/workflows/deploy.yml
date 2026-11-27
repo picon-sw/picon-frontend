@@ -18,12 +18,12 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write   # AWS OIDC 임시 자격 증명용
+  id-token: write # AWS OIDC 임시 자격 증명용
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v6
 
@@ -64,19 +64,27 @@ jobs:
           CMD_ID=$(aws ssm send-command \
             --document-name PICON-Deploy \
             --instance-ids "$INSTANCE_ID" \
+            --timeout-seconds 300 \
             --parameters "{\"apiTag\":[\"-\"],\"webTag\":[\"$TAG\"]}" \
             --comment "frontend $TAG" \
             --query Command.CommandId --output text)
           echo "배포 시작: web=$TAG"
 
-          # 최대 15분 대기 (다른 배포 대기 5분 + 배포 3분 + 실패 시 되돌리기 3분)
+          # 서버 명령이 끝날 때까지 기다림 (작업이 겹치지 않도록, 끝나기 전에는 이 job을 끝내지 않음)
+          # - 전달 제한 300초(--timeout-seconds): 그 안에 서버가 받지 못하면 명령은 실행되지 않고 끝남
+          # - 실행 제한 900초(PICON-Deploy 문서): 넘으면 SSM이 명령을 끝냄
+          # 둘을 합친 1200초보다 길게 기다리므로, 명령은 항상 끝난 상태(Success/Failed/Cancelled/TimedOut 등)가 됨
           STATUS=Pending
-          for _ in $(seq 1 90); do
+          for _ in $(seq 1 130); do
             sleep 10
             STATUS=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$INSTANCE_ID" \
               --query Status --output text 2>/dev/null || echo Pending)
-            case "$STATUS" in Success|Failed|Cancelled|TimedOut) break ;; esac
+            case "$STATUS" in Success|Failed|Cancelled|TimedOut|Undeliverable|Terminated) break ;; esac
           done
+          case "$STATUS" in
+            Success|Failed|Cancelled|TimedOut|Undeliverable|Terminated) ;;
+            *) echo "서버 명령이 21분이 지나도 끝나지 않았습니다 (상태: $STATUS). 서버에서 직접 확인이 필요합니다." ;;
+          esac
 
           echo "----- 서버 출력 -----"
           aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "$INSTANCE_ID" \
@@ -89,3 +97,4 @@ jobs:
           echo "---------------------"
           echo "결과: $STATUS"
           [ "$STATUS" = "Success" ]
+          
