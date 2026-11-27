@@ -97,4 +97,3 @@ jobs:
           echo "---------------------"
           echo "결과: $STATUS"
           [ "$STATUS" = "Success" ]
-          
