@@ -1,34 +1,12 @@
 /* 헤더는 마이페이지 하위 화면과 같게, 태그는 마이페이지 취향 카드 해시태그와 같은 모양 */
 .page {
-  padding: 0 20px 24px;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  height: 72px;
-  margin-left: -1px;
-}
-
-.back {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 36px;
-}
-
-.title {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 36px;
-  color: #b9b9b9;
+  --page-padding-left: 20px;
+  --page-padding-right: 20px;
+  padding: 0 var(--page-padding-right) 24px var(--page-padding-left);
 }
 
 .description {
-  margin: 0 0 0 3px;
+  margin: 16px 0 0 3px;
   font-size: 12px;
   line-height: 15px;
   color: #8f8f8f;
@@ -94,7 +72,7 @@
 }
 
 .groupTitle {
-  margin: 0 0 0 3px;
+  margin: 16px 0 0 3px;
   font-size: 13px;
   font-weight: 700;
   color: #777879;

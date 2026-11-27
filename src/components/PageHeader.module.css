@@ -1,0 +1,32 @@
+/* 높이 72px, 아래 연한 구분선. 페이지 좌우 여백만큼 밖으로 늘려서 선이 화면 끝까지 닿게 */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 72px;
+  margin: 0 calc(-1 * var(--page-padding-right, 0px)) 0 calc(-1 * var(--page-padding-left, 0px));
+  padding: 0 20px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.back {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #000;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

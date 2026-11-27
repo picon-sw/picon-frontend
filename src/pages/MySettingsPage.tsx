@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { logout } from '../api/auth';
-import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MySettingsPage.module.css';
 
 // to가 없는 메뉴는 아직 화면이 없어 버튼만 표시
@@ -27,12 +27,7 @@ export function MySettingsPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>설정 및 지원</h1>
-      </header>
+      <PageHeader title="설정 및 지원" backTo="/my" />
 
       <ul className={styles.list}>
         {SETTING_ITEMS.map(({ label, to }) => (

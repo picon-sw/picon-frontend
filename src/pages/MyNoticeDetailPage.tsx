@@ -1,8 +1,8 @@
 import { Link, useParams } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
 import megaphoneIcon from '../assets/icons/my/megaphone.svg';
 import pinIcon from '../assets/icons/my/pin.svg';
 import { NOTICES } from '../constants/notices';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyNoticesPage.module.css';
 
 // 공지사항 상세 (/my/settings/notices/:noticeId)
@@ -13,12 +13,7 @@ export function MyNoticeDetailPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings/notices" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>공지사항</h1>
-      </header>
+      <PageHeader title="공지사항" backTo="/my/settings/notices" />
 
       {notice ? (
         <article className={styles.detail}>

@@ -1,5 +1,4 @@
-import { Link } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MySupportPage.module.css';
 
 // TODO: 실제 운영 전 고객센터 번호 · 운영 시간 확정 후 수정 (지금은 임시 번호)
@@ -14,12 +13,7 @@ const SUPPORT_HOURS = [
 export function MySupportPage() {
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>고객센터</h1>
-      </header>
+      <PageHeader title="고객센터" backTo="/my/settings" />
 
       <section className={styles.contact} aria-labelledby="contact-title">
         <h2 id="contact-title" className={styles.contactTitle}>

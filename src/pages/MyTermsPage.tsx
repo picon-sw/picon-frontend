@@ -1,19 +1,14 @@
 import { Link } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
 import chevronRightIcon from '../assets/icons/explore/chevron-right.svg';
 import { TERMS } from '../constants/terms';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyTermsPage.module.css';
 
 // 약관 및 정책 목록 (설정 및 지원 → 약관 및 정책)
 export function MyTermsPage() {
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>약관 및 정책</h1>
-      </header>
+      <PageHeader title="약관 및 정책" backTo="/my/settings" />
 
       <ul className={styles.list}>
         {TERMS.map(({ id, title, required }) => (

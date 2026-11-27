@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyNotificationSettingsPage.module.css';
 
 type NotificationKey = 'request' | 'contest' | 'favorite' | 'marketing' | 'marketingNight';
@@ -98,12 +97,7 @@ export function MyNotificationSettingsPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>알림 설정</h1>
-      </header>
+      <PageHeader title="알림 설정" backTo="/my/settings" />
 
       <div className={styles.allRow}>
         <span className={styles.allLabel}>전체 알림</span>

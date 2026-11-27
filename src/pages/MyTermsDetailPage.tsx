@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router';
-import backIcon from '../assets/icons/explore/back.svg';
 import { TERMS, type TermsBlock } from '../constants/terms';
+import { PageHeader } from '../components/PageHeader';
 import styles from './MyTermsPage.module.css';
 
 interface TermsBlockViewProps {
@@ -34,12 +34,7 @@ export function MyTermsDetailPage() {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <Link to="/my/settings/terms" className={styles.back} aria-label="뒤로 가기">
-          <img src={backIcon} alt="" />
-        </Link>
-        <h1 className={styles.title}>약관 및 정책</h1>
-      </header>
+      <PageHeader title="약관 및 정책" backTo="/my/settings/terms" />
 
       {terms ? (
         <article className={styles.document}>
