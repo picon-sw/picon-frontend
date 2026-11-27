@@ -5,24 +5,25 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 12px;
 }
 
 .back {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
+  width: 22px;
   height: 36px;
-  margin-left: 3px;
+  margin-left: 4px;
 }
 
+/* 마이페이지 하위 화면과 같은 검정 ← + 검정 제목 */
 .title {
   margin: 0;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   line-height: 36px;
-  color: #b9b9b9;
+  color: #000;
 }
 
 .searchBox {
