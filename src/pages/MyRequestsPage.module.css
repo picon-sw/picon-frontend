@@ -1,0 +1,139 @@
+/* Figma "마이 - 내 의뢰 내역" */
+.page {
+  --page-padding-left: 20px;
+  --page-padding-right: 20px;
+  padding: 0 var(--page-padding-right) 24px var(--page-padding-left);
+}
+
+.filters {
+  margin-top: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #ebebeb;
+  border-radius: 15px;
+  background-color: #fff;
+}
+
+.cardTop {
+  display: flex;
+  gap: 14px;
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+}
+
+/* 지금 해야 할 일 있음 (제안 도착 · 사진 도착) */
+.badge_action {
+  background-color: #70b9df;
+  color: #fff;
+}
+
+/* 진행 중 */
+.badge_progress {
+  background-color: #eaf6fc;
+  color: #70b9df;
+}
+
+/* 끝남 (완료 · 마감 · 취소) */
+.badge_done {
+  background-color: #f5f5f5;
+  color: #8f8f8f;
+}
+
+.kind {
+  font-size: 11px;
+  font-weight: 500;
+  color: #8f8f8f;
+}
+
+.cardTitle,
+.meta,
+.summary {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000;
+}
+
+.meta {
+  font-size: 12px;
+  color: #8f8f8f;
+}
+
+.summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.action {
+  height: 37px;
+  border: 0;
+  border-radius: 10px;
+  background-color: #eaf6fc;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #70b9df;
+  cursor: pointer;
+}
+
+.actionDone {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.empty {
+  margin: 80px 0 0;
+  font-size: 13px;
+  color: #8f8f8f;
+  text-align: center;
+}

@@ -85,6 +85,31 @@ export function formatMyRequestMeta(request: MyRequest): string {
   return `${date} · ${request.place} · ${request.people}명`;
 }
 
+// 의뢰 카드를 눌렀을 때 갈 상세 화면 (의뢰 메인 · 마이페이지 내 의뢰 내역 공통). 아직 없는 화면은 null (누를 수 없는 카드)
+// TODO: 예약 상세·완료 상세·편집 제안 등 화면이 생기면 상태별로 연결
+// 편집 의뢰 상세 (받은 제안 · 작업 상세 · 완료 사진 확인 · 완료 상세)
+function getEditDetailPath(id: number, status: MyRequest['status']): string | null {
+  if (status === 'proposal' || status === 'waiting') return `/requests/edits/${id}/proposals`;
+  if (status === 'editWaiting' || status === 'editing' || status === 'revising') {
+    return `/requests/edits/${id}/work`;
+  }
+  if (status === 'photosArrived') return `/requests/edits/${id}/result`;
+  if (status === 'completed') return `/requests/edits/${id}/completed`;
+  return null;
+}
+
+export function getMyRequestDetailPath({ id, kind, status }: MyRequest): string | null {
+  if (kind === 'edit') return getEditDetailPath(id, status);
+  if (status === 'proposal' || status === 'waiting' || status === 'closed') {
+    return `/requests/${id}/proposals`;
+  }
+  if (status === 'confirmed' || status === 'expertCanceled' || status === 'photosArrived') {
+    return `/requests/${id}/reservation`;
+  }
+  if (status === 'completed') return `/requests/${id}/completed`;
+  return null;
+}
+
 function photographer(id: number, name: string): RequestPhotographer {
   // TODO: 시연용 사진 (API 연동 시 백엔드 이미지 URL 사용)
   return { id, name, profileImageUrl: demoProfileImage(name) };
